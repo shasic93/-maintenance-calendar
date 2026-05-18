@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Asset Maintenance Calendar</title>
+<title>Shafiq's Asset Maintenance Calendar</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -13,6 +13,9 @@
   --accent:#2563eb;--accent-light:#eff4ff;--accent-mid:#bfcfff;
   --chev:#2563eb;--chev-bg:#eff4ff;--chev-border:#bfcfff;
   --orig:#0f9e6e;--orig-bg:#edfaf4;--orig-border:#9fe1cb;
+  --ph:#7c3aed;--ph-bg:#f5f3ff;--ph-border:#c4b5fd;
+  --wa:#0369a1;--wa-bg:#eff6ff;--wa-border:#93c5fd;
+  --qld:#b91c1c;--qld-bg:#fff1f2;--qld-border:#fda4af;
   --tbc-bg:#f1f4f8;--tbc:#9aa0b4;
   --reminder:#e05a2b;--reminder-bg:#fff2ee;--reminder-border:#fbbaa0;
   --empty-bg:#f8f9fb;--empty-num:#c5cad8;
@@ -28,6 +31,9 @@
   --accent:#4f8ef7;--accent-light:rgba(79,142,247,0.12);--accent-mid:rgba(79,142,247,0.3);
   --chev:#4f8ef7;--chev-bg:rgba(79,142,247,0.12);--chev-border:rgba(79,142,247,0.3);
   --orig:#34d399;--orig-bg:rgba(52,211,153,0.1);--orig-border:rgba(52,211,153,0.3);
+  --ph:#a78bfa;--ph-bg:rgba(167,139,250,0.12);--ph-border:rgba(167,139,250,0.35);
+  --wa:#38bdf8;--wa-bg:rgba(56,189,248,0.1);--wa-border:rgba(56,189,248,0.35);
+  --qld:#fb7185;--qld-bg:rgba(251,113,133,0.1);--qld-border:rgba(251,113,133,0.35);
   --tbc-bg:rgba(136,145,168,0.08);--tbc:#8891aa;
   --reminder:#fb7c50;--reminder-bg:rgba(251,124,80,0.12);--reminder-border:rgba(251,124,80,0.35);
   --empty-bg:#0f1117;--empty-num:#2a2f3e;
@@ -40,69 +46,69 @@
 body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background .3s,color .3s;font-weight:500;}
 .shell{display:grid;grid-template-columns:250px 1fr;grid-template-rows:58px 1fr;min-height:100vh;}
 .topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;}
-.topbar-logo{font-size:14px;font-weight:700;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;}
+.topbar-logo{font-size:16px;font-weight:700;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;}
 .logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace;}
+.pill{font-size:12px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace;}
 .pill.live{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);display:flex;align-items:center;gap:5px;}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--orig);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.theme-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:4px 12px;font-size:11px;transition:all .15s;font-family:'Syne',sans-serif;}
+.theme-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 13px;font-size:12px;transition:all .15s;font-family:'Syne',sans-serif;}
 .theme-btn:hover{color:var(--text);border-color:var(--accent);}
-.add-btn{background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;padding:7px 16px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
+.add-btn{background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;padding:8px 18px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
 .add-btn:hover{opacity:.85;}
-.data-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 12px;font-size:11px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.data-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:7px 13px;font-size:12px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px;}
 .data-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface);}
 .data-btn.export{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);}
 .data-btn.export:hover{opacity:.85;}
 .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:18px 0;overflow-y:auto;}
 .sb-section{padding:0 14px;margin-bottom:22px;}
-.sb-label{font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;padding:0 3px;font-family:'DM Mono',monospace;}
+.sb-label{font-size:11px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;padding:0 3px;font-family:'DM Mono',monospace;}
 .mini-cal{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px;}
 .mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
-.mini-nav span{font-size:12px;font-weight:600;color:var(--text);}
-.mnb{background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;padding:2px 5px;border-radius:4px;}
+.mini-nav span{font-size:13px;font-weight:600;color:var(--text);}
+.mnb{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:2px 5px;border-radius:4px;}
 .mnb:hover{color:var(--text);background:var(--border);}
 .mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
-.dh{font-size:9px;color:var(--text3);padding:2px 0;font-family:'DM Mono',monospace;}
-.mc{font-size:11px;color:var(--text2);padding:4px 2px;border-radius:5px;cursor:pointer;position:relative;transition:all .15s;}
+.dh{font-size:10px;color:var(--text3);padding:2px 0;font-family:'DM Mono',monospace;}
+.mc{font-size:12px;color:var(--text2);padding:5px 2px;border-radius:5px;cursor:pointer;position:relative;transition:all .15s;}
 .mc:hover{background:var(--surface);color:var(--text);}
 .mc.other{color:var(--text3);}
 .mc.today{background:var(--accent);color:#fff;font-weight:600;}
 .mc.has-reminder{background:var(--reminder-bg);color:var(--reminder);font-weight:600;border:1px solid var(--reminder-border);}
 .mc.has-reminder::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--reminder);position:absolute;bottom:2px;left:50%;transform:translateX(-50%);}
 .legend{display:flex;gap:12px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);flex-wrap:wrap;}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);font-family:'DM Mono',monospace;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
 .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.fbtn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;transition:background .15s;font-family:'Syne',sans-serif;}
+.fbtn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:3px;transition:background .15s;font-family:'Syne',sans-serif;}
 .fbtn:hover{background:var(--surface2);}
 .fbtn.active{background:var(--accent-light);color:var(--accent);}
 .fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.fcnt{margin-left:auto;font-size:10px;color:var(--text3);background:var(--surface2);padding:1px 6px;border-radius:9px;border:1px solid var(--border);font-family:'DM Mono',monospace;}
+.fcnt{margin-left:auto;font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:9px;border:1px solid var(--border);font-family:'DM Mono',monospace;}
 .fbtn.active .fcnt{border-color:var(--accent-mid);color:var(--accent);}
 .up-item{display:flex;gap:9px;padding:7px 3px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;align-items:flex-start;}
 .up-item:hover{background:var(--surface2);}
 .up-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:28px;}
-.up-date{font-size:10px;color:var(--text3);margin-bottom:2px;font-family:'DM Mono',monospace;}
-.up-title{font-size:11px;font-weight:600;color:var(--text2);line-height:1.3;}
+.up-date{font-size:11px;color:var(--text3);margin-bottom:2px;font-family:'DM Mono',monospace;}
+.up-title{font-size:12px;font-weight:600;color:var(--text2);line-height:1.3;}
 .up-edit{margin-left:auto;opacity:0;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text3);cursor:pointer;padding:2px 7px;font-size:11px;transition:all .15s;flex-shrink:0;}
 .up-item:hover .up-edit{opacity:1;}
 .up-edit:hover{color:var(--accent);border-color:var(--accent-mid);}
 .main{display:flex;flex-direction:column;overflow:hidden;}
 .cal-hdr{display:flex;align-items:center;padding:14px 22px;gap:11px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.cal-title{font-size:19px;font-weight:700;color:var(--text);}
-.cal-sub{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
-.nb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 10px;font-size:14px;transition:all .15s;}
+.cal-title{font-size:22px;font-weight:700;color:var(--text);}
+.cal-sub{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.nb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 12px;font-size:16px;transition:all .15s;}
 .nb:hover{border-color:var(--border2);color:var(--text);}
-.tb{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 13px;font-size:12px;transition:all .15s;font-family:'Syne',sans-serif;}
+.tb{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 15px;font-size:13px;transition:all .15s;font-family:'Syne',sans-serif;}
 .tb:hover{background:var(--surface2);color:var(--text);}
 .vt{margin-left:auto;display:flex;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;}
-.vb{background:transparent;border:none;border-radius:4px;color:var(--text3);cursor:pointer;padding:4px 10px;font-size:12px;transition:all .15s;font-family:'Syne',sans-serif;}
+.vb{background:transparent;border:none;border-radius:4px;color:var(--text3);cursor:pointer;padding:5px 12px;font-size:13px;transition:all .15s;font-family:'Syne',sans-serif;}
 .vb.active{background:var(--accent);color:#fff;}
 .vb:hover:not(.active){color:var(--text2);}
 .cal-body{flex:1;overflow-y:auto;}
 .wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
-.wh div{font-size:11px;font-weight:700;color:var(--text2);text-align:center;padding:9px 0;letter-spacing:.04em;font-family:'DM Mono',monospace;}
+.wh div{font-size:12px;font-weight:700;color:var(--text2);text-align:center;padding:10px 0;letter-spacing:.04em;font-family:'DM Mono',monospace;}
 .mgd{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(100px,1fr);border-left:1px solid var(--border);border-top:1px solid var(--border);}
 .cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px;min-height:100px;transition:background .1s;position:relative;}
 .cday:hover{background:rgba(37,99,235,0.02);}
@@ -113,42 +119,48 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .cday.day-empty:not(.other){background:var(--empty-bg);}
 .cday.day-empty:not(.other) .dn{color:var(--empty-num);}
 .dn-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
-.dn{font-size:12px;font-weight:700;color:var(--text);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:'DM Mono',monospace;}
+.dn{font-size:13px;font-weight:700;color:var(--text);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:'DM Mono',monospace;}
 .cday.today .dn{background:var(--accent);color:#fff;}
 .day-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
 .day-add{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0 2px;opacity:.35;transition:all .15s;}
 .day-add:hover{opacity:1;color:var(--accent);}
-.cel{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent;transition:opacity .1s;display:block;width:100%;text-align:left;}
+.cel{padding:3px 7px;border-radius:4px;font-size:11px;font-weight:700;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent;transition:opacity .1s;display:block;width:100%;text-align:left;}
 .cel:hover{opacity:.75;}
 .cel.chev{background:var(--chev-bg);color:var(--chev);border-color:var(--chev);}
 .cel.orig{background:var(--orig-bg);color:var(--orig);border-color:var(--orig);}
+.cel.ph{background:var(--ph-bg);color:var(--ph);border-color:var(--ph);}
+.cel.wa{background:var(--wa-bg);color:var(--wa);border-color:var(--wa);}
+.cel.qld{background:var(--qld-bg);color:var(--qld);border-color:var(--qld);}
 .cel.tbc-evt{background:var(--reminder-bg);color:var(--reminder);border-color:var(--reminder);border-style:dashed;}
 .cal-legend{display:flex;align-items:center;gap:16px;padding:8px 22px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
-.cl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);}
+.cl-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);}
 .cl-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
 .lv{padding:20px;}
 .lmg{margin-bottom:28px;}
-.lml{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;}
+.lml{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;}
 .le{display:flex;gap:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;}
 .le:hover{border-color:var(--border2);background:var(--surface2);}
 .le.tbc-row{border-left:3px solid var(--reminder);}
 .ldc{min-width:68px;text-align:center;}
 .ldn{font-size:22px;font-weight:700;line-height:1;color:var(--text);font-family:'DM Mono',monospace;}
-.ldname{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;}
+.ldname{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;}
 .ldiv{width:1px;background:var(--border);flex-shrink:0;}
 .lcon{flex:1;min-width:0;}
-.ltitle{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.lmeta{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.lnotes{font-size:11px;font-weight:500;color:var(--text2);line-height:1.5;}
+.ltitle{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.lmeta{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.lnotes{font-size:12px;font-weight:500;color:var(--text2);line-height:1.5;}
 .le-actions{display:flex;gap:6px;align-items:center;margin-left:8px;opacity:0;transition:opacity .15s;flex-shrink:0;}
 .le:hover .le-actions{opacity:1;}
-.le-btn{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:4px 10px;font-size:11px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;white-space:nowrap;}
+.le-btn{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 11px;font-size:12px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;white-space:nowrap;}
 .le-btn:hover{color:var(--accent);border-color:var(--accent-mid);}
 .le-btn.del:hover{color:var(--danger);border-color:var(--danger-border);}
-.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.03em;font-family:'DM Mono',monospace;}
+.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.03em;font-family:'DM Mono',monospace;}
 .badge.prod{background:var(--prod-bg);color:var(--prod-text);}
 .badge.nonprod{background:var(--nonprod-bg);color:var(--nonprod-text);}
 .badge.tbc-b{background:var(--reminder-bg);color:var(--reminder);border:1px dashed var(--reminder-border);}
+.badge.ph-b{background:var(--ph-bg);color:var(--ph);border:1px solid var(--ph-border);}
+.badge.wa-b{background:var(--wa-bg);color:var(--wa);border:1px solid var(--wa-border);}
+.badge.qld-b{background:var(--qld-bg);color:var(--qld);border:1px solid var(--qld-border);}
 .badge.chev-b{background:var(--chev-bg);color:var(--chev);border:1px solid var(--chev-border);}
 .badge.orig-b{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
 .drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;}
@@ -158,12 +170,12 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .dc-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 9px;font-size:13px;float:right;margin-bottom:14px;transition:all .15s;}
 .dc-btn:hover{color:var(--text);}
 .d-bar{clear:both;height:3px;border-radius:2px;margin-bottom:14px;}
-.d-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
-.d-date{font-size:12px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace;}
+.d-title{font-size:19px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
+.d-date{font-size:13px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace;}
 .d-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
 .d-fl{margin-bottom:14px;}
-.d-fl-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-family:'DM Mono',monospace;}
-.d-fl-val{font-size:13px;font-weight:500;color:var(--text);line-height:1.5;}
+.d-fl-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-family:'DM Mono',monospace;}
+.d-fl-val{font-size:14px;font-weight:500;color:var(--text);line-height:1.5;}
 .d-div{border:none;border-top:1px solid var(--border);margin:18px 0;}
 .d-action-row{display:flex;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
 .d-edit-btn{flex:1;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-sm);color:var(--accent);cursor:pointer;padding:9px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:all .15s;}
@@ -172,19 +184,19 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .d-del-btn:hover{opacity:.75;}
 .sbar{display:flex;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0;}
 .scell{flex:1;padding:9px 14px;background:var(--surface);}
-.snum{font-size:18px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;}
-.slabel{font-size:11px;font-weight:600;color:var(--text2);margin-top:1px;}
+.snum{font-size:22px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;}
+.slabel{font-size:12px;font-weight:600;color:var(--text2);margin-top:1px;}
 .modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;}
 .modal-ov.open{display:flex;}
 .modal{background:var(--surface);border-radius:14px;border:1px solid var(--border2);width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;padding:28px;}
 .modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-.modal-title{font-size:17px;font-weight:700;color:var(--text);}
-.modal-close{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 10px;font-size:13px;transition:all .15s;}
+.modal-title{font-size:19px;font-weight:700;color:var(--text);}
+.modal-close{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 11px;font-size:14px;transition:all .15s;}
 .modal-close:hover{color:var(--text);}
 .form-row{margin-bottom:16px;}
 .form-row.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-label{font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;font-family:'DM Mono',monospace;display:block;}
-.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:13px;font-weight:500;padding:9px 12px;transition:border-color .15s;outline:none;-webkit-appearance:none;}
+.form-label{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;font-family:'DM Mono',monospace;display:block;}
+.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:500;padding:10px 12px;transition:border-color .15s;outline:none;-webkit-appearance:none;}
 .form-input:focus{border-color:var(--accent);}
 .form-input option{background:var(--surface);}
 textarea.form-input{resize:vertical;min-height:80px;}
@@ -222,7 +234,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
 <body>
 <div class="shell" id="shell">
   <header class="topbar">
-    <div class="topbar-logo"><div class="logo-icon">&#9632;</div>Asset Maintenance Calendar</div>
+    <div class="topbar-logo"><div class="logo-icon">&#9632;</div>Shafiq's Maintenance Tracker</div>
     <div class="topbar-right">
       <div class="pill live"><div class="live-dot"></div>Live</div>
       <div class="pill" id="today-display"></div>
@@ -257,6 +269,9 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <button class="fbtn active" onclick="setFilter('all',this)"><div class="fdot" style="background:var(--text2)"></div>All assets<span class="fcnt" id="cnt-all">0</span></button>
       <button class="fbtn" onclick="setFilter('chev',this)"><div class="fdot" style="background:var(--chev)"></div>Chevron ABU<span class="fcnt" id="cnt-chev">0</span></button>
       <button class="fbtn" onclick="setFilter('orig',this)"><div class="fdot" style="background:var(--orig)"></div>Origin / APLNG<span class="fcnt" id="cnt-orig">0</span></button>
+      <button class="fbtn" onclick="setFilter('ph',this)"><div class="fdot" style="background:var(--ph)"></div>KL Public Holidays<span class="fcnt" id="cnt-ph">0</span></button>
+      <button class="fbtn" onclick="setFilter('wa',this)"><div class="fdot" style="background:var(--wa)"></div>Perth (WA) Holidays<span class="fcnt" id="cnt-wa">0</span></button>
+      <button class="fbtn" onclick="setFilter('qld',this)"><div class="fdot" style="background:var(--qld)"></div>Brisbane (QLD) Holidays<span class="fcnt" id="cnt-qld">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-label">Upcoming</div>
@@ -327,6 +342,9 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <select class="form-input" id="f-type">
           <option value="chev">Chevron ABU</option>
           <option value="orig">Origin / APLNG</option>
+          <option value="ph">KL Public Holiday</option>
+          <option value="wa">Perth (WA) Public Holiday</option>
+          <option value="qld">Brisbane (QLD) Public Holiday</option>
         </select>
       </div>
     </div>
@@ -417,7 +435,7 @@ textarea.form-input{resize:vertical;min-height:80px;}
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG'};
+const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG',ph:'KL Public Holiday',wa:'Perth Public Holiday',qld:'Brisbane Public Holiday'};
 const STORAGE_KEY='amc_events_v3';
 
 /* ── SEED DATA (only used on first ever load, never overwrites saved data) ── */
@@ -432,6 +450,58 @@ const SEED=[
   {id:10,date:'2026-07-15',title:'Wheatstone DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2 per ABU request. RTO: 15–30 min. ABU to review near date to avoid cargo conflicts.'},
   {id:11,date:'2026-07-16',title:'Gorgon DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. Azure Fileshare: //ecfsauegorp214.file.core.windows.net/gorgon-prod'},
   {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. WAOIL Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
+  {id:101,date:'2026-01-01',title:'New Year\'s Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — New Year\'s Day 2026.'},
+  {id:102,date:'2026-02-01',title:'Thaipusam',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Thaipusam. Falls on Sunday; substitute day is Tuesday 3 Feb.'},
+  {id:103,date:'2026-02-01',title:'Federal Territory Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'KL Federal Territory Day. Falls on Sunday; substitute day is Monday 2 Feb.'},
+  {id:104,date:'2026-02-02',title:'Federal Territory Day (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Federal Territory Day (original: Sunday 1 Feb).'},
+  {id:105,date:'2026-02-03',title:'Thaipusam (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Thaipusam (original: Sunday 1 Feb).'},
+  {id:106,date:'2026-02-17',title:'Chinese New Year',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Chinese New Year Holiday — Day 1.'},
+  {id:107,date:'2026-02-18',title:'Chinese New Year (Day 2)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Chinese New Year Holiday — Day 2.'},
+  {id:108,date:'2026-03-06',title:'Nuzul Al-Quran (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Nuzul Al-Quran (original: Saturday 7 Mar).'},
+  {id:109,date:'2026-03-07',title:'Nuzul Al-Quran',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Nuzul Al-Quran.'},
+  {id:110,date:'2026-03-20',title:'Hari Raya Aidilfitri (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Aidilfitri (original: Saturday 21 Mar).'},
+  {id:111,date:'2026-03-21',title:'Hari Raya Aidilfitri',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Hari Raya Aidilfitri — Day 1.'},
+  {id:112,date:'2026-03-22',title:'Hari Raya Aidilfitri (Day 2)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Hari Raya Aidilfitri — Day 2. Falls on Sunday; substitute day is Monday 23 Mar.'},
+  {id:113,date:'2026-03-23',title:'Hari Raya Aidilfitri (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Aidilfitri Day 2 (original: Sunday 22 Mar).'},
+  {id:114,date:'2026-03-24',title:'Hari Raya Aidilfitri (Additional)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Additional public holiday for Hari Raya Aidilfitri 2026.'},
+  {id:115,date:'2026-05-01',title:'Labour Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Labour Day.'},
+  {id:116,date:'2026-05-27',title:'Hari Raya Haji',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Hari Raya Haji.'},
+  {id:117,date:'2026-05-31',title:'Wesak Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Wesak Day. Falls on Sunday; substitute day is Monday 1 Jun.'},
+  {id:118,date:'2026-06-01',title:'Wesak Day (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Wesak Day (original: Sunday 31 May).'},
+  {id:119,date:'2026-06-02',title:'Agong\'s Birthday (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Agong\'s Birthday.'},
+  {id:120,date:'2026-06-17',title:'Awal Muharram',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Awal Muharram (Islamic New Year).'},
+  {id:121,date:'2026-08-25',title:'Prophet Muhammad\'s Birthday',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Maulidur Rasul (Prophet Muhammad\'s Birthday).'},
+  {id:122,date:'2026-08-31',title:'Merdeka Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Merdeka Day (National Day). Malaysia\'s independence day.'},
+  {id:123,date:'2026-09-16',title:'Malaysia Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Malaysia Day. Commemorates formation of Malaysia in 1963.'},
+  {id:124,date:'2026-11-08',title:'Deepavali',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Deepavali. Falls on Sunday; substitute day is Monday 9 Nov.'},
+  {id:125,date:'2026-11-09',title:'Deepavali (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Deepavali (original: Sunday 8 Nov).'},
+  {id:126,date:'2026-12-25',title:'Christmas Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Christmas Day.'},
+  {id:201,date:'2026-01-01',title:'New Year\'s Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — New Year\'s Day 2026.'},
+  {id:202,date:'2026-01-26',title:'Australia Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Australia Day.'},
+  {id:203,date:'2026-03-02',title:'Labour Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Labour Day. First Monday of March.'},
+  {id:204,date:'2026-04-03',title:'Good Friday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Good Friday.'},
+  {id:205,date:'2026-04-05',title:'Easter Sunday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Easter Sunday. Established as a WA public holiday in 2022.'},
+  {id:206,date:'2026-04-06',title:'Easter Monday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Easter Monday.'},
+  {id:207,date:'2026-04-25',title:'ANZAC Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — ANZAC Day. Falls on Saturday; additional holiday Monday 27 Apr.'},
+  {id:208,date:'2026-04-27',title:'ANZAC Day (Additional Holiday)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional public holiday — ANZAC Day falls on Saturday 25 Apr, so Monday 27 Apr is the additional holiday.'},
+  {id:209,date:'2026-06-01',title:'Western Australia Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Western Australia Day. First Monday of June.'},
+  {id:210,date:'2026-09-28',title:'King\'s Birthday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — King\'s Birthday. Note: WA observes this on the 4th Monday of September, different from other states.'},
+  {id:211,date:'2026-12-25',title:'Christmas Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Christmas Day.'},
+  {id:212,date:'2026-12-26',title:'Boxing Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Boxing Day. Falls on Saturday; additional holiday Monday 28 Dec.'},
+  {id:213,date:'2026-12-28',title:'Boxing Day (Additional Holiday)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional holiday — Boxing Day falls on Saturday 26 Dec, so Monday 28 Dec is the additional holiday.'},
+  {id:301,date:'2026-01-01',title:'New Year\'s Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — New Year\'s Day 2026.'},
+  {id:302,date:'2026-01-26',title:'Australia Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Australia Day.'},
+  {id:303,date:'2026-04-03',title:'Good Friday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Good Friday.'},
+  {id:304,date:'2026-04-04',title:'Easter Saturday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Saturday. QLD observes Easter Saturday as a public holiday.'},
+  {id:305,date:'2026-04-05',title:'Easter Sunday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Sunday.'},
+  {id:306,date:'2026-04-06',title:'Easter Monday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Monday.'},
+  {id:307,date:'2026-04-25',title:'ANZAC Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — ANZAC Day. Falls on Saturday; QLD does not add an additional holiday.'},
+  {id:308,date:'2026-05-04',title:'Labour Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Labour Day. First Monday of May in QLD.'},
+  {id:309,date:'2026-08-12',title:'Royal Queensland Show (Ekka)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane-only public holiday — Royal Queensland Show (Ekka). This applies to Brisbane local government area only.'},
+  {id:310,date:'2026-10-05',title:'King\'s Birthday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — King\'s Birthday. QLD observes this on the first Monday of October.'},
+  {id:311,date:'2026-12-25',title:'Christmas Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Christmas Day.'},
+  {id:312,date:'2026-12-26',title:'Boxing Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Boxing Day. Falls on Saturday; additional holiday Monday 28 Dec.'},
+  {id:313,date:'2026-12-28',title:'Boxing Day (Additional Day)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD additional holiday — Boxing Day falls on Saturday, so Monday 28 Dec is an additional holiday.'},
 ];
 
 /* ── STORAGE: always reads from localStorage first, seeds only if nothing saved ── */
@@ -440,10 +510,13 @@ function loadEvts(){
     const saved=localStorage.getItem(STORAGE_KEY);
     if(saved){
       const parsed=JSON.parse(saved);
-      if(Array.isArray(parsed)&&parsed.length>0) return parsed;
+      if(Array.isArray(parsed)&&parsed.length>0){
+        const nonHoliday=parsed.filter(e=>e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld');
+        const holidays=SEED.filter(e=>e.type==='ph'||e.type==='wa'||e.type==='qld');
+        return [...nonHoliday,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
+      }
     }
   }catch(e){}
-  /* First-ever load — use seed and save it */
   const initial=JSON.parse(JSON.stringify(SEED));
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(initial));}catch(e){}
   return initial;
@@ -513,7 +586,7 @@ function applyTheme(){const d=shouldBeDark();document.getElementById('shell').cl
 function toggleTheme(){manualTheme=!shouldBeDark();applyTheme();}
 setInterval(()=>{if(manualTheme===null)applyTheme();},60000);
 
-function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':'var(--tbc)';}
+function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':t==='ph'?'var(--ph)':t==='wa'?'var(--wa)':t==='qld'?'var(--qld)':'var(--tbc)';}
 function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
 function shortDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function isUpcoming(s){return new Date(s+'T23:59:00')>=today;}
@@ -529,6 +602,9 @@ function updateStats(){
   document.getElementById('cnt-all').textContent=ALL_EVENTS.length;
   document.getElementById('cnt-chev').textContent=ALL_EVENTS.filter(e=>e.type==='chev').length;
   document.getElementById('cnt-orig').textContent=ALL_EVENTS.filter(e=>e.type==='orig').length;
+  document.getElementById('cnt-ph').textContent=ALL_EVENTS.filter(e=>e.type==='ph').length;
+  document.getElementById('cnt-wa').textContent=ALL_EVENTS.filter(e=>e.type==='wa').length;
+  document.getElementById('cnt-qld').textContent=ALL_EVENTS.filter(e=>e.type==='qld').length;
 }
 
 function renderUpcoming(){
@@ -602,8 +678,8 @@ function renderList(){
     h+=`<div class="lmg"><div class="lml">${g.label}</div>`;
     g.events.forEach(e=>{
       const d=new Date(e.date+'T12:00:00');
-      const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`);
-      const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+      const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`));
+      const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
       h+=`<div class="le${e.tbc?' tbc-row':''}" onclick="openDrawer(${e.id})">
         <div class="ldc"><div class="ldn">${String(d.getDate()).padStart(2,'0')}</div><div class="ldname">${DAYS[d.getDay()].slice(0,3)}</div></div>
         <div class="ldiv"></div>
@@ -631,8 +707,8 @@ function openDrawer(id){
   document.getElementById('d-bar').style.background=e.tbc?'var(--reminder)':typeColor(e.type);
   document.getElementById('d-title').textContent=e.title;
   document.getElementById('d-date').textContent=fmtDate(e.date);
-  const eb=e.tbc?`<span class="badge tbc-b">TBC — confirmation needed</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`);
-  const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+  const eb=e.tbc?`<span class="badge tbc-b">TBC — confirmation needed</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`));
+  const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
   document.getElementById('d-badges').innerHTML=ab+eb;
   document.getElementById('d-fields').innerHTML=`
     <div class="d-fl"><div class="d-fl-label">Time window</div><div class="d-fl-val">${e.time}</div></div>
