@@ -116,6 +116,8 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .cday.today{background:var(--accent-light);}
 .cday.day-reminder{background:var(--reminder-bg);}
 .cday.day-event:not(.today){background:var(--has-event-bg);}
+.cday.day-holiday{background:rgba(120,100,200,0.04);}
+.dark-mode .cday.day-holiday{background:rgba(167,139,250,0.05);}
 .cday.day-empty:not(.other){background:var(--empty-bg);}
 .cday.day-empty:not(.other) .dn{color:var(--empty-num);}
 .dn-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
@@ -223,6 +225,9 @@ textarea.form-input{resize:vertical;min-height:80px;}
 .data-action-btn.blue{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-mid);}
 .data-action-btn.warn{background:var(--reminder-bg);color:var(--reminder);border:1px solid var(--reminder-border);}
 .info-box{background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--accent);line-height:1.6;margin-bottom:14px;}
+.assignee-chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:2px 9px 2px 4px;font-size:11px;font-weight:600;color:var(--text2);font-family:'DM Mono',monospace;}
+.assignee-avatar{width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.cel-assignee{font-size:10px;opacity:.75;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .3s ease;z-index:400;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:5px;height:5px;}
@@ -368,6 +373,10 @@ textarea.form-input{resize:vertical;min-height:80px;}
     <div class="form-row">
       <label class="form-label">Notes</label>
       <textarea class="form-input" id="f-notes" placeholder="Case numbers, contacts, scope of work…"></textarea>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Assignee</label>
+      <input class="form-input" id="f-assignee" type="text" placeholder="e.g. Shafiq, John, Quorum Team">
     </div>
     <div class="form-row">
       <div class="form-toggle" onclick="toggleTbc()">
@@ -652,16 +661,27 @@ function renderMonth(){
     const ds=`${c.y}-${String(c.m).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
     const isT=c.cur&&today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===c.d;
     const evts=evtMap[ds]?filtered(evtMap[ds]):[];
+    const phTypes=['ph','wa','qld'];
     const hasR=evts.some(e=>e.tbc),hasE=evts.length>0;
+    const allHoliday=hasE&&evts.every(e=>phTypes.includes(e.type));
+    const hasMaint=evts.some(e=>!phTypes.includes(e.type));
     let cls='cday';
     if(!c.cur)cls+=' other';
     else if(isT)cls+=' today';
     else if(hasR)cls+=' day-reminder';
-    else if(hasE)cls+=' day-event';
+    else if(hasMaint)cls+=' day-event';
+    else if(allHoliday)cls+=' day-holiday';
     else cls+=' day-empty';
-    const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasE?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div style="width:6px"></div>`;
+    const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasMaint?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div style="width:6px"></div>`;
     const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()" title="Add event">+</button>`:'';
-    h+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?`<div style="display:flex;align-items:center;gap:2px">${dot}${addBtn}</div>`:''}</div>${evts.map(e=>`<button class="cel ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}">${e.title}</button>`).join('')}</div>`;
+    const phTypes=['ph','wa','qld'];
+    const flagMap={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
+    h+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?`<div style="display:flex;align-items:center;gap:2px">${dot}${addBtn}</div>`:''}</div>${evts.map(e=>{
+      const isPH=phTypes.includes(e.type);
+      const label=isPH?`${flagMap[e.type]} ${e.title}`:e.title;
+      const assigneeLine=(!isPH&&e.assignee)?`<div class="cel-assignee">👤 ${e.assignee}</div>`:'';
+      return `<button class="cel ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}${e.assignee?' — '+e.assignee:''}" style="height:auto;white-space:normal;line-height:1.3;">${label}${assigneeLine}</button>`;
+    }).join('')}</div>`;
   });
   h+='</div>';
   body.innerHTML=h;
@@ -680,12 +700,13 @@ function renderList(){
       const d=new Date(e.date+'T12:00:00');
       const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`));
       const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+      const assigneeHtml=e.assignee?`<span class="assignee-chip"><span class="assignee-avatar">${e.assignee.charAt(0).toUpperCase()}</span>${e.assignee}</span>`:'';
       h+=`<div class="le${e.tbc?' tbc-row':''}" onclick="openDrawer(${e.id})">
         <div class="ldc"><div class="ldn">${String(d.getDate()).padStart(2,'0')}</div><div class="ldname">${DAYS[d.getDay()].slice(0,3)}</div></div>
         <div class="ldiv"></div>
         <div class="lcon">
           <div class="ltitle">${e.title} ${eb}</div>
-          <div class="lmeta">${ab}<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">${e.time}</span><span style="font-size:11px;color:var(--text3)">${e.duration}</span></div>
+          <div class="lmeta">${ab}<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">${e.time}</span><span style="font-size:11px;color:var(--text3)">${e.duration}</span>${assigneeHtml}</div>
           <div class="lnotes">${e.notes.length>120?e.notes.slice(0,120)+'…':e.notes}</div>
         </div>
         <div class="le-actions" onclick="event.stopPropagation()">
@@ -710,9 +731,15 @@ function openDrawer(id){
   const eb=e.tbc?`<span class="badge tbc-b">TBC — confirmation needed</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`));
   const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
   document.getElementById('d-badges').innerHTML=ab+eb;
+  const flagMap={ph:'🇲🇾 KL Malaysia',wa:'🇦🇺 Perth, WA',qld:'🇦🇺 Brisbane, QLD'};
+  const isHoliday=['ph','wa','qld'].includes(e.type);
+  const assigneeRow=e.assignee?`<div class="d-fl"><div class="d-fl-label">Assignee</div><div class="d-fl-val"><span class="assignee-chip"><span class="assignee-avatar">${e.assignee.charAt(0).toUpperCase()}</span>${e.assignee}</span></div></div>`:'';
+  const countryRow=isHoliday?`<div class="d-fl"><div class="d-fl-label">Country / Region</div><div class="d-fl-val">${flagMap[e.type]}</div></div>`:'';
   document.getElementById('d-fields').innerHTML=`
+    ${countryRow}
     <div class="d-fl"><div class="d-fl-label">Time window</div><div class="d-fl-val">${e.time}</div></div>
     <div class="d-fl"><div class="d-fl-label">Duration</div><div class="d-fl-val">${e.duration}</div></div>
+    ${assigneeRow}
     <hr class="d-div">
     <div class="d-fl"><div class="d-fl-label">Notes</div><div class="d-fl-val">${e.notes}</div></div>`;
   document.getElementById('overlay').classList.add('open');
@@ -734,6 +761,7 @@ function openModal(editId,prefillDate){
   document.getElementById('f-duration').value=e?(e.tbc?'':e.duration):'';
   document.getElementById('f-time').value=e?(e.tbc?'':e.time):'';
   document.getElementById('f-notes').value=e?e.notes:'';
+  document.getElementById('f-assignee').value=e?(e.assignee||''):'';
   tbcVal=e?e.tbc:false;
   document.getElementById('tbc-track').classList.toggle('on',tbcVal);
   document.getElementById('modal-ov').classList.add('open');
@@ -753,11 +781,12 @@ function saveEvent(){
   const duration=document.getElementById('f-duration').value.trim()||'TBC';
   const time=tbcVal?'TBC':(document.getElementById('f-time').value.trim()||'TBC');
   const notes=document.getElementById('f-notes').value.trim();
+  const assignee=document.getElementById('f-assignee').value.trim();
   if(modalEditId!==null){
     const idx=ALL_EVENTS.findIndex(x=>x.id===modalEditId);
-    if(idx>-1){ALL_EVENTS[idx]={...ALL_EVENTS[idx],title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes};showToast('Event updated ✓');}
+    if(idx>-1){ALL_EVENTS[idx]={...ALL_EVENTS[idx],title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes,assignee};showToast('Event updated ✓');}
   }else{
-    ALL_EVENTS.push({id:nextId++,title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes});
+    ALL_EVENTS.push({id:nextId++,title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes,assignee});
     ALL_EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
     showToast('Event added ✓');
   }
