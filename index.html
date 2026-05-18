@@ -516,6 +516,7 @@ const SEED=[
 /* ── STORAGE: always reads from localStorage first, seeds only if nothing saved ── */
 function loadEvts(){
   try{
+    /* Check current key first */
     const saved=localStorage.getItem(STORAGE_KEY);
     if(saved){
       const parsed=JSON.parse(saved);
@@ -525,7 +526,24 @@ function loadEvts(){
         return [...nonHoliday,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
       }
     }
+    /* Check ALL legacy keys and migrate if found */
+    const legacyKeys=['amc_v2','amc_events_v2','mc_events','maintenance_events'];
+    for(const k of legacyKeys){
+      const legacy=localStorage.getItem(k);
+      if(legacy){
+        const parsed=JSON.parse(legacy);
+        if(Array.isArray(parsed)&&parsed.length>0){
+          const nonHoliday=parsed.filter(e=>e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld'&&e.type!=='pi');
+          const holidays=SEED.filter(e=>e.type==='ph'||e.type==='wa'||e.type==='qld');
+          const merged=[...nonHoliday,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
+          /* Save to new key so future loads work */
+          try{localStorage.setItem(STORAGE_KEY,JSON.stringify(merged));}catch(e){}
+          return merged;
+        }
+      }
+    }
   }catch(e){}
+  /* First-ever load — use seed */
   const initial=JSON.parse(JSON.stringify(SEED));
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(initial));}catch(e){}
   return initial;
