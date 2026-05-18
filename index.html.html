@@ -1,0 +1,418 @@
+
+<style>
+:root {
+  --bg:#f8f9fb;--surface:#ffffff;--surface2:#f1f4f8;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);
+  --text:#1a1d23;--text2:#5a6278;--text3:#9aa0b4;
+  --accent:#2563eb;--accent-light:#eff4ff;--accent-mid:#bfcfff;
+  --chev:#2563eb;--chev-bg:#eff4ff;--chev-border:#bfcfff;
+  --orig:#0f9e6e;--orig-bg:#edfaf4;--orig-border:#9fe1cb;
+  --pi:#b45309;--pi-bg:#fef9ec;--pi-border:#fcd34d;
+  --tbc-bg:#f1f4f8;--tbc:#9aa0b4;
+  --reminder:#e05a2b;--reminder-bg:#fff2ee;--reminder-border:#fbbaa0;
+  --empty-bg:#f8f9fb;--empty-num:#c5cad8;
+  --has-event-bg:#eff4ff;--has-event-border:#bfcfff;
+  --prod-bg:#edfaf4;--prod-text:#0f9e6e;
+  --nonprod-bg:#fff2ee;--nonprod-text:#e05a2b;
+  --radius:10px;--radius-sm:6px;
+  --mode-label:"☀ Light";
+}
+.dark-mode {
+  --bg:#0f1117;--surface:#171b24;--surface2:#1e2330;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
+  --text:#e8eaf2;--text2:#8891aa;--text3:#4a5268;
+  --accent:#4f8ef7;--accent-light:rgba(79,142,247,0.12);--accent-mid:rgba(79,142,247,0.3);
+  --chev:#4f8ef7;--chev-bg:rgba(79,142,247,0.12);--chev-border:rgba(79,142,247,0.3);
+  --orig:#34d399;--orig-bg:rgba(52,211,153,0.1);--orig-border:rgba(52,211,153,0.3);
+  --pi:#fbbf24;--pi-bg:rgba(251,191,36,0.1);--pi-border:rgba(251,191,36,0.3);
+  --tbc-bg:rgba(136,145,168,0.08);--tbc:#8891aa;
+  --reminder:#fb7c50;--reminder-bg:rgba(251,124,80,0.12);--reminder-border:rgba(251,124,80,0.35);
+  --empty-bg:#0f1117;--empty-num:#2a2f3e;
+  --has-event-bg:rgba(79,142,247,0.07);--has-event-border:rgba(79,142,247,0.2);
+  --prod-bg:rgba(52,211,153,0.1);--prod-text:#34d399;
+  --nonprod-bg:rgba(251,124,80,0.12);--nonprod-text:#fb7c50;
+  --mode-label:"🌙 Dark";
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background .3s,color .3s;}
+.shell{display:grid;grid-template-columns:250px 1fr;grid-template-rows:58px 1fr;min-height:100vh;}
+.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;}
+.topbar-logo{font-size:14px;font-weight:700;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;}
+.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:9px;}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-family:monospace;}
+.pill.live{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);display:flex;align-items:center;gap:5px;}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--orig);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+.theme-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:4px 10px;font-size:11px;transition:all .15s;}
+.theme-btn:hover{color:var(--text);border-color:var(--accent);}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:18px 0;overflow-y:auto;}
+.sb-section{padding:0 14px;margin-bottom:22px;}
+.sb-label{font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;padding:0 3px;font-family:monospace;}
+.mini-cal{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px;}
+.mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.mini-nav span{font-size:12px;font-weight:600;color:var(--text);}
+.mnb{background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;padding:2px 4px;border-radius:4px;}
+.mnb:hover{color:var(--text);background:var(--border);}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
+.dh{font-size:9px;color:var(--text3);padding:2px 0;font-family:monospace;}
+.mc{font-size:11px;color:var(--text2);padding:4px 2px;border-radius:5px;cursor:pointer;position:relative;transition:all .15s;}
+.mc:hover{background:var(--surface);color:var(--text);}
+.mc.other{color:var(--text3);}
+.mc.today{background:var(--accent);color:#fff;font-weight:600;}
+.mc.has-reminder{background:var(--reminder-bg);color:var(--reminder);font-weight:600;border:1px solid var(--reminder-border);border-radius:5px;}
+.mc.has-reminder::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--reminder);position:absolute;bottom:2px;left:50%;transform:translateX(-50%);}
+.mc.has-reminder:hover{background:var(--reminder-border);}
+.legend{display:flex;gap:12px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);font-family:monospace;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.fbtn{display:flex;align-items:center;gap:8px;width:100%;padding:7px 10px;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;font-size:12px;color:var(--text2);margin-bottom:3px;transition:background .15s;font-family:inherit;}
+.fbtn:hover{background:var(--surface2);}
+.fbtn.active{background:var(--accent-light);color:var(--accent);}
+.fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fcnt{margin-left:auto;font-size:10px;color:var(--text3);background:var(--surface2);padding:1px 6px;border-radius:9px;border:1px solid var(--border);font-family:monospace;}
+.fbtn.active .fcnt{border-color:var(--accent-mid);color:var(--accent);}
+.up-item{display:flex;gap:9px;padding:7px 3px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;}
+.up-item:hover{background:var(--surface2);}
+.up-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:28px;}
+.up-date{font-size:10px;color:var(--text3);margin-bottom:2px;font-family:monospace;}
+.up-title{font-size:11px;color:var(--text2);line-height:1.3;}
+.main{display:flex;flex-direction:column;overflow:hidden;}
+.cal-hdr{display:flex;align-items:center;padding:14px 22px;gap:11px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.cal-title{font-size:19px;font-weight:700;color:var(--text);}
+.cal-sub{font-size:11px;color:var(--text3);font-family:monospace;}
+.nb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 10px;font-size:14px;transition:all .15s;}
+.nb:hover{border-color:var(--border2);color:var(--text);}
+.tb{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 13px;font-size:12px;transition:all .15s;font-family:inherit;}
+.tb:hover{background:var(--surface2);color:var(--text);}
+.vt{margin-left:auto;display:flex;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;}
+.vb{background:transparent;border:none;border-radius:4px;color:var(--text3);cursor:pointer;padding:4px 10px;font-size:12px;transition:all .15s;font-family:inherit;}
+.vb.active{background:var(--accent);color:#fff;}
+.vb:hover:not(.active){color:var(--text2);}
+.cal-body{flex:1;overflow-y:auto;padding:0;}
+.wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
+.wh div{font-size:11px;color:var(--text3);text-align:center;padding:9px 0;letter-spacing:.04em;font-family:monospace;}
+.mgd{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(90px,1fr);border-left:1px solid var(--border);border-top:1px solid var(--border);}
+.cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px;min-height:90px;transition:background .1s;position:relative;}
+.cday:hover{background:rgba(37,99,235,0.03);}
+.cday.other{opacity:.3;}
+.cday.today{background:var(--accent-light);}
+.cday.day-reminder{background:var(--reminder-bg);}
+.cday.day-reminder:not(.today) .dn-wrap .dn{color:var(--reminder);}
+.cday.day-empty:not(.other):not(.today){background:var(--empty-bg);}
+.cday.day-empty:not(.other) .dn{color:var(--empty-num);}
+.cday.day-event:not(.today){background:var(--has-event-bg);}
+.dn-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
+.dn{font-size:12px;color:var(--text2);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:monospace;}
+.cday.today .dn{background:var(--accent);color:#fff;}
+.day-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
+.cel{padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent;transition:opacity .1s;}
+.cel:hover{opacity:.8;}
+.cel.chev{background:var(--chev-bg);color:var(--chev);border-color:var(--chev);}
+.cel.orig{background:var(--orig-bg);color:var(--orig);border-color:var(--orig);}
+.cel.pi{background:var(--pi-bg);color:var(--pi);border-color:var(--pi);}
+.cel.tbc-evt{background:var(--tbc-bg);color:var(--tbc);border-color:var(--tbc);border-style:dashed;}
+.lv{padding:20px;}
+.lmg{margin-bottom:28px;}
+.lml{font-size:11px;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);font-family:monospace;}
+.le{display:flex;gap:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:border-color .15s,background .15s;}
+.le:hover{border-color:var(--border2);background:var(--surface2);}
+.le.tbc-row{border-left:3px solid var(--reminder);}
+.ldc{min-width:68px;text-align:center;}
+.ldn{font-size:22px;font-weight:500;line-height:1;color:var(--text);font-family:monospace;}
+.ldname{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:monospace;}
+.ldiv{width:1px;background:var(--border);flex-shrink:0;}
+.lcon{flex:1;}
+.ltitle{font-size:13px;font-weight:600;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
+.lmeta{font-size:11px;color:var(--text2);margin-bottom:3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.lnotes{font-size:11px;color:var(--text3);line-height:1.5;}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:500;letter-spacing:.03em;font-family:monospace;}
+.badge.prod{background:var(--prod-bg);color:var(--prod-text);}
+.badge.nonprod{background:var(--nonprod-bg);color:var(--nonprod-text);}
+.badge.tbc-b{background:var(--reminder-bg);color:var(--reminder);border:1px dashed var(--reminder-border);}
+.badge.chev-b{background:var(--chev-bg);color:var(--chev);border:1px solid var(--chev-border);}
+.badge.orig-b{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
+.drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;}
+.drawer-ov.open{display:block;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:360px;background:var(--surface);border-left:1px solid var(--border2);z-index:101;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;padding:22px;}
+.drawer.open{transform:translateX(0);}
+.dc-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 9px;font-size:13px;float:right;margin-bottom:14px;transition:all .15s;}
+.dc-btn:hover{color:var(--text);border-color:var(--border2);}
+.d-bar{clear:both;height:3px;border-radius:2px;margin-bottom:14px;}
+.d-title{font-size:17px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
+.d-date{font-size:12px;color:var(--text3);margin-bottom:14px;font-family:monospace;}
+.d-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
+.d-fl{margin-bottom:14px;}
+.d-fl-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-family:monospace;}
+.d-fl-val{font-size:13px;color:var(--text2);line-height:1.5;}
+.d-div{border:none;border-top:1px solid var(--border);margin:18px 0;}
+.sbar{display:flex;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0;}
+.scell{flex:1;padding:9px 14px;background:var(--surface);}
+.snum{font-size:18px;font-weight:500;color:var(--text);font-family:monospace;}
+.slabel{font-size:11px;color:var(--text3);margin-top:1px;}
+.cal-legend{display:flex;align-items:center;gap:16px;padding:8px 22px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
+.cl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);}
+.cl-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
+@media(max-width:860px){.shell{grid-template-columns:1fr;grid-template-rows:58px auto 1fr;}.sidebar{display:none;}.drawer{width:100%;}}
+</style>
+
+<div class="shell" id="shell">
+  <header class="topbar">
+    <div class="topbar-logo"><div class="logo-icon">&#9632;</div>Asset Maintenance Calendar</div>
+    <div class="topbar-right">
+      <div class="pill live"><div class="live-dot"></div>Live</div>
+      <div class="pill" id="today-display"></div>
+      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">&#9788; Auto</button>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-label">Navigate</div>
+      <div class="mini-cal">
+        <div class="mini-nav">
+          <button class="mnb" onclick="miniPrev()">&#8249;</button>
+          <span id="mini-label"></span>
+          <button class="mnb" onclick="miniNext()">&#8250;</button>
+        </div>
+        <div class="mgrid">
+          <div class="dh">Su</div><div class="dh">Mo</div><div class="dh">Tu</div>
+          <div class="dh">We</div><div class="dh">Th</div><div class="dh">Fr</div><div class="dh">Sa</div>
+          <div id="mini-cells" style="display:contents"></div>
+        </div>
+        <div class="legend">
+          <div class="leg-item"><div class="leg-dot" style="background:var(--reminder)"></div>TBC / reminder</div>
+          <div class="leg-item"><div class="leg-dot" style="background:var(--accent);opacity:.5"></div>Has events</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-label">Assets</div>
+      <button class="fbtn active" onclick="setFilter('all',this)"><div class="fdot" style="background:var(--text2)"></div>All assets<span class="fcnt" id="cnt-all">0</span></button>
+      <button class="fbtn" onclick="setFilter('chev',this)"><div class="fdot" style="background:var(--chev)"></div>Chevron ABU<span class="fcnt" id="cnt-chev">0</span></button>
+      <button class="fbtn" onclick="setFilter('orig',this)"><div class="fdot" style="background:var(--orig)"></div>Origin / APLNG<span class="fcnt" id="cnt-orig">0</span></button>
+      <button class="fbtn" onclick="setFilter('pi',this)"><div class="fdot" style="background:var(--pi)"></div>PI Network<span class="fcnt" id="cnt-pi">0</span></button>
+    </div>
+
+    <div class="sb-section">
+      <div class="sb-label">Upcoming</div>
+      <div id="upcoming-list"></div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="cal-hdr">
+      <button class="nb" onclick="prevMonth()">&#8249;</button>
+      <button class="nb" onclick="nextMonth()">&#8250;</button>
+      <button class="tb" onclick="goToday()">Today</button>
+      <div><div class="cal-title" id="cal-title"></div><div class="cal-sub" id="cal-sub"></div></div>
+      <div class="vt">
+        <button class="vb active" id="btn-month" onclick="setView('month')">Month</button>
+        <button class="vb" id="btn-list" onclick="setView('list')">List</button>
+      </div>
+    </div>
+
+    <div class="cal-legend">
+      <div class="cl-item"><div class="cl-swatch" style="background:var(--reminder-bg);border:1px solid var(--reminder-border)"></div>Reminder / TBC</div>
+      <div class="cl-item"><div class="cl-swatch" style="background:var(--has-event-bg);border:1px solid var(--has-event-border)"></div>Has events</div>
+      <div class="cl-item"><div class="cl-swatch" style="background:var(--empty-bg);border:1px solid var(--border2)"></div>No events</div>
+      <div class="cl-item"><div class="cl-swatch" style="background:var(--accent);border-radius:50%"></div>Today</div>
+    </div>
+
+    <div class="cal-body" id="cal-body"></div>
+
+    <div class="sbar">
+      <div class="scell"><div class="snum" id="stat-total">0</div><div class="slabel">Total events</div></div>
+      <div class="scell"><div class="snum" id="stat-upcoming">0</div><div class="slabel">Upcoming</div></div>
+      <div class="scell"><div class="snum" id="stat-prod">0</div><div class="slabel">Production</div></div>
+      <div class="scell"><div class="snum" id="stat-tbc">0</div><div class="slabel">TBC / reminder</div></div>
+    </div>
+  </main>
+</div>
+
+<div class="drawer-ov" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <button class="dc-btn" onclick="closeDrawer()">&#10005;</button>
+  <div class="d-bar" id="d-bar"></div>
+  <div class="d-title" id="d-title"></div>
+  <div class="d-date" id="d-date"></div>
+  <div class="d-badges" id="d-badges"></div>
+  <div id="d-fields"></div>
+</div>
+
+<script>
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+const ALL_EVENTS=[
+  {id:1,date:'2026-04-22',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'All non-prod environments (DEV/TEST/UAT) patched simultaneously. OS patching, DNS Firewall enablement, DB engine update, EC password refresh.'},
+  {id:2,date:'2026-04-28',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh. Project Wildcat environment.'},
+  {id:3,date:'2026-04-29',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh.'},
+  {id:4,date:'2026-05-18',title:'APLNG Q2 prod maintenance',asset:'Origin / APLNG',type:'orig',env:'Prod',time:'TBC',duration:'TBC',tbc:true,notes:'Case 26-01101247. Exact date to be confirmed. Contact Quorum EC Midstream team.'},
+  {id:5,date:'2026-05-20',title:'Wheatstone PI network maintenance',asset:'Chevron ABU',type:'pi',env:'Prod',time:'17:00–21:00 AWST',duration:'4 hours',tbc:false,notes:'Window 1 of 2. PI network downtime. Check PI integrations post-window.'},
+  {id:6,date:'2026-05-21',title:'Wheatstone PI network maintenance',asset:'Chevron ABU',type:'pi',env:'Prod',time:'12:00–13:00 AWST',duration:'1 hour',tbc:false,notes:'Window 2 of 2. PI Server: https://wstpepipwebapi.chevron.com/piwebapi'},
+  {id:7,date:'2026-06-10',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh. DNS Firewall deferred to mid-July.'},
+  {id:8,date:'2026-06-11',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
+  {id:9,date:'2026-06-24',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
+  {id:10,date:'2026-07-15',title:'Wheatstone DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO 15–30 min. ABU to review near date to avoid cargo conflicts.'},
+  {id:11,date:'2026-07-16',title:'Gorgon DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO 15–30 min. Azure Fileshare: //ecfsauegorp214.file.core.windows.net/gorgon-prod'},
+  {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO 15–30 min. Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
+];
+
+const evtMap={};
+ALL_EVENTS.forEach(e=>{if(!evtMap[e.date])evtMap[e.date]=[];evtMap[e.date].push(e);});
+
+let curYear=2026,curMonth=5,activeFilter='all',curView='month';
+const today=new Date();
+let manualTheme=null;
+
+function getHour(){return new Date().getHours();}
+function shouldBeDark(){if(manualTheme!==null)return manualTheme;const h=getHour();return h<7||h>=19;}
+function applyTheme(){
+  const dark=shouldBeDark();
+  document.getElementById('shell').classList.toggle('dark-mode',dark);
+  document.body.classList.toggle('dark-mode',dark);
+  document.getElementById('theme-btn').textContent=dark?'🌙 Dark':'☀ Light';
+}
+function toggleTheme(){manualTheme=!shouldBeDark();applyTheme();}
+setInterval(()=>{if(manualTheme===null)applyTheme();},60000);
+
+function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':t==='pi'?'var(--pi)':'var(--tbc)';}
+function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
+function shortDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
+function isUpcoming(s){return new Date(s+'T23:59:00')>=today;}
+function filtered(evts){if(activeFilter==='all')return evts;return evts.filter(e=>e.type===activeFilter);}
+
+function updateStats(){
+  const vis=filtered(ALL_EVENTS);
+  document.getElementById('stat-total').textContent=vis.length;
+  document.getElementById('stat-upcoming').textContent=vis.filter(e=>isUpcoming(e.date)).length;
+  document.getElementById('stat-prod').textContent=vis.filter(e=>e.env==='Prod').length;
+  document.getElementById('stat-tbc').textContent=vis.filter(e=>e.tbc).length;
+  document.getElementById('cnt-all').textContent=ALL_EVENTS.length;
+  document.getElementById('cnt-chev').textContent=ALL_EVENTS.filter(e=>e.type==='chev').length;
+  document.getElementById('cnt-orig').textContent=ALL_EVENTS.filter(e=>e.type==='orig').length;
+  document.getElementById('cnt-pi').textContent=ALL_EVENTS.filter(e=>e.type==='pi').length;
+}
+
+function renderUpcoming(){
+  const ul=document.getElementById('upcoming-list');
+  const up=filtered(ALL_EVENTS).filter(e=>isUpcoming(e.date)).slice(0,6);
+  if(!up.length){ul.innerHTML='<div style="font-size:11px;color:var(--text3);padding:4px">No upcoming events.</div>';return;}
+  ul.innerHTML=up.map(e=>`<div class="up-item" onclick="openDrawer(${e.id})"><div class="up-bar" style="background:${typeColor(e.type)}"></div><div><div class="up-date">${shortDate(e.date)}</div><div class="up-title">${e.title}</div></div></div>`).join('');
+}
+
+function renderMini(){
+  document.getElementById('mini-label').textContent=MONTHS[curMonth-1].slice(0,3)+' '+curYear;
+  const first=new Date(curYear,curMonth-1,1).getDay();
+  const daysIn=new Date(curYear,curMonth,0).getDate();
+  const prev=new Date(curYear,curMonth-1,0).getDate();
+  let html='';
+  for(let i=0;i<first;i++)html+=`<div class="mc other">${prev-first+1+i}</div>`;
+  for(let d=1;d<=daysIn;d++){
+    const ds=`${curYear}-${String(curMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isT=today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===d;
+    const hasR=evtMap[ds]&&filtered(evtMap[ds]).some(e=>e.tbc);
+    html+=`<div class="mc${isT?' today':''}${hasR?' has-reminder':''}" onclick="jumpToDate('${ds}')">${d}</div>`;
+  }
+  const rem=42-(first+daysIn);
+  for(let i=1;i<=rem;i++)html+=`<div class="mc other">${i}</div>`;
+  document.getElementById('mini-cells').innerHTML=html;
+}
+
+function miniPrev(){if(curMonth===1){curMonth=12;curYear--;}else curMonth--;render();}
+function miniNext(){if(curMonth===12){curMonth=1;curYear++;}else curMonth++;render();}
+
+function renderMonth(){
+  const body=document.getElementById('cal-body');
+  const first=new Date(curYear,curMonth-1,1).getDay();
+  const daysIn=new Date(curYear,curMonth,0).getDate();
+  const prev=new Date(curYear,curMonth-1,0).getDate();
+  let cells=[];
+  for(let i=0;i<first;i++)cells.push({d:prev-first+1+i,cur:false,y:curMonth===1?curYear-1:curYear,m:curMonth===1?12:curMonth-1});
+  for(let d=1;d<=daysIn;d++)cells.push({d,cur:true,y:curYear,m:curMonth});
+  const rem=42-cells.length;
+  for(let i=1;i<=rem;i++)cells.push({d:i,cur:false,y:curMonth===12?curYear+1:curYear,m:curMonth===12?1:curMonth+1});
+
+  let html=`<div class="wh">${SDAYS.map(d=>`<div>${d}</div>`).join('')}</div><div class="mgd">`;
+  cells.forEach(c=>{
+    const ds=`${c.y}-${String(c.m).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
+    const isT=c.cur&&today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===c.d;
+    const evts=evtMap[ds]?filtered(evtMap[ds]):[];
+    const hasR=evts.some(e=>e.tbc);
+    const hasE=evts.length>0;
+    let cls='cday';
+    if(!c.cur)cls+=' other';
+    else if(isT)cls+=' today';
+    else if(hasR)cls+=' day-reminder';
+    else if(hasE)cls+=' day-event';
+    else cls+=' day-empty';
+    const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasE?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div class="day-indicator" style="background:transparent"></div>`;
+    html+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?dot:''}</div>${evts.map(e=>`<div class="cel ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}">${e.title}</div>`).join('')}</div>`;
+  });
+  html+='</div>';
+  body.innerHTML=html;
+}
+
+function renderList(){
+  const body=document.getElementById('cal-body');
+  const vis=filtered(ALL_EVENTS);
+  const groups={};
+  vis.forEach(e=>{
+    const d=new Date(e.date+'T12:00:00');
+    const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    if(!groups[k])groups[k]={label:MONTHS[d.getMonth()]+' '+d.getFullYear(),events:[]};
+    groups[k].events.push(e);
+  });
+  let html='<div class="lv">';
+  Object.keys(groups).sort().forEach(k=>{
+    const g=groups[k];
+    html+=`<div class="lmg"><div class="lml">${g.label}</div>`;
+    g.events.forEach(e=>{
+      const d=new Date(e.date+'T12:00:00');
+      const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`);
+      const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+      html+=`<div class="le${e.tbc?' tbc-row':''}" onclick="openDrawer(${e.id})"><div class="ldc"><div class="ldn">${String(d.getDate()).padStart(2,'0')}</div><div class="ldname">${DAYS[d.getDay()].slice(0,3)}</div></div><div class="ldiv"></div><div class="lcon"><div class="ltitle">${e.title} ${eb}</div><div class="lmeta">${ab}<span style="font-family:monospace;font-size:11px;color:var(--text3)">${e.time}</span><span style="font-size:11px;color:var(--text3)">${e.duration}</span></div><div class="lnotes">${e.notes.length>110?e.notes.slice(0,110)+'…':e.notes}</div></div></div>`;
+    });
+    html+='</div>';
+  });
+  if(!vis.length)html+='<div style="color:var(--text3);font-size:13px;padding:40px;text-align:center;">No events match filter.</div>';
+  html+='</div>';
+  body.innerHTML=html;
+}
+
+function openDrawer(id){
+  const e=ALL_EVENTS.find(x=>x.id===id);if(!e)return;
+  document.getElementById('d-bar').style.background=e.tbc?'var(--reminder)':typeColor(e.type);
+  document.getElementById('d-title').textContent=e.title;
+  document.getElementById('d-date').textContent=fmtDate(e.date);
+  const eb=e.tbc?`<span class="badge tbc-b">TBC — confirmation needed</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`);
+  const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+  document.getElementById('d-badges').innerHTML=ab+eb;
+  document.getElementById('d-fields').innerHTML=`<div class="d-fl"><div class="d-fl-label">Time window</div><div class="d-fl-val">${e.time}</div></div><div class="d-fl"><div class="d-fl-label">Duration</div><div class="d-fl-val">${e.duration}</div></div><hr class="d-div"><div class="d-fl"><div class="d-fl-label">Notes</div><div class="d-fl-val">${e.notes}</div></div>`;
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+function closeDrawer(){document.getElementById('overlay').classList.remove('open');document.getElementById('drawer').classList.remove('open');}
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function setView(v){curView=v;document.getElementById('btn-month').classList.toggle('active',v==='month');document.getElementById('btn-list').classList.toggle('active',v==='list');render();}
+function prevMonth(){if(curMonth===1){curMonth=12;curYear--;}else curMonth--;render();}
+function nextMonth(){if(curMonth===12){curMonth=1;curYear++;}else curMonth++;render();}
+function goToday(){curYear=today.getFullYear();curMonth=today.getMonth()+1;render();}
+function jumpToDate(s){const d=new Date(s+'T12:00:00');curYear=d.getFullYear();curMonth=d.getMonth()+1;setView('month');}
+
+function render(){
+  const cnt=filtered(ALL_EVENTS).filter(e=>{const d=new Date(e.date+'T12:00:00');return d.getFullYear()===curYear&&d.getMonth()===curMonth-1;}).length;
+  document.getElementById('cal-title').textContent=`${MONTHS[curMonth-1]} ${curYear}`;
+  document.getElementById('cal-sub').textContent=cnt?`${cnt} event${cnt>1?'s':''} this month`:'No events this month';
+  if(curView==='month')renderMonth();else renderList();
+  renderMini();renderUpcoming();updateStats();
+}
+
+document.getElementById('today-display').textContent=today.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+applyTheme();
+render();
+</script>
