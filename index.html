@@ -13,7 +13,6 @@
   --accent:#2563eb;--accent-light:#eff4ff;--accent-mid:#bfcfff;
   --chev:#2563eb;--chev-bg:#eff4ff;--chev-border:#bfcfff;
   --orig:#0f9e6e;--orig-bg:#edfaf4;--orig-border:#9fe1cb;
-  --pi:#b45309;--pi-bg:#fef9ec;--pi-border:#fcd34d;
   --tbc-bg:#f1f4f8;--tbc:#9aa0b4;
   --reminder:#e05a2b;--reminder-bg:#fff2ee;--reminder-border:#fbbaa0;
   --empty-bg:#f8f9fb;--empty-num:#c5cad8;
@@ -29,7 +28,6 @@
   --accent:#4f8ef7;--accent-light:rgba(79,142,247,0.12);--accent-mid:rgba(79,142,247,0.3);
   --chev:#4f8ef7;--chev-bg:rgba(79,142,247,0.12);--chev-border:rgba(79,142,247,0.3);
   --orig:#34d399;--orig-bg:rgba(52,211,153,0.1);--orig-border:rgba(52,211,153,0.3);
-  --pi:#fbbf24;--pi-bg:rgba(251,191,36,0.1);--pi-border:rgba(251,191,36,0.3);
   --tbc-bg:rgba(136,145,168,0.08);--tbc:#8891aa;
   --reminder:#fb7c50;--reminder-bg:rgba(251,124,80,0.12);--reminder-border:rgba(251,124,80,0.35);
   --empty-bg:#0f1117;--empty-num:#2a2f3e;
@@ -41,10 +39,10 @@
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background .3s,color .3s;font-weight:500;}
 .shell{display:grid;grid-template-columns:250px 1fr;grid-template-rows:58px 1fr;min-height:100vh;}
-.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:14px;}
+.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;}
 .topbar-logo{font-size:14px;font-weight:700;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;}
 .logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:9px;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace;}
 .pill.live{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);display:flex;align-items:center;gap:5px;}
 .live-dot{width:6px;height:6px;border-radius:50%;background:var(--orig);animation:pulse 2s infinite;}
@@ -53,6 +51,10 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .theme-btn:hover{color:var(--text);border-color:var(--accent);}
 .add-btn{background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;padding:7px 16px;font-size:12px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
 .add-btn:hover{opacity:.85;}
+.data-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 12px;font-size:11px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px;}
+.data-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface);}
+.data-btn.export{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);}
+.data-btn.export:hover{opacity:.85;}
 .sidebar{background:var(--surface);border-right:1px solid var(--border);padding:18px 0;overflow-y:auto;}
 .sb-section{padding:0 14px;margin-bottom:22px;}
 .sb-label{font-size:10px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;padding:0 3px;font-family:'DM Mono',monospace;}
@@ -120,7 +122,6 @@ body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--t
 .cel:hover{opacity:.75;}
 .cel.chev{background:var(--chev-bg);color:var(--chev);border-color:var(--chev);}
 .cel.orig{background:var(--orig-bg);color:var(--orig);border-color:var(--orig);}
-.cel.pi{background:var(--pi-bg);color:var(--pi);border-color:var(--pi);}
 .cel.tbc-evt{background:var(--reminder-bg);color:var(--reminder);border-color:var(--reminder);border-style:dashed;}
 .cal-legend{display:flex;align-items:center;gap:16px;padding:8px 22px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
 .cl-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);}
@@ -200,12 +201,22 @@ textarea.form-input{resize:vertical;min-height:80px;}
 .btn-cancel:hover{background:var(--surface2);}
 .btn-delete{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-sm);color:var(--danger);cursor:pointer;padding:10px 14px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
 .btn-delete:hover{opacity:.75;}
+.data-modal{background:var(--surface);border-radius:14px;border:1px solid var(--border2);width:480px;max-width:95vw;padding:28px;}
+.data-section{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+.data-section-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
+.data-section-sub{font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5;}
+.data-action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:opacity .15s;}
+.data-action-btn:hover{opacity:.85;}
+.data-action-btn.green{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
+.data-action-btn.blue{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-mid);}
+.data-action-btn.warn{background:var(--reminder-bg);color:var(--reminder);border:1px solid var(--reminder-border);}
+.info-box{background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--accent);line-height:1.6;margin-bottom:14px;}
 .toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .3s ease;z-index:400;pointer-events:none;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-@media(max-width:860px){.shell{grid-template-columns:1fr;grid-template-rows:58px auto 1fr;}.sidebar{display:none;}.drawer{width:100%;}.modal{width:95vw;padding:20px;}.form-row.two{grid-template-columns:1fr;}}
+@media(max-width:860px){.shell{grid-template-columns:1fr;grid-template-rows:58px auto 1fr;}.sidebar{display:none;}.drawer{width:100%;}.modal,.data-modal{width:95vw;padding:20px;}.form-row.two{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
@@ -216,7 +227,8 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <div class="pill live"><div class="live-dot"></div>Live</div>
       <div class="pill" id="today-display"></div>
       <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">&#9788; Auto</button>
-      <button class="add-btn" onclick="openModal(null, null)">+ Add Event</button>
+      <button class="data-btn export" onclick="openDataModal()">&#128190; Data</button>
+      <button class="add-btn" onclick="openModal(null,null)">+ Add Event</button>
     </div>
   </header>
 
@@ -245,7 +257,6 @@ textarea.form-input{resize:vertical;min-height:80px;}
       <button class="fbtn active" onclick="setFilter('all',this)"><div class="fdot" style="background:var(--text2)"></div>All assets<span class="fcnt" id="cnt-all">0</span></button>
       <button class="fbtn" onclick="setFilter('chev',this)"><div class="fdot" style="background:var(--chev)"></div>Chevron ABU<span class="fcnt" id="cnt-chev">0</span></button>
       <button class="fbtn" onclick="setFilter('orig',this)"><div class="fdot" style="background:var(--orig)"></div>Origin / APLNG<span class="fcnt" id="cnt-orig">0</span></button>
-      <button class="fbtn" onclick="setFilter('pi',this)"><div class="fdot" style="background:var(--pi)"></div>PI Network<span class="fcnt" id="cnt-pi">0</span></button>
     </div>
     <div class="sb-section">
       <div class="sb-label">Upcoming</div>
@@ -316,7 +327,6 @@ textarea.form-input{resize:vertical;min-height:80px;}
         <select class="form-input" id="f-type">
           <option value="chev">Chevron ABU</option>
           <option value="orig">Origin / APLNG</option>
-          <option value="pi">PI Network</option>
         </select>
       </div>
     </div>
@@ -355,6 +365,51 @@ textarea.form-input{resize:vertical;min-height:80px;}
   </div>
 </div>
 
+<!-- DATA MANAGER MODAL -->
+<div class="modal-ov" id="data-modal-ov" onclick="handleDataOvClick(event)">
+  <div class="data-modal">
+    <div class="modal-header">
+      <div class="modal-title">&#128190; Data manager</div>
+      <button class="modal-close" onclick="closeDataModal()">&#10005;</button>
+    </div>
+
+    <div class="info-box">
+      Your events are saved in your browser automatically. Export a backup before uploading a new version of this file — then import it back in one click to restore everything.
+    </div>
+
+    <div class="data-section">
+      <div class="data-section-title">&#11015; Export my events</div>
+      <div class="data-section-sub">Downloads a <strong>events-backup.json</strong> file to your computer. Keep this safe — it contains all your events. Do this before uploading a new version of the calendar.</div>
+      <button class="data-action-btn green" onclick="exportData()">&#11015; Download events-backup.json</button>
+    </div>
+
+    <div class="data-section">
+      <div class="data-section-title">&#11014; Import events</div>
+      <div class="data-section-sub">Restore your events from a previously exported <strong>events-backup.json</strong> file. Your current events will be replaced with the imported ones.</div>
+      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
+      <button class="data-action-btn blue" onclick="document.getElementById('import-file').click()">&#11014; Choose events-backup.json</button>
+    </div>
+
+    <div class="data-section">
+      <div class="data-section-title">&#128203; How to safely upgrade the calendar</div>
+      <div class="data-section-sub" style="margin-bottom:0;">
+        1. Click <strong>Export</strong> above — save the file.<br>
+        2. Upload the new <strong>index.html</strong> to GitHub.<br>
+        3. Open your live URL, go to <strong>Data &#10142; Import</strong>.<br>
+        4. Select your saved <strong>events-backup.json</strong>.<br>
+        All your events are restored instantly. &#10003;
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+      <button class="btn-cancel" onclick="closeDataModal()">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- HIDDEN FILE INPUT for import -->
+<input type="file" id="import-file-hidden" accept=".json" style="display:none" onchange="importData(event)">
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
@@ -362,15 +417,15 @@ textarea.form-input{resize:vertical;min-height:80px;}
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG',pi:'PI Network'};
+const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG'};
+const STORAGE_KEY='amc_events_v3';
 
+/* ── SEED DATA (only used on first ever load, never overwrites saved data) ── */
 const SEED=[
   {id:1,date:'2026-04-22',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'All non-prod environments (DEV/TEST/UAT) patched simultaneously. OS patching, DNS Firewall enablement, DB engine update, EC password refresh.'},
   {id:2,date:'2026-04-28',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh. Project Wildcat environment.'},
   {id:3,date:'2026-04-29',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh.'},
   {id:4,date:'2026-05-18',title:'APLNG Q2 prod maintenance',asset:'Origin / APLNG',type:'orig',env:'Prod',time:'TBC',duration:'TBC',tbc:true,notes:'Case 26-01101247 opened 18 May 2026. Exact date to be confirmed. Contact Quorum EC Midstream team.'},
-  {id:5,date:'2026-05-20',title:'Wheatstone PI network maintenance',asset:'Chevron ABU',type:'pi',env:'Prod',time:'17:00–21:00 AWST',duration:'4 hours',tbc:false,notes:'Window 1 of 2. PI network downtime. Source: APSTSupport@chevron.com. Check PI integrations post-window.'},
-  {id:6,date:'2026-05-21',title:'Wheatstone PI network maintenance',asset:'Chevron ABU',type:'pi',env:'Prod',time:'12:00–13:00 AWST',duration:'1 hour',tbc:false,notes:'Window 2 of 2. PI Server: https://wstpepipwebapi.chevron.com/piwebapi'},
   {id:7,date:'2026-06-10',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh. DNS Firewall deferred to mid-July.'},
   {id:8,date:'2026-06-11',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
   {id:9,date:'2026-06-24',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00–23:00 AWST',duration:'3 hours',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
@@ -379,9 +434,70 @@ const SEED=[
   {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. WAOIL Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
 ];
 
-function loadEvts(){try{const s=localStorage.getItem('amc_v2');return s?JSON.parse(s):JSON.parse(JSON.stringify(SEED));}catch(e){return JSON.parse(JSON.stringify(SEED));}}
-function saveEvts(){try{localStorage.setItem('amc_v2',JSON.stringify(ALL_EVENTS));}catch(e){}}
-function rebuildMap(){Object.keys(evtMap).forEach(k=>delete evtMap[k]);ALL_EVENTS.forEach(e=>{if(!evtMap[e.date])evtMap[e.date]=[];evtMap[e.date].push(e);});}
+/* ── STORAGE: always reads from localStorage first, seeds only if nothing saved ── */
+function loadEvts(){
+  try{
+    const saved=localStorage.getItem(STORAGE_KEY);
+    if(saved){
+      const parsed=JSON.parse(saved);
+      if(Array.isArray(parsed)&&parsed.length>0) return parsed;
+    }
+  }catch(e){}
+  /* First-ever load — use seed and save it */
+  const initial=JSON.parse(JSON.stringify(SEED));
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(initial));}catch(e){}
+  return initial;
+}
+function saveEvts(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(ALL_EVENTS));}catch(e){}
+}
+function rebuildMap(){
+  Object.keys(evtMap).forEach(k=>delete evtMap[k]);
+  ALL_EVENTS.forEach(e=>{if(!evtMap[e.date])evtMap[e.date]=[];evtMap[e.date].push(e);});
+}
+
+/* ── EXPORT: download events as JSON file ── */
+function exportData(){
+  const payload={
+    exported:new Date().toISOString(),
+    version:3,
+    events:ALL_EVENTS
+  };
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='events-backup.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Backup downloaded ✓');
+}
+
+/* ── IMPORT: restore events from JSON file ── */
+function importData(event){
+  const file=event.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=function(e){
+    try{
+      const raw=JSON.parse(e.target.result);
+      let evts=[];
+      if(Array.isArray(raw)) evts=raw;
+      else if(raw.events&&Array.isArray(raw.events)) evts=raw.events;
+      else{showToast('Invalid file format');return;}
+      if(evts.length===0){showToast('No events found in file');return;}
+      if(!confirm(`Import ${evts.length} events? This will replace your current events.`))return;
+      ALL_EVENTS=evts.filter(e=>e.type!=='pi');
+      ALL_EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
+      nextId=Math.max(0,...ALL_EVENTS.map(e=>e.id))+1;
+      saveEvts();rebuildMap();render();
+      closeDataModal();
+      showToast(`${ALL_EVENTS.length} events imported ✓`);
+    }catch(err){showToast('Could not read file — check it is a valid backup');}
+  };
+  reader.readAsText(file);
+  event.target.value='';
+}
 
 let ALL_EVENTS=loadEvts();
 const evtMap={};
@@ -391,17 +507,18 @@ let curYear=2026,curMonth=5,activeFilter='all',curView='month';
 const today=new Date();
 let manualTheme=null,drawerEvtId=null,tbcVal=false,modalEditId=null;
 
+/* ── THEME ── */
 function shouldBeDark(){if(manualTheme!==null)return manualTheme;const h=new Date().getHours();return h<7||h>=19;}
 function applyTheme(){const d=shouldBeDark();document.getElementById('shell').classList.toggle('dark-mode',d);document.body.classList.toggle('dark-mode',d);document.getElementById('theme-btn').textContent=d?'🌙 Dark':'☀ Light';}
 function toggleTheme(){manualTheme=!shouldBeDark();applyTheme();}
 setInterval(()=>{if(manualTheme===null)applyTheme();},60000);
 
-function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':t==='pi'?'var(--pi)':'var(--tbc)';}
+function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':'var(--tbc)';}
 function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
 function shortDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function isUpcoming(s){return new Date(s+'T23:59:00')>=today;}
 function filtered(evts){if(activeFilter==='all')return evts;return evts.filter(e=>e.type===activeFilter);}
-function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+function showToast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 function updateStats(){
   const v=filtered(ALL_EVENTS);
@@ -412,7 +529,6 @@ function updateStats(){
   document.getElementById('cnt-all').textContent=ALL_EVENTS.length;
   document.getElementById('cnt-chev').textContent=ALL_EVENTS.filter(e=>e.type==='chev').length;
   document.getElementById('cnt-orig').textContent=ALL_EVENTS.filter(e=>e.type==='orig').length;
-  document.getElementById('cnt-pi').textContent=ALL_EVENTS.filter(e=>e.type==='pi').length;
 }
 
 function renderUpcoming(){
@@ -468,7 +584,7 @@ function renderMonth(){
     else if(hasE)cls+=' day-event';
     else cls+=' day-empty';
     const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasE?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div style="width:6px"></div>`;
-    const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()" title="Add event on this day">+</button>`:'';
+    const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()" title="Add event">+</button>`:'';
     h+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?`<div style="display:flex;align-items:center;gap:2px">${dot}${addBtn}</div>`:''}</div>${evts.map(e=>`<button class="cel ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}">${e.title}</button>`).join('')}</div>`;
   });
   h+='</div>';
@@ -530,7 +646,7 @@ function closeDrawer(){document.getElementById('overlay').classList.remove('open
 function editFromDrawer(){if(drawerEvtId!==null){const id=drawerEvtId;closeDrawer();openModal(id,null);}}
 function deleteFromDrawer(){if(drawerEvtId!==null){closeDrawer();deleteEvt(drawerEvtId);}}
 
-function openModal(editId, prefillDate){
+function openModal(editId,prefillDate){
   modalEditId=editId;
   const e=editId!==null?ALL_EVENTS.find(x=>x.id===editId):null;
   document.getElementById('modal-title').textContent=e?'Edit event':'Add event';
@@ -564,7 +680,7 @@ function saveEvent(){
   if(modalEditId!==null){
     const idx=ALL_EVENTS.findIndex(x=>x.id===modalEditId);
     if(idx>-1){ALL_EVENTS[idx]={...ALL_EVENTS[idx],title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes};showToast('Event updated ✓');}
-  } else {
+  }else{
     ALL_EVENTS.push({id:nextId++,title,date,type,asset:ASSET_NAMES[type],env,duration,time,tbc:tbcVal,notes});
     ALL_EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
     showToast('Event added ✓');
@@ -584,13 +700,17 @@ function deleteFromModal(){
   }
 }
 
+function openDataModal(){document.getElementById('data-modal-ov').classList.add('open');}
+function closeDataModal(){document.getElementById('data-modal-ov').classList.remove('open');}
+function handleDataOvClick(e){if(e.target===document.getElementById('data-modal-ov'))closeDataModal();}
+
 function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
 function setView(v){curView=v;document.getElementById('btn-month').classList.toggle('active',v==='month');document.getElementById('btn-list').classList.toggle('active',v==='list');render();}
 function prevMonth(){curMonth===1?(curMonth=12,curYear--):curMonth--;render();}
 function nextMonth(){curMonth===12?(curMonth=1,curYear++):curMonth++;render();}
 function goToday(){curYear=today.getFullYear();curMonth=today.getMonth()+1;render();}
 function jumpToDate(s){const d=new Date(s+'T12:00:00');curYear=d.getFullYear();curMonth=d.getMonth()+1;setView('month');}
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeDrawer();}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeDrawer();closeDataModal();}});
 
 function render(){
   const cnt=filtered(ALL_EVENTS).filter(e=>{const d=new Date(e.date+'T12:00:00');return d.getFullYear()===curYear&&d.getMonth()===curMonth-1;}).length;
