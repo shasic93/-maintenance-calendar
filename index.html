@@ -428,9 +428,9 @@ textarea.fin{resize:vertical;min-height:70px;}
       <button class="fb" onclick="setFilter('chev',this)"><div class="fb-dot" style="background:var(--chev)"></div>Chevron ABU<span class="fb-cnt" id="cnt-chev">0</span></button>
       <button class="fb" onclick="setFilter('orig',this)"><div class="fb-dot" style="background:var(--orig)"></div>Origin / APLNG<span class="fb-cnt" id="cnt-orig">0</span></button>
       <button class="fb" onclick="setFilter('pto',this)"><div class="fb-dot" style="background:var(--pto)"></div>My PTO<span class="fb-cnt" id="cnt-pto">0</span></button>
-      <button class="fb" onclick="setFilter('ph',this)"><div class="fb-dot" style="background:var(--ph)"></div>🇲🇾 KL<span class="fb-cnt" id="cnt-ph">0</span></button>
-      <button class="fb" onclick="setFilter('wa',this)"><div class="fb-dot" style="background:var(--wa)"></div>🇦🇺 Perth<span class="fb-cnt" id="cnt-wa">0</span></button>
-      <button class="fb" onclick="setFilter('qld',this)"><div class="fb-dot" style="background:var(--qld)"></div>🇦🇺 Brisbane<span class="fb-cnt" id="cnt-qld">0</span></button>
+      <button class="fb" onclick="setFilter('ph',this)"><div class="fb-dot" style="background:var(--ph)"></div><span style="display:inline-flex;align-items:center;background:#CC0001;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">MY</span>KL<span class="fb-cnt" id="cnt-ph">0</span></button>
+      <button class="fb" onclick="setFilter('wa',this)"><div class="fb-dot" style="background:var(--wa)"></div><span style="display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">AU</span>Perth<span class="fb-cnt" id="cnt-wa">0</span></button>
+      <button class="fb" onclick="setFilter('qld',this)"><div class="fb-dot" style="background:var(--qld)"></div><span style="display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">AU</span>Brisbane<span class="fb-cnt" id="cnt-qld">0</span></button>
     </div>
 
     <div class="sb-sec">
@@ -462,9 +462,9 @@ textarea.fin{resize:vertical;min-height:70px;}
     <div class="lb-item"><div class="lb-sw" style="background:var(--pto-bg);border:1px solid var(--pto-border)"></div>PTO</div>
     <div class="lb-item"><div class="lb-sw" style="background:var(--chev-bg);border:1px solid var(--chev-border)"></div>Chevron</div>
     <div class="lb-item"><div class="lb-sw" style="background:var(--orig-bg);border:1px solid var(--orig-border)"></div>Origin</div>
-    <div class="lb-item"><div class="lb-sw" style="background:var(--ph-bg);border:1px solid var(--ph-border)"></div>🇲🇾 KL</div>
-    <div class="lb-item"><div class="lb-sw" style="background:var(--wa-bg);border:1px solid var(--wa-border)"></div>🇦🇺 Perth</div>
-    <div class="lb-item"><div class="lb-sw" style="background:var(--qld-bg);border:1px solid var(--qld-border)"></div>🇦🇺 Brisbane</div>
+    <div class="lb-item"><div class="lb-sw" style="background:var(--ph-bg);border:1px solid var(--ph-border)"></div><span style="display:inline-flex;align-items:center;background:#CC0001;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">MY</span>KL</div>
+    <div class="lb-item"><div class="lb-sw" style="background:var(--wa-bg);border:1px solid var(--wa-border)"></div><span style="display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">AU</span>Perth</div>
+    <div class="lb-item"><div class="lb-sw" style="background:var(--qld-bg);border:1px solid var(--qld-border)"></div><span style="display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 4px;border-radius:3px;margin-right:3px;letter-spacing:.03em;font-family:'Inter',sans-serif;flex-shrink:0">AU</span>Brisbane</div>
     <div style="margin-left:auto;font-size:10px;color:var(--text4);font-family:'JetBrains Mono',monospace;">Press ? for shortcuts</div>
   </div>
   <div class="cal-body" id="cal-body"></div>
@@ -619,7 +619,7 @@ const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG',pto:'PTO',ph:'KL Public Holiday',wa:'Perth Public Holiday',qld:'Brisbane Public Holiday'};
 const STORAGE_KEY='amc_v2';
 const PH_TYPES=['ph','wa','qld'];
-const FLAG={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
+const FLAG={ph:'<span style=\"display:inline-flex;align-items:center;background:#CC0001;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">MY</span>',wa:'<span style=\"display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">AU</span>',qld:'<span style=\"display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">AU</span>'};
 
 const SEED=[
   {id:1,date:'2026-04-22',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'All non-prod environments (DEV/TEST/UAT). OS patching, DNS Firewall, DB engine update, EC password refresh.'},
@@ -891,7 +891,7 @@ function renderUpcoming(){
     let urgCls='',barColor=typeColor(e.type),titleColor='var(--text2)',lbl='';
     if(days<=7){urgCls='urgent';barColor='var(--reminder)';titleColor='var(--reminder)';lbl=days===0?'Today':days===1?'Tomorrow':`${days}d`;}
     else if(days<=30){urgCls='soon';barColor='var(--pto)';titleColor='var(--pto)';lbl=`${days}d`;}
-    const ptoBadge=isPTO?`<span style="font-size:9px;color:var(--pto);font-weight:600"> 🏖PTO</span>`:'';
+    const ptoBadge=isPTO?`<span style="font-size:9px;color:var(--pto);font-weight:600"> 🏖 PTO</span>`:'';
     return `<div class="up-item${urgCls?' '+urgCls:''}">
       <div class="up-bar" style="background:${barColor}"></div>
       <div style="flex:1;min-width:0" onclick="openDrawer(${e.id})">
@@ -1027,11 +1027,12 @@ function openDrawer(id){
   const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:isPH?`<span class="badge ${e.type}-b">Public Holiday</span>`:isPTO?`<span class="badge pto-b">PTO</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-prod</span>`);
   const ab=`<span class="badge ${e.type==='orig'?'orig-b':e.type==='ph'?'ph-b':e.type==='wa'?'wa-b':e.type==='qld'?'qld-b':e.type==='pto'?'pto-b':'chev-b'}">${e.asset}</span>`;
   document.getElementById('d-badges').innerHTML=ab+eb;
-  const countryRow=isPH?`<div class="d-field"><div class="d-lbl">Region</div><div class="d-val">${FLAG[e.type]} ${e.type==='ph'?'KL, Malaysia':e.type==='wa'?'Perth, WA':'Brisbane, QLD'}</div></div>`:'';
+  const regionMap={ph:'<span style=\"display:inline-flex;align-items:center;background:#CC0001;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">MY</span> KL, Malaysia',wa:'<span style=\"display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">AU</span> Perth, WA',qld:'<span style=\"display:inline-flex;align-items:center;background:#00008B;color:#fff;font-size:9px;font-weight:700;padding:1px 5px;border-radius:3px;margin-right:3px;letter-spacing:.04em;flex-shrink:0\">AU</span> Brisbane, QLD'};
+  const countryRow=isPH?`<div class="d-field"><div class="d-lbl">Region</div><div class="d-val">${regionMap[e.type]}</div></div>`:'';
   const assigneeRow=e.assignee?`<div class="d-field"><div class="d-lbl">Assignee</div><div class="d-val"><span class="av-chip"><span class="av">${e.assignee[0].toUpperCase()}</span>${e.assignee}</span></div></div>`:'';
   /* Holiday overlaps on same day */
   const sameDay=ALL_EVENTS.filter(x=>x.date===e.date&&x.id!==e.id&&PH_TYPES.includes(x.type));
-  const overlapHtml=sameDay.length&&!isPH?`<div class="d-holiday-overlap"><div class="d-ho-title">⚠ Holidays on this day</div>${sameDay.map(h=>`<div class="d-ho-item">${FLAG[h.type]} ${h.title} (${h.asset})</div>`).join('')}</div>`:'';
+  const overlapHtml=sameDay.length&&!isPH?`<div class="d-holiday-overlap"><div class="d-ho-title">&#9888; Holidays on this day</div>${sameDay.map(h=>`<div class="d-ho-item">${h.title} (${h.asset})</div>`).join('')}</div>`:'';
   document.getElementById('d-body').innerHTML=`${countryRow}<div class="d-field"><div class="d-lbl">Time window</div><div class="d-val">${e.time}</div></div><div class="d-field"><div class="d-lbl">Duration</div><div class="d-val">${e.duration}</div></div>${assigneeRow}<hr class="d-sep"><div class="d-field"><div class="d-lbl">Notes</div><div class="d-val">${e.notes||'—'}</div></div>${overlapHtml}`;
   document.getElementById('overlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
