@@ -136,11 +136,11 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--t
 .lb-swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
 
 /* ── MONTH GRID ── */
-.cal-body{flex:1;overflow-y:auto;}
-.wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:10;}
+.cal-body{flex:1;overflow-y:auto;display:flex;flex-direction:column;}
+.wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:10;flex-shrink:0;}
 .wh div{font-size:11px;font-weight:600;color:var(--text3);text-align:center;padding:8px 0;letter-spacing:.03em;font-family:'JetBrains Mono',monospace;}
-.mgd{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid var(--border);border-top:1px solid var(--border);}
-.cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;min-height:110px;background:var(--surface);transition:background .1s;position:relative;}
+.mgd{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:1fr;border-left:1px solid var(--border);border-top:1px solid var(--border);flex:1;}
+.cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;min-height:0;background:var(--surface);transition:background .1s;position:relative;}
 .cday:hover{background:var(--surface2);}
 .cday.other-month{background:var(--bg);opacity:.6;}
 .cday.is-today{background:var(--accent-light);}
@@ -510,13 +510,11 @@ const SEED=[
   {id:10,date:'2026-07-15',title:'Wheatstone DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2 per ABU request. RTO: 15–30 min. ABU to review near date to avoid cargo conflicts.'},
   {id:11,date:'2026-07-16',title:'Gorgon DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. Azure Fileshare: //ecfsauegorp214.file.core.windows.net/gorgon-prod'},
   {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. WAOIL Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
-  /* PTO */
-  {id:50,date:'2026-05-20',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
-  {id:51,date:'2026-05-21',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
-  {id:52,date:'2026-05-22',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
-  {id:53,date:'2026-05-23',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
-  {id:54,date:'2026-05-24',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
-  {id:55,date:'2026-05-25',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  /* PTO — weekdays only, skip Sat 23 & Sun 24 May */
+  {id:50,date:'2026-05-20',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days (excl. weekends)',tbc:false,notes:'Personal time off: 20–25 May 2026 (working days only).'},
+  {id:51,date:'2026-05-21',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days (excl. weekends)',tbc:false,notes:'Personal time off: 20–25 May 2026 (working days only).'},
+  {id:52,date:'2026-05-22',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days (excl. weekends)',tbc:false,notes:'Personal time off: 20–25 May 2026 (working days only).'},
+  {id:55,date:'2026-05-25',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days (excl. weekends)',tbc:false,notes:'Personal time off: 20–25 May 2026 (working days only).'},
   /* KL PUBLIC HOLIDAYS */
   {id:101,date:'2026-01-01',title:'New Year\'s Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — New Year\'s Day 2026.'},
   {id:102,date:'2026-02-01',title:'Thaipusam',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Thaipusam.'},
@@ -656,7 +654,7 @@ function updateStats(){
 
 function renderUpcoming(){
   const ul=document.getElementById('upcoming-list');
-  const up=filtered(ALL_EVENTS).filter(e=>isUpcoming(e.date)&&e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld').slice(0,8);
+  const up=filtered(ALL_EVENTS).filter(e=>isUpcoming(e.date)&&e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld'&&e.type!=='pto').slice(0,8);
   if(!up.length){ul.innerHTML='<div style="font-size:11px;color:var(--text4);padding:4px 4px">No upcoming events.</div>';return;}
   const now=new Date();
   ul.innerHTML=up.map(e=>{
@@ -706,7 +704,7 @@ function renderMonth(){
   for(let d=1;d<=daysIn;d++)cells.push({d,cur:true,y:curYear,m:curMonth});
   const rem=42-cells.length;
   for(let i=1;i<=rem;i++)cells.push({d:i,cur:false,y:curMonth===12?curYear+1:curYear,m:curMonth===12?1:curMonth+1});
-  let h=`<div class="wh">${SDAYS.map(s=>`<div>${s}</div>`).join('')}</div><div class="mgd">`;
+  let h=`<div style="display:flex;flex-direction:column;height:100%;"><div class="wh">${SDAYS.map(s=>`<div>${s}</div>`).join('')}</div><div class="mgd">`;
   cells.forEach(c=>{
     const ds=`${c.y}-${String(c.m).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
     const isT=c.cur&&today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===c.d;
@@ -731,7 +729,7 @@ function renderMonth(){
     });
     h+=`</div>`;
   });
-  h+='</div>';
+  h+='</div></div>';
   body.innerHTML=h;
 }
 
@@ -838,13 +836,14 @@ function saveEvent(){
   const notes=document.getElementById('f-notes').value.trim();
   const assignee=document.getElementById('f-assignee').value.trim();
 
-  /* Build list of dates in range */
+  /* Build list of dates in range — skip weekends for PTO */
   const dates=[];
   if(dateEnd&&dateEnd>dateStart){
     let cur=new Date(dateStart+'T12:00:00');
     const end=new Date(dateEnd+'T12:00:00');
     while(cur<=end){
-      dates.push(cur.toISOString().slice(0,10));
+      const dow=cur.getDay();
+      if(type!=='pto'||( dow!==0&&dow!==6)) dates.push(cur.toISOString().slice(0,10));
       cur.setDate(cur.getDate()+1);
     }
   } else {
