@@ -665,6 +665,7 @@ function renderMonth(){
     const isT=c.cur&&today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===c.d;
     const evts=evtMap[ds]?filtered(evtMap[ds]):[];
     const phTypes=['ph','wa','qld'];
+    const flagMap={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
     const hasR=evts.some(e=>e.tbc),hasE=evts.length>0;
     const allHoliday=hasE&&evts.every(e=>phTypes.includes(e.type));
     const hasMaint=evts.some(e=>!phTypes.includes(e.type));
@@ -677,8 +678,6 @@ function renderMonth(){
     else cls+=' day-empty';
     const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasMaint?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div style="width:6px"></div>`;
     const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()" title="Add event">+</button>`:'';
-    const phTypes=['ph','wa','qld'];
-    const flagMap={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
     h+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?`<div style="display:flex;align-items:center;gap:2px">${dot}${addBtn}</div>`:''}</div>${evts.map(e=>{
       const isPH=phTypes.includes(e.type);
       const label=isPH?`${flagMap[e.type]} ${e.title}`:e.title;
