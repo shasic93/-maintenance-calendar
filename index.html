@@ -3,455 +3,483 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shafiq's Asset Maintenance Calendar</title>
+<title>Shafiq's Maintenance Tracker</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#f8f9fb;--surface:#ffffff;--surface2:#f1f4f8;--border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.13);
-  --text:#0a0c10;--text2:#2d3348;--text3:#6b7490;
-  --accent:#2563eb;--accent-light:#eff4ff;--accent-mid:#bfcfff;
-  --chev:#2563eb;--chev-bg:#eff4ff;--chev-border:#bfcfff;
-  --orig:#0f9e6e;--orig-bg:#edfaf4;--orig-border:#9fe1cb;
+:root{
+  --bg:#f4f6f9;--surface:#ffffff;--surface2:#f0f2f5;--surface3:#e8ebf0;
+  --border:rgba(0,0,0,0.06);--border2:rgba(0,0,0,0.11);
+  --text:#111827;--text2:#374151;--text3:#6b7280;--text4:#9ca3af;
+  --accent:#2563eb;--accent-light:#eff6ff;--accent-mid:#bfdbfe;
+  --chev:#2563eb;--chev-bg:#eff6ff;--chev-border:#bfdbfe;
+  --orig:#059669;--orig-bg:#ecfdf5;--orig-border:#6ee7b7;
   --ph:#7c3aed;--ph-bg:#f5f3ff;--ph-border:#c4b5fd;
-  --wa:#0369a1;--wa-bg:#eff6ff;--wa-border:#93c5fd;
-  --qld:#b91c1c;--qld-bg:#fff1f2;--qld-border:#fda4af;
-  --tbc-bg:#f1f4f8;--tbc:#9aa0b4;
-  --reminder:#e05a2b;--reminder-bg:#fff2ee;--reminder-border:#fbbaa0;
-  --empty-bg:#f8f9fb;--empty-num:#c5cad8;
-  --has-event-bg:#eff4ff;
-  --prod-bg:#edfaf4;--prod-text:#0f9e6e;
-  --nonprod-bg:#fff2ee;--nonprod-text:#e05a2b;
+  --wa:#0284c7;--wa-bg:#f0f9ff;--wa-border:#7dd3fc;
+  --qld:#dc2626;--qld-bg:#fef2f2;--qld-border:#fca5a5;
+  --pto:#d97706;--pto-bg:#fffbeb;--pto-border:#fcd34d;
+  --reminder:#ea580c;--reminder-bg:#fff7ed;--reminder-border:#fdba74;
   --danger:#dc2626;--danger-bg:#fef2f2;--danger-border:#fca5a5;
-  --radius:10px;--radius-sm:6px;
+  --prod-bg:#ecfdf5;--prod-text:#059669;
+  --nonprod-bg:#fff7ed;--nonprod-text:#ea580c;
+  --radius:12px;--radius-sm:8px;--radius-xs:5px;
+  --shadow:0 1px 3px rgba(0,0,0,0.08),0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md:0 4px 6px rgba(0,0,0,0.07),0 2px 4px rgba(0,0,0,0.05);
 }
-.dark-mode {
-  --bg:#0f1117;--surface:#171b24;--surface2:#1e2330;--border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.13);
-  --text:#f0f2f8;--text2:#b8c0d4;--text3:#6e7a96;
-  --accent:#4f8ef7;--accent-light:rgba(79,142,247,0.12);--accent-mid:rgba(79,142,247,0.3);
-  --chev:#4f8ef7;--chev-bg:rgba(79,142,247,0.12);--chev-border:rgba(79,142,247,0.3);
-  --orig:#34d399;--orig-bg:rgba(52,211,153,0.1);--orig-border:rgba(52,211,153,0.3);
-  --ph:#a78bfa;--ph-bg:rgba(167,139,250,0.12);--ph-border:rgba(167,139,250,0.35);
-  --wa:#38bdf8;--wa-bg:rgba(56,189,248,0.1);--wa-border:rgba(56,189,248,0.35);
-  --qld:#fb7185;--qld-bg:rgba(251,113,133,0.1);--qld-border:rgba(251,113,133,0.35);
-  --tbc-bg:rgba(136,145,168,0.08);--tbc:#8891aa;
-  --reminder:#fb7c50;--reminder-bg:rgba(251,124,80,0.12);--reminder-border:rgba(251,124,80,0.35);
-  --empty-bg:#0f1117;--empty-num:#2a2f3e;
-  --has-event-bg:rgba(79,142,247,0.07);
-  --prod-bg:rgba(52,211,153,0.1);--prod-text:#34d399;
-  --nonprod-bg:rgba(251,124,80,0.12);--nonprod-text:#fb7c50;
-  --danger:#f87171;--danger-bg:rgba(248,113,113,0.1);--danger-border:rgba(248,113,113,0.3);
+.dark{
+  --bg:#0d1117;--surface:#161b22;--surface2:#1c2128;--surface3:#262d36;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
+  --text:#e6edf3;--text2:#adbac7;--text3:#768390;--text4:#444c56;
+  --accent:#4c8ef7;--accent-light:rgba(76,142,247,0.1);--accent-mid:rgba(76,142,247,0.25);
+  --chev:#4c8ef7;--chev-bg:rgba(76,142,247,0.1);--chev-border:rgba(76,142,247,0.25);
+  --orig:#34d399;--orig-bg:rgba(52,211,153,0.08);--orig-border:rgba(52,211,153,0.25);
+  --ph:#a78bfa;--ph-bg:rgba(167,139,250,0.1);--ph-border:rgba(167,139,250,0.25);
+  --wa:#38bdf8;--wa-bg:rgba(56,189,248,0.08);--wa-border:rgba(56,189,248,0.25);
+  --qld:#f87171;--qld-bg:rgba(248,113,113,0.08);--qld-border:rgba(248,113,113,0.25);
+  --pto:#fbbf24;--pto-bg:rgba(251,191,36,0.08);--pto-border:rgba(251,191,36,0.25);
+  --reminder:#fb923c;--reminder-bg:rgba(251,146,60,0.1);--reminder-border:rgba(251,146,60,0.25);
+  --danger:#f87171;--danger-bg:rgba(248,113,113,0.1);--danger-border:rgba(248,113,113,0.25);
+  --prod-bg:rgba(52,211,153,0.08);--prod-text:#34d399;
+  --nonprod-bg:rgba(251,146,60,0.1);--nonprod-text:#fb923c;
+  --shadow:0 1px 3px rgba(0,0,0,0.3);--shadow-md:0 4px 6px rgba(0,0,0,0.3);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:'Syne','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background .3s,color .3s;font-weight:500;}
-.shell{display:grid;grid-template-columns:250px 1fr;grid-template-rows:58px 1fr;min-height:100vh;}
-.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:12px;}
-.topbar-logo{font-size:16px;font-weight:700;letter-spacing:.03em;color:var(--text);display:flex;align-items:center;gap:8px;}
-.logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;flex-shrink:0;}
+body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;line-height:1.5;transition:background .25s,color .25s;font-size:14px;}
+
+/* ── LAYOUT ── */
+.shell{display:grid;grid-template-columns:240px 1fr;grid-template-rows:56px 1fr;min-height:100vh;}
+
+/* ── TOPBAR ── */
+.topbar{grid-column:1/-1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;gap:10px;box-shadow:var(--shadow);}
+.logo{display:flex;align-items:center;gap:9px;}
+.logo-mark{width:30px;height:30px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;font-weight:700;flex-shrink:0;box-shadow:0 2px 4px rgba(37,99,235,0.3);}
+.logo-name{font-size:15px;font-weight:700;color:var(--text);letter-spacing:-.01em;}
+.logo-sub{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:-2px;}
 .topbar-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.pill{font-size:12px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text2);font-family:'DM Mono',monospace;}
-.pill.live{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);display:flex;align-items:center;gap:5px;}
-.live-dot{width:6px;height:6px;border-radius:50%;background:var(--orig);animation:pulse 2s infinite;}
+.t-pill{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--border2);color:var(--text3);font-family:'JetBrains Mono',monospace;background:var(--surface2);}
+.t-pill.live{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);display:flex;align-items:center;gap:5px;}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--orig);animation:pulse 2s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
-.theme-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 13px;font-size:12px;transition:all .15s;font-family:'Syne',sans-serif;}
-.theme-btn:hover{color:var(--text);border-color:var(--accent);}
-.add-btn{background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;padding:8px 18px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
-.add-btn:hover{opacity:.85;}
-.data-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:7px 13px;font-size:12px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;display:flex;align-items:center;gap:5px;}
-.data-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface);}
-.data-btn.export{border-color:var(--orig-border);color:var(--orig);background:var(--orig-bg);}
-.data-btn.export:hover{opacity:.85;}
-.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:18px 0;overflow-y:auto;}
-.sb-section{padding:0 14px;margin-bottom:22px;}
-.sb-label{font-size:11px;letter-spacing:.1em;color:var(--text3);text-transform:uppercase;margin-bottom:9px;padding:0 3px;font-family:'DM Mono',monospace;}
-.mini-cal{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px;}
-.mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
-.mini-nav span{font-size:13px;font-weight:600;color:var(--text);}
-.mnb{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:2px 5px;border-radius:4px;}
-.mnb:hover{color:var(--text);background:var(--border);}
-.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;}
-.dh{font-size:10px;color:var(--text3);padding:2px 0;font-family:'DM Mono',monospace;}
-.mc{font-size:12px;color:var(--text2);padding:5px 2px;border-radius:5px;cursor:pointer;position:relative;transition:all .15s;}
-.mc:hover{background:var(--surface);color:var(--text);}
-.mc.other{color:var(--text3);}
-.mc.today{background:var(--accent);color:#fff;font-weight:600;}
-.mc.has-reminder{background:var(--reminder-bg);color:var(--reminder);font-weight:600;border:1px solid var(--reminder-border);}
-.mc.has-reminder::after{content:'';width:4px;height:4px;border-radius:50%;background:var(--reminder);position:absolute;bottom:2px;left:50%;transform:translateX(-50%);}
-.legend{display:flex;gap:12px;margin-top:9px;padding-top:9px;border-top:1px solid var(--border);flex-wrap:wrap;}
-.leg-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;}
-.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.fbtn{display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:var(--radius-sm);border:none;background:transparent;cursor:pointer;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:3px;transition:background .15s;font-family:'Syne',sans-serif;}
-.fbtn:hover{background:var(--surface2);}
-.fbtn.active{background:var(--accent-light);color:var(--accent);}
-.fdot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-.fcnt{margin-left:auto;font-size:11px;color:var(--text3);background:var(--surface2);padding:1px 7px;border-radius:9px;border:1px solid var(--border);font-family:'DM Mono',monospace;}
-.fbtn.active .fcnt{border-color:var(--accent-mid);color:var(--accent);}
-.up-item{display:flex;gap:9px;padding:7px 3px;border-radius:var(--radius-sm);cursor:pointer;transition:background .15s;align-items:flex-start;}
+.t-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:5px 12px;font-size:12px;font-weight:500;font-family:'Inter',sans-serif;transition:all .15s;}
+.t-btn:hover{color:var(--text);border-color:var(--border2);background:var(--surface3);}
+.t-btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;}
+.t-btn.primary:hover{opacity:.88;}
+
+/* ── SIDEBAR ── */
+.sidebar{background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden;}
+.sb-scroll{flex:1;overflow-y:auto;padding:16px 12px;}
+.sb-scroll::-webkit-scrollbar{width:4px;}
+.sb-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.sb-sec{margin-bottom:20px;}
+.sb-hd{font-size:10px;font-weight:600;letter-spacing:.08em;color:var(--text4);text-transform:uppercase;margin-bottom:8px;padding:0 4px;font-family:'JetBrains Mono',monospace;}
+
+/* mini cal */
+.mini{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:10px;box-shadow:var(--shadow);}
+.mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.mini-nav span{font-size:12px;font-weight:600;color:var(--text);}
+.mnb{background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;padding:2px 5px;border-radius:4px;line-height:1;}
+.mnb:hover{color:var(--text);background:var(--surface3);}
+.mgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center;}
+.dh{font-size:9px;color:var(--text4);padding:2px 0;font-family:'JetBrains Mono',monospace;font-weight:500;}
+.mc{font-size:11px;color:var(--text3);padding:4px 1px;border-radius:4px;cursor:pointer;position:relative;transition:all .12s;line-height:1.4;}
+.mc:hover{background:var(--surface3);color:var(--text);}
+.mc.other{color:var(--text4);}
+.mc.today{background:var(--accent);color:#fff;font-weight:700;}
+.mc.has-reminder{background:var(--reminder-bg);color:var(--reminder);font-weight:700;border:1px solid var(--reminder-border);}
+.mc.has-reminder::after{content:'';width:3px;height:3px;border-radius:50%;background:var(--reminder);position:absolute;bottom:1px;left:50%;transform:translateX(-50%);}
+.mc.has-pto{background:var(--pto-bg);color:var(--pto);font-weight:600;border:1px solid var(--pto-border);}
+.mini-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+.ml-item{display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text4);}
+.ml-dot{width:6px;height:6px;border-radius:50%;}
+
+/* filter buttons */
+.fb{display:flex;align-items:center;gap:7px;width:100%;padding:7px 8px;border-radius:var(--radius-xs);border:none;background:transparent;cursor:pointer;font-size:12px;font-weight:500;color:var(--text3);margin-bottom:2px;transition:all .12s;font-family:'Inter',sans-serif;text-align:left;}
+.fb:hover{background:var(--surface2);color:var(--text2);}
+.fb.active{background:var(--accent-light);color:var(--accent);font-weight:600;}
+.fb-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.fb-cnt{margin-left:auto;font-size:10px;color:var(--text4);background:var(--surface2);padding:1px 6px;border-radius:8px;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;}
+.fb.active .fb-cnt{border-color:var(--accent-mid);color:var(--accent);}
+
+/* upcoming */
+.up-item{display:flex;gap:8px;padding:6px 4px;border-radius:var(--radius-xs);cursor:pointer;transition:all .12s;align-items:flex-start;position:relative;}
 .up-item:hover{background:var(--surface2);}
-.up-item.urgent{background:rgba(224,90,43,0.06);border-radius:var(--radius-sm);}
-.up-item.urgent:hover{background:rgba(224,90,43,0.1);}
-.up-item.soon{background:rgba(240,168,50,0.06);border-radius:var(--radius-sm);}
-.up-item.soon:hover{background:rgba(240,168,50,0.1);}
-.up-bar{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:28px;}
-.up-date{font-size:11px;color:var(--text3);margin-bottom:2px;font-family:'DM Mono',monospace;}
+.up-item.urgent{background:rgba(234,88,12,0.05);}
+.up-item.urgent:hover{background:rgba(234,88,12,0.09);}
+.up-item.soon{background:rgba(217,119,6,0.05);}
+.up-item.soon:hover{background:rgba(217,119,6,0.09);}
+.up-bar{width:2px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:24px;}
+.up-date{font-size:10px;color:var(--text4);margin-bottom:1px;font-family:'JetBrains Mono',monospace;}
 .up-title{font-size:12px;font-weight:600;color:var(--text2);line-height:1.3;}
-.up-edit{margin-left:auto;opacity:0;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text3);cursor:pointer;padding:2px 7px;font-size:11px;transition:all .15s;flex-shrink:0;}
+.up-edit{margin-left:auto;opacity:0;background:none;border:none;color:var(--text4);cursor:pointer;padding:2px 5px;font-size:12px;flex-shrink:0;border-radius:4px;transition:all .12s;}
 .up-item:hover .up-edit{opacity:1;}
-.up-edit:hover{color:var(--accent);border-color:var(--accent-mid);}
-.main{display:flex;flex-direction:column;overflow:hidden;}
-.cal-hdr{display:flex;align-items:center;padding:14px 22px;gap:11px;border-bottom:1px solid var(--border);flex-shrink:0;}
-.cal-title{font-size:22px;font-weight:700;color:var(--text);}
-.cal-sub{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
-.nb{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 12px;font-size:16px;transition:all .15s;}
-.nb:hover{border-color:var(--border2);color:var(--text);}
-.tb{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 15px;font-size:13px;transition:all .15s;font-family:'Syne',sans-serif;}
-.tb:hover{background:var(--surface2);color:var(--text);}
-.vt{margin-left:auto;display:flex;gap:3px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:3px;}
-.vb{background:transparent;border:none;border-radius:4px;color:var(--text3);cursor:pointer;padding:5px 12px;font-size:13px;transition:all .15s;font-family:'Syne',sans-serif;}
-.vb.active{background:var(--accent);color:#fff;}
+.up-edit:hover{color:var(--accent);background:var(--accent-light);}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;overflow:hidden;background:var(--bg);}
+.cal-hdr{display:flex;align-items:center;padding:12px 20px;gap:10px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface);}
+.cal-title{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-.02em;}
+.cal-sub{font-size:11px;color:var(--text4);font-family:'JetBrains Mono',monospace;}
+.nav-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:5px 10px;font-size:15px;transition:all .12s;line-height:1;}
+.nav-btn:hover{border-color:var(--border2);color:var(--text);}
+.today-btn{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:5px 12px;font-size:12px;font-weight:500;transition:all .12s;font-family:'Inter',sans-serif;}
+.today-btn:hover{background:var(--surface2);color:var(--text);}
+.view-tog{margin-left:auto;display:flex;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:2px;}
+.vb{background:transparent;border:none;border-radius:4px;color:var(--text4);cursor:pointer;padding:4px 12px;font-size:12px;font-weight:500;transition:all .12s;font-family:'Inter',sans-serif;}
+.vb.active{background:var(--accent);color:#fff;font-weight:600;}
 .vb:hover:not(.active){color:var(--text2);}
+
+/* ── LEGEND BAR ── */
+.legend-bar{display:flex;align-items:center;gap:14px;padding:7px 20px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
+.lb-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3);font-weight:500;}
+.lb-swatch{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+
+/* ── MONTH GRID ── */
 .cal-body{flex:1;overflow-y:auto;}
-.wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--bg);z-index:10;}
-.wh div{font-size:12px;font-weight:700;color:var(--text2);text-align:center;padding:10px 0;letter-spacing:.04em;font-family:'DM Mono',monospace;}
-.mgd{display:grid;grid-template-columns:repeat(7,1fr);grid-auto-rows:minmax(100px,1fr);border-left:1px solid var(--border);border-top:1px solid var(--border);}
-.cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:7px;min-height:100px;transition:background .1s;position:relative;}
-.cday:hover{background:rgba(37,99,235,0.02);}
-.cday.other{opacity:.3;}
-.cday.today{background:var(--accent-light);}
-.cday.day-reminder{background:var(--reminder-bg);}
-.cday.day-event:not(.today){background:var(--has-event-bg);}
-.cday.day-holiday{background:rgba(120,100,200,0.04);}
-.dark-mode .cday.day-holiday{background:rgba(167,139,250,0.05);}
-.cday.day-empty:not(.other){background:var(--empty-bg);}
-.cday.day-empty:not(.other) .dn{color:var(--empty-num);}
-.dn-wrap{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;}
-.dn{font-size:13px;font-weight:700;color:var(--text);width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:'DM Mono',monospace;}
-.cday.today .dn{background:var(--accent);color:#fff;}
-.day-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0;}
-.day-add{background:none;border:none;color:var(--text3);cursor:pointer;font-size:15px;line-height:1;padding:0 2px;opacity:.35;transition:all .15s;}
-.day-add:hover{opacity:1;color:var(--accent);}
-.cel{padding:3px 7px;border-radius:4px;font-size:11px;font-weight:700;margin-bottom:2px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;border-left:2px solid transparent;transition:opacity .1s;display:block;width:100%;text-align:left;}
-.cel:hover{opacity:.75;}
-.cel.chev{background:var(--chev-bg);color:var(--chev);border-color:var(--chev);}
-.cel.orig{background:var(--orig-bg);color:var(--orig);border-color:var(--orig);}
-.cel.ph{background:var(--ph-bg);color:var(--ph);border-color:var(--ph);}
-.cel.wa{background:var(--wa-bg);color:var(--wa);border-color:var(--wa);}
-.cel.qld{background:var(--qld-bg);color:var(--qld);border-color:var(--qld);}
-.cel.tbc-evt{background:var(--reminder-bg);color:var(--reminder);border-color:var(--reminder);border-style:dashed;}
-.cal-legend{display:flex;align-items:center;gap:16px;padding:8px 22px;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;flex-wrap:wrap;}
-.cl-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text2);}
-.cl-swatch{width:12px;height:12px;border-radius:3px;flex-shrink:0;}
-.lv{padding:20px;}
+.wh{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:10;}
+.wh div{font-size:11px;font-weight:600;color:var(--text3);text-align:center;padding:8px 0;letter-spacing:.03em;font-family:'JetBrains Mono',monospace;}
+.mgd{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid var(--border);border-top:1px solid var(--border);}
+.cday{border-right:1px solid var(--border);border-bottom:1px solid var(--border);padding:6px;min-height:110px;background:var(--surface);transition:background .1s;position:relative;}
+.cday:hover{background:var(--surface2);}
+.cday.other-month{background:var(--bg);opacity:.6;}
+.cday.is-today{background:var(--accent-light);}
+.cday.has-reminder{background:var(--reminder-bg);}
+.cday.has-pto{background:var(--pto-bg);}
+.cday.has-event:not(.is-today):not(.has-reminder):not(.has-pto){background:var(--surface);}
+.cday.is-weekend:not(.is-today):not(.has-reminder):not(.has-pto){background:var(--bg);}
+.dn-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;}
+.dn{font-size:12px;font-weight:600;color:var(--text3);width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%;font-family:'JetBrains Mono',monospace;}
+.cday.is-today .dn{background:var(--accent);color:#fff;font-weight:700;}
+.cday.other-month .dn{color:var(--text4);}
+.day-add{background:none;border:none;color:var(--text4);cursor:pointer;font-size:14px;line-height:1;padding:1px 3px;opacity:0;transition:all .12s;border-radius:3px;}
+.cday:hover .day-add{opacity:1;}
+.day-add:hover{opacity:1!important;color:var(--accent);background:var(--accent-light);}
+.evt{padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600;margin-bottom:2px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:flex;align-items:center;gap:4px;transition:opacity .1s;border-left:2px solid transparent;}
+.evt:hover{opacity:.8;}
+.evt.chev{background:var(--chev-bg);color:var(--chev);border-color:var(--chev);}
+.evt.orig{background:var(--orig-bg);color:var(--orig);border-color:var(--orig);}
+.evt.ph{background:var(--ph-bg);color:var(--ph);border-color:var(--ph);}
+.evt.wa{background:var(--wa-bg);color:var(--wa);border-color:var(--wa);}
+.evt.qld{background:var(--qld-bg);color:var(--qld);border-color:var(--qld);}
+.evt.pto{background:var(--pto-bg);color:var(--pto);border-color:var(--pto);font-style:italic;}
+.evt.tbc-evt{background:var(--reminder-bg);color:var(--reminder);border-color:var(--reminder);border-style:dashed;}
+.evt-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+.evt-assignee{font-size:9px;opacity:.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:1px;padding-left:8px;}
+
+/* ── LIST VIEW ── */
+.lv{padding:20px;max-width:900px;}
 .lmg{margin-bottom:28px;}
-.lml{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);font-family:'DM Mono',monospace;}
-.le{display:flex;gap:14px;padding:12px 14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:7px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;}
-.le:hover{border-color:var(--border2);background:var(--surface2);}
-.le.tbc-row{border-left:3px solid var(--reminder);}
-.ldc{min-width:68px;text-align:center;}
-.ldn{font-size:22px;font-weight:700;line-height:1;color:var(--text);font-family:'DM Mono',monospace;}
-.ldname{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;font-family:'DM Mono',monospace;}
-.ldiv{width:1px;background:var(--border);flex-shrink:0;}
-.lcon{flex:1;min-width:0;}
-.ltitle{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:7px;flex-wrap:wrap;}
-.lmeta{font-size:12px;font-weight:600;color:var(--text2);margin-bottom:3px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.lnotes{font-size:12px;font-weight:500;color:var(--text2);line-height:1.5;}
-.le-actions{display:flex;gap:6px;align-items:center;margin-left:8px;opacity:0;transition:opacity .15s;flex-shrink:0;}
+.lml{font-size:11px;font-weight:600;letter-spacing:.07em;color:var(--text4);text-transform:uppercase;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);font-family:'JetBrains Mono',monospace;}
+.le{display:flex;gap:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px;cursor:pointer;transition:all .15s;overflow:hidden;box-shadow:var(--shadow);}
+.le:hover{border-color:var(--border2);box-shadow:var(--shadow-md);transform:translateY(-1px);}
+.le-accent{width:4px;flex-shrink:0;}
+.le-body{display:flex;gap:14px;padding:12px 14px;flex:1;min-width:0;}
+.le-date{min-width:52px;text-align:center;flex-shrink:0;}
+.le-day{font-size:22px;font-weight:700;color:var(--text);line-height:1;font-family:'JetBrains Mono',monospace;}
+.le-dow{font-size:10px;font-weight:600;color:var(--text4);text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
+.le-divider{width:1px;background:var(--border);flex-shrink:0;}
+.le-content{flex:1;min-width:0;padding-left:14px;}
+.le-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.le-meta{font-size:12px;color:var(--text3);display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px;}
+.le-notes{font-size:12px;color:var(--text3);line-height:1.5;}
+.le-actions{display:flex;gap:5px;align-items:flex-start;padding:10px 10px 10px 0;opacity:0;transition:opacity .15s;flex-shrink:0;}
 .le:hover .le-actions{opacity:1;}
-.le-btn{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 11px;font-size:12px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;white-space:nowrap;}
-.le-btn:hover{color:var(--accent);border-color:var(--accent-mid);}
-.le-btn.del:hover{color:var(--danger);border-color:var(--danger-border);}
-.badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.03em;font-family:'DM Mono',monospace;}
+.la-btn{background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:4px 9px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;transition:all .12s;white-space:nowrap;}
+.la-btn:hover{color:var(--accent);border-color:var(--accent-mid);}
+.la-btn.del:hover{color:var(--danger);border-color:var(--danger-border);}
+
+/* badges */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:600;letter-spacing:.02em;font-family:'JetBrains Mono',monospace;}
 .badge.prod{background:var(--prod-bg);color:var(--prod-text);}
 .badge.nonprod{background:var(--nonprod-bg);color:var(--nonprod-text);}
 .badge.tbc-b{background:var(--reminder-bg);color:var(--reminder);border:1px dashed var(--reminder-border);}
+.badge.chev-b{background:var(--chev-bg);color:var(--chev);border:1px solid var(--chev-border);}
+.badge.orig-b{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
 .badge.ph-b{background:var(--ph-bg);color:var(--ph);border:1px solid var(--ph-border);}
 .badge.wa-b{background:var(--wa-bg);color:var(--wa);border:1px solid var(--wa-border);}
 .badge.qld-b{background:var(--qld-bg);color:var(--qld);border:1px solid var(--qld-border);}
-.badge.chev-b{background:var(--chev-bg);color:var(--chev);border:1px solid var(--chev-border);}
-.badge.orig-b{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
-.drawer-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;}
-.drawer-ov.open{display:block;}
-.drawer{position:fixed;right:0;top:0;bottom:0;width:370px;background:var(--surface);border-left:1px solid var(--border2);z-index:101;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;padding:22px;}
+.badge.pto-b{background:var(--pto-bg);color:var(--pto);border:1px solid var(--pto-border);}
+.assignee-chip{display:inline-flex;align-items:center;gap:4px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:2px 8px 2px 3px;font-size:11px;font-weight:500;color:var(--text3);}
+.av{width:15px;height:15px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0;}
+
+/* ── DRAWER ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;backdrop-filter:blur(2px);}
+.overlay.open{display:block;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--border2);z-index:101;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto;display:flex;flex-direction:column;}
 .drawer.open{transform:translateX(0);}
-.dc-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:5px 9px;font-size:13px;float:right;margin-bottom:14px;transition:all .15s;}
-.dc-btn:hover{color:var(--text);}
-.d-bar{clear:both;height:3px;border-radius:2px;margin-bottom:14px;}
-.d-title{font-size:19px;font-weight:700;color:var(--text);margin-bottom:5px;line-height:1.3;}
-.d-date{font-size:13px;color:var(--text3);margin-bottom:14px;font-family:'DM Mono',monospace;}
-.d-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;}
-.d-fl{margin-bottom:14px;}
-.d-fl-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-family:'DM Mono',monospace;}
-.d-fl-val{font-size:14px;font-weight:500;color:var(--text);line-height:1.5;}
-.d-div{border:none;border-top:1px solid var(--border);margin:18px 0;}
-.d-action-row{display:flex;gap:8px;margin-top:22px;padding-top:18px;border-top:1px solid var(--border);}
-.d-edit-btn{flex:1;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-sm);color:var(--accent);cursor:pointer;padding:9px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:all .15s;}
-.d-edit-btn:hover{background:var(--accent);color:#fff;}
-.d-del-btn{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-sm);color:var(--danger);cursor:pointer;padding:9px 14px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
-.d-del-btn:hover{opacity:.75;}
-.sbar{display:flex;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0;}
-.scell{flex:1;padding:9px 14px;background:var(--surface);}
-.snum{font-size:22px;font-weight:700;color:var(--text);font-family:'DM Mono',monospace;}
-.slabel{font-size:12px;font-weight:600;color:var(--text2);margin-top:1px;}
-.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center;}
-.modal-ov.open{display:flex;}
-.modal{background:var(--surface);border-radius:14px;border:1px solid var(--border2);width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;padding:28px;}
-.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;}
-.modal-title{font-size:19px;font-weight:700;color:var(--text);}
-.modal-close{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:6px 11px;font-size:14px;transition:all .15s;}
-.modal-close:hover{color:var(--text);}
-.form-row{margin-bottom:16px;}
-.form-row.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.form-label{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px;font-family:'DM Mono',monospace;display:block;}
-.form-input{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-sm);color:var(--text);font-family:'Syne',sans-serif;font-size:14px;font-weight:500;padding:10px 12px;transition:border-color .15s;outline:none;-webkit-appearance:none;}
-.form-input:focus{border-color:var(--accent);}
-.form-input option{background:var(--surface);}
-textarea.form-input{resize:vertical;min-height:80px;}
-.form-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 0;}
-.tog-track{width:38px;height:22px;background:var(--border2);border-radius:11px;position:relative;transition:background .2s;flex-shrink:0;}
-.tog-track.on{background:var(--accent);}
-.tog-thumb{width:16px;height:16px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s;}
-.tog-track.on .tog-thumb{left:19px;}
-.tog-label{font-size:13px;font-weight:600;color:var(--text2);}
-.form-footer{display:flex;gap:10px;margin-top:24px;padding-top:18px;border-top:1px solid var(--border);}
-.btn-save{flex:1;background:var(--accent);border:none;border-radius:var(--radius-sm);color:#fff;cursor:pointer;padding:10px;font-size:14px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
+.drawer-top{padding:16px 18px 0;flex-shrink:0;}
+.drawer-close{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:5px 10px;font-size:13px;float:right;margin-bottom:12px;transition:all .12s;}
+.drawer-close:hover{color:var(--text);}
+.d-accent{clear:both;height:3px;border-radius:2px;margin-bottom:14px;}
+.d-title{font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;line-height:1.3;}
+.d-date{font-size:12px;color:var(--text4);margin-bottom:14px;font-family:'JetBrains Mono',monospace;}
+.d-badges{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:16px;}
+.drawer-body{padding:0 18px;flex:1;}
+.d-field{margin-bottom:14px;}
+.d-label{font-size:10px;font-weight:600;color:var(--text4);text-transform:uppercase;letter-spacing:.07em;margin-bottom:3px;font-family:'JetBrains Mono',monospace;}
+.d-val{font-size:13px;font-weight:500;color:var(--text2);line-height:1.5;}
+.d-sep{border:none;border-top:1px solid var(--border);margin:14px 0;}
+.drawer-footer{padding:14px 18px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;}
+.d-edit{flex:1;background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-xs);color:var(--accent);cursor:pointer;padding:9px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;transition:all .15s;}
+.d-edit:hover{background:var(--accent);color:#fff;}
+.d-del{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-xs);color:var(--danger);cursor:pointer;padding:9px 14px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.d-del:hover{opacity:.75;}
+
+/* ── STATS ── */
+.stats{display:flex;gap:1px;background:var(--border);border-top:1px solid var(--border);flex-shrink:0;}
+.stat{flex:1;padding:10px 16px;background:var(--surface);}
+.stat-n{font-size:20px;font-weight:700;color:var(--text);font-family:'JetBrains Mono',monospace;}
+.stat-l{font-size:11px;font-weight:500;color:var(--text3);margin-top:1px;}
+
+/* ── MODAL ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(3px);}
+.modal-bg.open{display:flex;}
+.modal{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border2);width:520px;max-width:95vw;max-height:92vh;overflow-y:auto;padding:24px;box-shadow:var(--shadow-md);}
+.modal-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-ttl{font-size:17px;font-weight:700;color:var(--text);}
+.modal-x{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:5px 10px;font-size:13px;transition:all .12s;}
+.modal-x:hover{color:var(--text);}
+.frow{margin-bottom:15px;}
+.frow.two{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.flabel{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;font-family:'JetBrains Mono',monospace;display:block;}
+.finput{width:100%;background:var(--surface2);border:1.5px solid var(--border2);border-radius:var(--radius-xs);color:var(--text);font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:9px 11px;transition:border-color .15s;outline:none;-webkit-appearance:none;}
+.finput:focus{border-color:var(--accent);}
+.finput option{background:var(--surface);}
+textarea.finput{resize:vertical;min-height:75px;}
+.ftoggle{display:flex;align-items:center;gap:10px;cursor:pointer;padding:4px 0;}
+.tog-t{width:36px;height:20px;background:var(--border2);border-radius:10px;position:relative;transition:background .2s;flex-shrink:0;}
+.tog-t.on{background:var(--accent);}
+.tog-th{width:14px;height:14px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2);}
+.tog-t.on .tog-th{left:19px;}
+.tog-lbl{font-size:13px;font-weight:500;color:var(--text3);}
+.modal-footer{display:flex;gap:8px;margin-top:20px;padding-top:16px;border-top:1px solid var(--border);}
+.btn-save{flex:1;background:var(--accent);border:none;border-radius:var(--radius-xs);color:#fff;cursor:pointer;padding:10px;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;transition:opacity .15s;}
 .btn-save:hover{opacity:.85;}
-.btn-cancel{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;padding:10px 18px;font-size:13px;font-weight:600;font-family:'Syne',sans-serif;transition:all .15s;}
+.btn-cancel{background:transparent;border:1px solid var(--border2);border-radius:var(--radius-xs);color:var(--text3);cursor:pointer;padding:10px 16px;font-size:13px;font-weight:500;font-family:'Inter',sans-serif;transition:all .15s;}
 .btn-cancel:hover{background:var(--surface2);}
-.btn-delete{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-sm);color:var(--danger);cursor:pointer;padding:10px 14px;font-size:13px;font-weight:700;font-family:'Syne',sans-serif;transition:opacity .15s;}
-.btn-delete:hover{opacity:.75;}
-.data-modal{background:var(--surface);border-radius:14px;border:1px solid var(--border2);width:480px;max-width:95vw;padding:28px;}
-.data-section{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
-.data-section-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;display:flex;align-items:center;gap:8px;}
-.data-section-sub{font-size:12px;color:var(--text3);margin-bottom:12px;line-height:1.5;}
-.data-action-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:700;font-family:'Syne',sans-serif;cursor:pointer;border:none;transition:opacity .15s;}
-.data-action-btn:hover{opacity:.85;}
-.data-action-btn.green{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
-.data-action-btn.blue{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-mid);}
-.data-action-btn.warn{background:var(--reminder-bg);color:var(--reminder);border:1px solid var(--reminder-border);}
-.info-box{background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-sm);padding:10px 14px;font-size:12px;color:var(--accent);line-height:1.6;margin-bottom:14px;}
-.assignee-chip{display:inline-flex;align-items:center;gap:5px;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:2px 9px 2px 4px;font-size:11px;font-weight:600;color:var(--text2);font-family:'DM Mono',monospace;}
-.assignee-avatar{width:16px;height:16px;border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
-.cel-assignee{font-size:10px;opacity:.75;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:var(--bg);padding:10px 22px;border-radius:20px;font-size:13px;font-weight:700;opacity:0;transition:all .3s ease;z-index:400;pointer-events:none;white-space:nowrap;}
+.btn-del-modal{background:var(--danger-bg);border:1px solid var(--danger-border);border-radius:var(--radius-xs);color:var(--danger);cursor:pointer;padding:10px 14px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;transition:opacity .15s;}
+.btn-del-modal:hover{opacity:.75;}
+
+/* ── DATA MODAL ── */
+.data-modal{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border2);width:460px;max-width:95vw;padding:24px;box-shadow:var(--shadow-md);}
+.dsec{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:14px;margin-bottom:12px;}
+.dsec-t{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;}
+.dsec-s{font-size:12px;color:var(--text3);line-height:1.6;margin-bottom:10px;}
+.dact{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--radius-xs);font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;transition:opacity .15s;}
+.dact:hover{opacity:.85;}
+.dact.green{background:var(--orig-bg);color:var(--orig);border:1px solid var(--orig-border);}
+.dact.blue{background:var(--accent-light);color:var(--accent);border:1px solid var(--accent-mid);}
+.info-banner{background:var(--accent-light);border:1px solid var(--accent-mid);border-radius:var(--radius-xs);padding:10px 13px;font-size:12px;color:var(--accent);line-height:1.6;margin-bottom:14px;}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(50px);background:var(--text);color:var(--bg);padding:9px 20px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .28s ease;z-index:400;pointer-events:none;white-space:nowrap;box-shadow:var(--shadow-md);}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
 ::-webkit-scrollbar{width:5px;height:5px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px;}
-@media(max-width:860px){.shell{grid-template-columns:1fr;grid-template-rows:58px auto 1fr;}.sidebar{display:none;}.drawer{width:100%;}.modal,.data-modal{width:95vw;padding:20px;}.form-row.two{grid-template-columns:1fr;}}
+@media(max-width:840px){.shell{grid-template-columns:1fr;grid-template-rows:56px auto 1fr;}.sidebar{display:none;}.drawer{width:100%;}.modal,.data-modal{width:95vw;padding:18px;}.frow.two{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <div class="shell" id="shell">
+
+  <!-- TOPBAR -->
   <header class="topbar">
-    <div class="topbar-logo"><div class="logo-icon">&#9632;</div>Shafiq's Maintenance Tracker</div>
+    <div class="logo">
+      <div class="logo-mark">S</div>
+      <div>
+        <div class="logo-name">Shafiq's Maintenance Tracker</div>
+        <div class="logo-sub" id="today-display"></div>
+      </div>
+    </div>
     <div class="topbar-right">
-      <div class="pill live"><div class="live-dot"></div>Live</div>
-      <div class="pill" id="today-display"></div>
-      <button class="theme-btn" id="theme-btn" onclick="toggleTheme()">&#9788; Auto</button>
-      <button class="data-btn export" onclick="openDataModal()">&#128190; Data</button>
-      <button class="add-btn" onclick="openModal(null,null)">+ Add Event</button>
+      <div class="t-pill live"><div class="ldot"></div>Live</div>
+      <button class="t-btn" id="theme-btn" onclick="toggleTheme()">☀ Auto</button>
+      <button class="t-btn" onclick="openDataModal()">💾 Data</button>
+      <button class="t-btn primary" onclick="openModal(null,null)">+ Add Event</button>
     </div>
   </header>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar">
-    <div class="sb-section">
-      <div class="sb-label">Navigate</div>
-      <div class="mini-cal">
-        <div class="mini-nav">
-          <button class="mnb" onclick="miniPrev()">&#8249;</button>
-          <span id="mini-label"></span>
-          <button class="mnb" onclick="miniNext()">&#8250;</button>
-        </div>
-        <div class="mgrid">
-          <div class="dh">Su</div><div class="dh">Mo</div><div class="dh">Tu</div>
-          <div class="dh">We</div><div class="dh">Th</div><div class="dh">Fr</div><div class="dh">Sa</div>
-          <div id="mini-cells" style="display:contents"></div>
-        </div>
-        <div class="legend">
-          <div class="leg-item"><div class="leg-dot" style="background:var(--reminder)"></div>TBC / reminder</div>
-          <div class="leg-item"><div class="leg-dot" style="background:var(--accent);opacity:.6"></div>Has events</div>
+    <div class="sb-scroll">
+      <div class="sb-sec">
+        <div class="sb-hd">Navigate</div>
+        <div class="mini">
+          <div class="mini-nav">
+            <button class="mnb" onclick="miniPrev()">‹</button>
+            <span id="mini-label"></span>
+            <button class="mnb" onclick="miniNext()">›</button>
+          </div>
+          <div class="mgrid">
+            <div class="dh">Su</div><div class="dh">Mo</div><div class="dh">Tu</div>
+            <div class="dh">We</div><div class="dh">Th</div><div class="dh">Fr</div><div class="dh">Sa</div>
+            <div id="mini-cells" style="display:contents"></div>
+          </div>
+          <div class="mini-legend">
+            <div class="ml-item"><div class="ml-dot" style="background:var(--reminder)"></div>TBC</div>
+            <div class="ml-item"><div class="ml-dot" style="background:var(--pto)"></div>PTO</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="sb-section">
-      <div class="sb-label">Assets</div>
-      <button class="fbtn active" onclick="setFilter('all',this)"><div class="fdot" style="background:var(--text2)"></div>All assets<span class="fcnt" id="cnt-all">0</span></button>
-      <button class="fbtn" onclick="setFilter('chev',this)"><div class="fdot" style="background:var(--chev)"></div>Chevron ABU<span class="fcnt" id="cnt-chev">0</span></button>
-      <button class="fbtn" onclick="setFilter('orig',this)"><div class="fdot" style="background:var(--orig)"></div>Origin / APLNG<span class="fcnt" id="cnt-orig">0</span></button>
-      <button class="fbtn" onclick="setFilter('ph',this)"><div class="fdot" style="background:var(--ph)"></div>KL Public Holidays<span class="fcnt" id="cnt-ph">0</span></button>
-      <button class="fbtn" onclick="setFilter('wa',this)"><div class="fdot" style="background:var(--wa)"></div>Perth (WA) Holidays<span class="fcnt" id="cnt-wa">0</span></button>
-      <button class="fbtn" onclick="setFilter('qld',this)"><div class="fdot" style="background:var(--qld)"></div>Brisbane (QLD) Holidays<span class="fcnt" id="cnt-qld">0</span></button>
-    </div>
-    <div class="sb-section">
-      <div class="sb-label">Upcoming</div>
-      <div id="upcoming-list"></div>
+
+      <div class="sb-sec">
+        <div class="sb-hd">Filter</div>
+        <button class="fb active" onclick="setFilter('all',this)"><div class="fb-dot" style="background:var(--text3)"></div>All<span class="fb-cnt" id="cnt-all">0</span></button>
+        <button class="fb" onclick="setFilter('chev',this)"><div class="fb-dot" style="background:var(--chev)"></div>Chevron ABU<span class="fb-cnt" id="cnt-chev">0</span></button>
+        <button class="fb" onclick="setFilter('orig',this)"><div class="fb-dot" style="background:var(--orig)"></div>Origin / APLNG<span class="fb-cnt" id="cnt-orig">0</span></button>
+        <button class="fb" onclick="setFilter('pto',this)"><div class="fb-dot" style="background:var(--pto)"></div>My PTO<span class="fb-cnt" id="cnt-pto">0</span></button>
+        <button class="fb" onclick="setFilter('ph',this)"><div class="fb-dot" style="background:var(--ph)"></div>🇲🇾 KL Holidays<span class="fb-cnt" id="cnt-ph">0</span></button>
+        <button class="fb" onclick="setFilter('wa',this)"><div class="fb-dot" style="background:var(--wa)"></div>🇦🇺 Perth Holidays<span class="fb-cnt" id="cnt-wa">0</span></button>
+        <button class="fb" onclick="setFilter('qld',this)"><div class="fb-dot" style="background:var(--qld)"></div>🇦🇺 Brisbane Holidays<span class="fb-cnt" id="cnt-qld">0</span></button>
+      </div>
+
+      <div class="sb-sec">
+        <div class="sb-hd">Upcoming</div>
+        <div id="upcoming-list"></div>
+      </div>
     </div>
   </aside>
 
+  <!-- MAIN -->
   <main class="main">
     <div class="cal-hdr">
-      <button class="nb" onclick="prevMonth()">&#8249;</button>
-      <button class="nb" onclick="nextMonth()">&#8250;</button>
-      <button class="tb" onclick="goToday()">Today</button>
+      <button class="nav-btn" onclick="prevMonth()">‹</button>
+      <button class="nav-btn" onclick="nextMonth()">›</button>
+      <button class="today-btn" onclick="goToday()">Today</button>
       <div><div class="cal-title" id="cal-title"></div><div class="cal-sub" id="cal-sub"></div></div>
-      <div class="vt">
+      <div class="view-tog">
         <button class="vb active" id="btn-month" onclick="setView('month')">Month</button>
         <button class="vb" id="btn-list" onclick="setView('list')">List</button>
       </div>
     </div>
-    <div class="cal-legend">
-      <div class="cl-item"><div class="cl-swatch" style="background:var(--reminder-bg);border:1px solid var(--reminder-border)"></div>Reminder / TBC</div>
-      <div class="cl-item"><div class="cl-swatch" style="background:var(--has-event-bg);border:1px solid var(--accent-mid)"></div>Has events</div>
-      <div class="cl-item"><div class="cl-swatch" style="background:var(--empty-bg);border:1px solid var(--border2)"></div>No events</div>
-      <div class="cl-item"><div class="cl-swatch" style="background:var(--accent);border-radius:50%"></div>Today</div>
+    <div class="legend-bar">
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--reminder-bg);border:1px solid var(--reminder-border)"></div>TBC / Reminder</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--pto-bg);border:1px solid var(--pto-border)"></div>My PTO</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--chev-bg);border:1px solid var(--chev-border)"></div>Chevron</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--orig-bg);border:1px solid var(--orig-border)"></div>Origin</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--ph-bg);border:1px solid var(--ph-border)"></div>🇲🇾 KL</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--wa-bg);border:1px solid var(--wa-border)"></div>🇦🇺 Perth</div>
+      <div class="lb-item"><div class="lb-swatch" style="background:var(--qld-bg);border:1px solid var(--qld-border)"></div>🇦🇺 Brisbane</div>
     </div>
     <div class="cal-body" id="cal-body"></div>
-    <div class="sbar">
-      <div class="scell"><div class="snum" id="stat-total">0</div><div class="slabel">Total events</div></div>
-      <div class="scell"><div class="snum" id="stat-upcoming">0</div><div class="slabel">Upcoming</div></div>
-      <div class="scell"><div class="snum" id="stat-prod">0</div><div class="slabel">Production</div></div>
-      <div class="scell"><div class="snum" id="stat-tbc">0</div><div class="slabel">TBC / reminder</div></div>
+    <div class="stats">
+      <div class="stat"><div class="stat-n" id="stat-total">0</div><div class="stat-l">Total events</div></div>
+      <div class="stat"><div class="stat-n" id="stat-upcoming">0</div><div class="stat-l">Upcoming</div></div>
+      <div class="stat"><div class="stat-n" id="stat-prod">0</div><div class="stat-l">Production</div></div>
+      <div class="stat"><div class="stat-n" id="stat-tbc">0</div><div class="stat-l">TBC</div></div>
     </div>
   </main>
 </div>
 
-<!-- DETAIL DRAWER -->
-<div class="drawer-ov" id="overlay" onclick="closeDrawer()"></div>
+<!-- DRAWER -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="drawer">
-  <button class="dc-btn" onclick="closeDrawer()">&#10005;</button>
-  <div class="d-bar" id="d-bar"></div>
-  <div class="d-title" id="d-title"></div>
-  <div class="d-date" id="d-date"></div>
-  <div class="d-badges" id="d-badges"></div>
-  <div id="d-fields"></div>
-  <div class="d-action-row">
-    <button class="d-edit-btn" onclick="editFromDrawer()">&#9998; Edit event</button>
-    <button class="d-del-btn" onclick="deleteFromDrawer()">&#128465; Delete</button>
+  <div class="drawer-top">
+    <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    <div class="d-accent" id="d-accent"></div>
+    <div class="d-title" id="d-title"></div>
+    <div class="d-date" id="d-date"></div>
+    <div class="d-badges" id="d-badges"></div>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+  <div class="drawer-footer">
+    <button class="d-edit" onclick="editFromDrawer()">✏ Edit event</button>
+    <button class="d-del" onclick="deleteFromDrawer()">🗑 Delete</button>
   </div>
 </div>
 
-<!-- ADD / EDIT MODAL -->
-<div class="modal-ov" id="modal-ov" onclick="handleOvClick(event)">
+<!-- ADD/EDIT MODAL -->
+<div class="modal-bg" id="modal-bg" onclick="handleModalBg(event)">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title" id="modal-title">Add event</div>
-      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    <div class="modal-hdr">
+      <div class="modal-ttl" id="modal-ttl">Add event</div>
+      <button class="modal-x" onclick="closeModal()">✕</button>
     </div>
-    <div class="form-row">
-      <label class="form-label">Event title *</label>
-      <input class="form-input" id="f-title" type="text" placeholder="e.g. Gorgon Q3 OS patching">
+    <div class="frow">
+      <label class="flabel">Title *</label>
+      <input class="finput" id="f-title" type="text" placeholder="e.g. Gorgon Q3 OS patching">
     </div>
-    <div class="form-row two">
+    <div class="frow two">
+      <div><label class="flabel">Date *</label><input class="finput" id="f-date" type="date"></div>
       <div>
-        <label class="form-label">Date *</label>
-        <input class="form-input" id="f-date" type="date">
-      </div>
-      <div>
-        <label class="form-label">Asset</label>
-        <select class="form-input" id="f-type">
+        <label class="flabel">Category</label>
+        <select class="finput" id="f-type">
           <option value="chev">Chevron ABU</option>
           <option value="orig">Origin / APLNG</option>
+          <option value="pto">My PTO</option>
           <option value="ph">KL Public Holiday</option>
           <option value="wa">Perth (WA) Public Holiday</option>
           <option value="qld">Brisbane (QLD) Public Holiday</option>
         </select>
       </div>
     </div>
-    <div class="form-row two">
-      <div>
-        <label class="form-label">Environment</label>
-        <select class="form-input" id="f-env">
-          <option value="Prod">Production</option>
-          <option value="Non-prod">Non-production</option>
-        </select>
-      </div>
-      <div>
-        <label class="form-label">Duration</label>
-        <input class="form-input" id="f-duration" type="text" placeholder="e.g. 3 hours">
-      </div>
+    <div class="frow two" id="maint-fields">
+      <div><label class="flabel">Environment</label><select class="finput" id="f-env"><option value="Prod">Production</option><option value="Non-prod">Non-production</option></select></div>
+      <div><label class="flabel">Duration</label><input class="finput" id="f-duration" placeholder="e.g. 3 hours"></div>
     </div>
-    <div class="form-row">
-      <label class="form-label">Time window</label>
-      <input class="form-input" id="f-time" type="text" placeholder="e.g. 19:30 – 22:30 AWST">
+    <div class="frow" id="time-field">
+      <label class="flabel">Time window</label>
+      <input class="finput" id="f-time" placeholder="e.g. 19:30 – 22:30 AWST">
     </div>
-    <div class="form-row">
-      <label class="form-label">Notes</label>
-      <textarea class="form-input" id="f-notes" placeholder="Case numbers, contacts, scope of work…"></textarea>
+    <div class="frow">
+      <label class="flabel">Notes</label>
+      <textarea class="finput" id="f-notes" placeholder="Case numbers, contacts, scope of work…"></textarea>
     </div>
-    <div class="form-row">
-      <label class="form-label">Assignee</label>
-      <input class="form-input" id="f-assignee" type="text" placeholder="e.g. Shafiq, John, Quorum Team">
+    <div class="frow" id="assignee-field">
+      <label class="flabel">Assignee</label>
+      <input class="finput" id="f-assignee" placeholder="e.g. Shafiq, John">
     </div>
-    <div class="form-row">
-      <div class="form-toggle" onclick="toggleTbc()">
-        <div class="tog-track" id="tbc-track"><div class="tog-thumb"></div></div>
-        <span class="tog-label">Mark as TBC — date / time not yet confirmed</span>
+    <div class="frow">
+      <div class="ftoggle" onclick="toggleTbc()">
+        <div class="tog-t" id="tbc-track"><div class="tog-th"></div></div>
+        <span class="tog-lbl">Mark as TBC — not yet confirmed</span>
       </div>
     </div>
-    <div class="form-footer">
+    <div class="modal-footer">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-delete" id="btn-delete" style="display:none" onclick="deleteFromModal()">&#128465; Delete</button>
+      <button class="btn-del-modal" id="btn-del-modal" style="display:none" onclick="deleteFromModal()">🗑 Delete</button>
       <button class="btn-save" onclick="saveEvent()">Save event</button>
     </div>
   </div>
 </div>
 
-<!-- DATA MANAGER MODAL -->
-<div class="modal-ov" id="data-modal-ov" onclick="handleDataOvClick(event)">
+<!-- DATA MODAL -->
+<div class="modal-bg" id="data-bg" onclick="handleDataBg(event)">
   <div class="data-modal">
-    <div class="modal-header">
-      <div class="modal-title">&#128190; Data manager</div>
-      <button class="modal-close" onclick="closeDataModal()">&#10005;</button>
+    <div class="modal-hdr">
+      <div class="modal-ttl">💾 Data manager</div>
+      <button class="modal-x" onclick="closeDataModal()">✕</button>
     </div>
-
-    <div class="info-box">
-      Your events are saved in your browser automatically. Export a backup before uploading a new version of this file — then import it back in one click to restore everything.
+    <div class="info-banner">Your events are auto-saved in your browser. Export before uploading a new version — then import to restore everything in one click.</div>
+    <div class="dsec">
+      <div class="dsec-t">⬇ Export my events</div>
+      <div class="dsec-s">Downloads <strong>events-backup.json</strong> to your computer. Do this before every upgrade.</div>
+      <button class="dact green" onclick="exportData()">⬇ Download events-backup.json</button>
     </div>
-
-    <div class="data-section">
-      <div class="data-section-title">&#11015; Export my events</div>
-      <div class="data-section-sub">Downloads a <strong>events-backup.json</strong> file to your computer. Keep this safe — it contains all your events. Do this before uploading a new version of the calendar.</div>
-      <button class="data-action-btn green" onclick="exportData()">&#11015; Download events-backup.json</button>
-    </div>
-
-    <div class="data-section">
-      <div class="data-section-title">&#11014; Import events</div>
-      <div class="data-section-sub">Restore your events from a previously exported <strong>events-backup.json</strong> file. Your current events will be replaced with the imported ones.</div>
+    <div class="dsec">
+      <div class="dsec-t">⬆ Import events</div>
+      <div class="dsec-s">Restore from a previously exported backup file. Replaces current events.</div>
       <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)">
-      <button class="data-action-btn blue" onclick="document.getElementById('import-file').click()">&#11014; Choose events-backup.json</button>
+      <button class="dact blue" onclick="document.getElementById('import-file').click()">⬆ Choose events-backup.json</button>
     </div>
-
-    <div class="data-section">
-      <div class="data-section-title">&#128203; How to safely upgrade the calendar</div>
-      <div class="data-section-sub" style="margin-bottom:0;">
-        1. Click <strong>Export</strong> above — save the file.<br>
-        2. Upload the new <strong>index.html</strong> to GitHub.<br>
-        3. Open your live URL, go to <strong>Data &#10142; Import</strong>.<br>
-        4. Select your saved <strong>events-backup.json</strong>.<br>
-        All your events are restored instantly. &#10003;
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:flex-end;margin-top:6px;">
+    <div style="display:flex;justify-content:flex-end;margin-top:4px;">
       <button class="btn-cancel" onclick="closeDataModal()">Close</button>
     </div>
   </div>
 </div>
 
-<!-- HIDDEN FILE INPUT for import -->
-<input type="file" id="import-file-hidden" accept=".json" style="display:none" onchange="importData(event)">
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
 const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const SDAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG',ph:'KL Public Holiday',wa:'Perth Public Holiday',qld:'Brisbane Public Holiday'};
+const ASSET_NAMES={chev:'Chevron ABU',orig:'Origin / APLNG',pto:'PTO',ph:'KL Public Holiday',wa:'Perth Public Holiday',qld:'Brisbane Public Holiday'};
 const STORAGE_KEY='amc_v2';
+const PH_TYPES=['ph','wa','qld'];
+const FLAG={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
 
-/* ── SEED DATA (only used on first ever load, never overwrites saved data) ── */
 const SEED=[
   {id:1,date:'2026-04-22',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'All non-prod environments (DEV/TEST/UAT) patched simultaneously. OS patching, DNS Firewall enablement, DB engine update, EC password refresh.'},
   {id:2,date:'2026-04-28',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30–22:30 AWST',duration:'3 hours',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh. Project Wildcat environment.'},
@@ -463,129 +491,112 @@ const SEED=[
   {id:10,date:'2026-07-15',title:'Wheatstone DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2 per ABU request. RTO: 15–30 min. ABU to review near date to avoid cargo conflicts.'},
   {id:11,date:'2026-07-16',title:'Gorgon DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. Azure Fileshare: //ecfsauegorp214.file.core.windows.net/gorgon-prod'},
   {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00–20:00 AWST',duration:'2 hours',tbc:true,notes:'Deferred from Q2. RTO: 15–30 min. WAOIL Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
+  /* PTO */
+  {id:50,date:'2026-05-20',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  {id:51,date:'2026-05-21',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  {id:52,date:'2026-05-22',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  {id:53,date:'2026-05-23',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  {id:54,date:'2026-05-24',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  {id:55,date:'2026-05-25',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'6 days',tbc:false,notes:'Personal time off: 20–25 May 2026.'},
+  /* KL PUBLIC HOLIDAYS */
   {id:101,date:'2026-01-01',title:'New Year\'s Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — New Year\'s Day 2026.'},
-  {id:102,date:'2026-02-01',title:'Thaipusam',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Thaipusam. Falls on Sunday; substitute day is Tuesday 3 Feb.'},
-  {id:103,date:'2026-02-01',title:'Federal Territory Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'KL Federal Territory Day. Falls on Sunday; substitute day is Monday 2 Feb.'},
-  {id:104,date:'2026-02-02',title:'Federal Territory Day (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Federal Territory Day (original: Sunday 1 Feb).'},
-  {id:105,date:'2026-02-03',title:'Thaipusam (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Thaipusam (original: Sunday 1 Feb).'},
+  {id:102,date:'2026-02-01',title:'Thaipusam',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Thaipusam.'},
+  {id:103,date:'2026-02-01',title:'Federal Territory Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'KL Federal Territory Day.'},
+  {id:104,date:'2026-02-02',title:'Federal Territory Day (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Federal Territory Day.'},
+  {id:105,date:'2026-02-03',title:'Thaipusam (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Thaipusam.'},
   {id:106,date:'2026-02-17',title:'Chinese New Year',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Chinese New Year Holiday — Day 1.'},
   {id:107,date:'2026-02-18',title:'Chinese New Year (Day 2)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Chinese New Year Holiday — Day 2.'},
-  {id:108,date:'2026-03-06',title:'Nuzul Al-Quran (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Nuzul Al-Quran (original: Saturday 7 Mar).'},
+  {id:108,date:'2026-03-06',title:'Nuzul Al-Quran (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Nuzul Al-Quran.'},
   {id:109,date:'2026-03-07',title:'Nuzul Al-Quran',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Nuzul Al-Quran.'},
-  {id:110,date:'2026-03-20',title:'Hari Raya Aidilfitri (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Aidilfitri (original: Saturday 21 Mar).'},
+  {id:110,date:'2026-03-20',title:'Hari Raya (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Aidilfitri.'},
   {id:111,date:'2026-03-21',title:'Hari Raya Aidilfitri',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Hari Raya Aidilfitri — Day 1.'},
-  {id:112,date:'2026-03-22',title:'Hari Raya Aidilfitri (Day 2)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Hari Raya Aidilfitri — Day 2. Falls on Sunday; substitute day is Monday 23 Mar.'},
-  {id:113,date:'2026-03-23',title:'Hari Raya Aidilfitri (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Aidilfitri Day 2 (original: Sunday 22 Mar).'},
-  {id:114,date:'2026-03-24',title:'Hari Raya Aidilfitri (Additional)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Additional public holiday for Hari Raya Aidilfitri 2026.'},
+  {id:112,date:'2026-03-22',title:'Hari Raya Aidilfitri (Day 2)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Hari Raya Aidilfitri — Day 2.'},
+  {id:113,date:'2026-03-23',title:'Hari Raya (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Hari Raya Day 2.'},
+  {id:114,date:'2026-03-24',title:'Hari Raya (Additional)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Additional public holiday for Hari Raya Aidilfitri 2026.'},
   {id:115,date:'2026-05-01',title:'Labour Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Labour Day.'},
   {id:116,date:'2026-05-27',title:'Hari Raya Haji',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Hari Raya Haji.'},
-  {id:117,date:'2026-05-31',title:'Wesak Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Wesak Day. Falls on Sunday; substitute day is Monday 1 Jun.'},
-  {id:118,date:'2026-06-01',title:'Wesak Day (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Wesak Day (original: Sunday 31 May).'},
-  {id:119,date:'2026-06-02',title:'Agong\'s Birthday (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Agong\'s Birthday.'},
-  {id:120,date:'2026-06-17',title:'Awal Muharram',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Awal Muharram (Islamic New Year).'},
-  {id:121,date:'2026-08-25',title:'Prophet Muhammad\'s Birthday',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Maulidur Rasul (Prophet Muhammad\'s Birthday).'},
-  {id:122,date:'2026-08-31',title:'Merdeka Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Merdeka Day (National Day). Malaysia\'s independence day.'},
-  {id:123,date:'2026-09-16',title:'Malaysia Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Malaysia Day. Commemorates formation of Malaysia in 1963.'},
-  {id:124,date:'2026-11-08',title:'Deepavali',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Deepavali. Falls on Sunday; substitute day is Monday 9 Nov.'},
-  {id:125,date:'2026-11-09',title:'Deepavali (Substitute)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Deepavali (original: Sunday 8 Nov).'},
+  {id:117,date:'2026-05-31',title:'Wesak Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Wesak Day.'},
+  {id:118,date:'2026-06-01',title:'Wesak Day (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Wesak Day.'},
+  {id:119,date:'2026-06-02',title:'Agong\'s Birthday (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Agong\'s Birthday.'},
+  {id:120,date:'2026-06-17',title:'Awal Muharram',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Awal Muharram.'},
+  {id:121,date:'2026-08-25',title:'Prophet\'s Birthday',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Maulidur Rasul.'},
+  {id:122,date:'2026-08-31',title:'Merdeka Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Merdeka Day.'},
+  {id:123,date:'2026-09-16',title:'Malaysia Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Malaysia Day.'},
+  {id:124,date:'2026-11-08',title:'Deepavali',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Deepavali.'},
+  {id:125,date:'2026-11-09',title:'Deepavali (Sub)',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Substitute day for Deepavali.'},
   {id:126,date:'2026-12-25',title:'Christmas Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday — Christmas Day.'},
-  {id:201,date:'2026-01-01',title:'New Year\'s Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — New Year\'s Day 2026.'},
-  {id:202,date:'2026-01-26',title:'Australia Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Australia Day.'},
+  /* PERTH WA */
+  {id:201,date:'2026-01-01',title:'New Year\'s Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:202,date:'2026-01-26',title:'Australia Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
   {id:203,date:'2026-03-02',title:'Labour Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Labour Day. First Monday of March.'},
-  {id:204,date:'2026-04-03',title:'Good Friday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Good Friday.'},
-  {id:205,date:'2026-04-05',title:'Easter Sunday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Easter Sunday. Established as a WA public holiday in 2022.'},
-  {id:206,date:'2026-04-06',title:'Easter Monday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Easter Monday.'},
-  {id:207,date:'2026-04-25',title:'ANZAC Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — ANZAC Day. Falls on Saturday; additional holiday Monday 27 Apr.'},
-  {id:208,date:'2026-04-27',title:'ANZAC Day (Additional Holiday)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional public holiday — ANZAC Day falls on Saturday 25 Apr, so Monday 27 Apr is the additional holiday.'},
-  {id:209,date:'2026-06-01',title:'Western Australia Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Western Australia Day. First Monday of June.'},
-  {id:210,date:'2026-09-28',title:'King\'s Birthday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — King\'s Birthday. Note: WA observes this on the 4th Monday of September, different from other states.'},
-  {id:211,date:'2026-12-25',title:'Christmas Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Christmas Day.'},
-  {id:212,date:'2026-12-26',title:'Boxing Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Boxing Day. Falls on Saturday; additional holiday Monday 28 Dec.'},
-  {id:213,date:'2026-12-28',title:'Boxing Day (Additional Holiday)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional holiday — Boxing Day falls on Saturday 26 Dec, so Monday 28 Dec is the additional holiday.'},
-  {id:301,date:'2026-01-01',title:'New Year\'s Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — New Year\'s Day 2026.'},
-  {id:302,date:'2026-01-26',title:'Australia Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Australia Day.'},
-  {id:303,date:'2026-04-03',title:'Good Friday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Good Friday.'},
-  {id:304,date:'2026-04-04',title:'Easter Saturday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Saturday. QLD observes Easter Saturday as a public holiday.'},
-  {id:305,date:'2026-04-05',title:'Easter Sunday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Sunday.'},
-  {id:306,date:'2026-04-06',title:'Easter Monday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Easter Monday.'},
-  {id:307,date:'2026-04-25',title:'ANZAC Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — ANZAC Day. Falls on Saturday; QLD does not add an additional holiday.'},
-  {id:308,date:'2026-05-04',title:'Labour Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Labour Day. First Monday of May in QLD.'},
-  {id:309,date:'2026-08-12',title:'Royal Queensland Show (Ekka)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane-only public holiday — Royal Queensland Show (Ekka). This applies to Brisbane local government area only.'},
-  {id:310,date:'2026-10-05',title:'King\'s Birthday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — King\'s Birthday. QLD observes this on the first Monday of October.'},
-  {id:311,date:'2026-12-25',title:'Christmas Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Christmas Day.'},
-  {id:312,date:'2026-12-26',title:'Boxing Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday — Boxing Day. Falls on Saturday; additional holiday Monday 28 Dec.'},
-  {id:313,date:'2026-12-28',title:'Boxing Day (Additional Day)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD additional holiday — Boxing Day falls on Saturday, so Monday 28 Dec is an additional holiday.'},
+  {id:204,date:'2026-04-03',title:'Good Friday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:205,date:'2026-04-05',title:'Easter Sunday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:206,date:'2026-04-06',title:'Easter Monday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:207,date:'2026-04-25',title:'ANZAC Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:208,date:'2026-04-27',title:'ANZAC Day (Additional)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional holiday — ANZAC Day falls Saturday.'},
+  {id:209,date:'2026-06-01',title:'WA Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday — Western Australia Day.'},
+  {id:210,date:'2026-09-28',title:'King\'s Birthday',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA — 4th Monday of September.'},
+  {id:211,date:'2026-12-25',title:'Christmas Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:212,date:'2026-12-26',title:'Boxing Day',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA public holiday.'},
+  {id:213,date:'2026-12-28',title:'Boxing Day (Additional)',asset:'Perth Public Holiday',type:'wa',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Perth / WA additional holiday.'},
+  /* BRISBANE QLD */
+  {id:301,date:'2026-01-01',title:'New Year\'s Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:302,date:'2026-01-26',title:'Australia Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:303,date:'2026-04-03',title:'Good Friday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:304,date:'2026-04-04',title:'Easter Saturday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:305,date:'2026-04-05',title:'Easter Sunday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:306,date:'2026-04-06',title:'Easter Monday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:307,date:'2026-04-25',title:'ANZAC Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:308,date:'2026-05-04',title:'Labour Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD — First Monday of May.'},
+  {id:309,date:'2026-08-12',title:'Ekka (Brisbane Show)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane local government area only.'},
+  {id:310,date:'2026-10-05',title:'King\'s Birthday',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD — First Monday of October.'},
+  {id:311,date:'2026-12-25',title:'Christmas Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:312,date:'2026-12-26',title:'Boxing Day',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD public holiday.'},
+  {id:313,date:'2026-12-28',title:'Boxing Day (Additional)',asset:'Brisbane Public Holiday',type:'qld',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Brisbane / QLD additional holiday.'},
 ];
 
-/* ── STORAGE: always reads from localStorage first, seeds only if nothing saved ── */
+/* ── STORAGE ── */
 function loadEvts(){
   try{
     const saved=localStorage.getItem(STORAGE_KEY);
     if(saved){
       const parsed=JSON.parse(saved);
       if(Array.isArray(parsed)&&parsed.length>0){
-        /* Keep all saved maintenance events, always inject fresh holidays from SEED */
-        const maintenance=parsed.filter(e=>e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld'&&e.type!=='pi');
-        const holidays=SEED.filter(e=>e.type==='ph'||e.type==='wa'||e.type==='qld');
-        const merged=[...maintenance,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
-        return merged;
+        const maint=parsed.filter(e=>!PH_TYPES.includes(e.type)&&e.type!=='pi');
+        const holidays=SEED.filter(e=>PH_TYPES.includes(e.type));
+        return [...maint,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
       }
     }
   }catch(e){}
-  /* First-ever load — use full seed */
   const initial=JSON.parse(JSON.stringify(SEED));
   try{localStorage.setItem(STORAGE_KEY,JSON.stringify(initial));}catch(e){}
   return initial;
 }
-function saveEvts(){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(ALL_EVENTS));}catch(e){}
-}
-function rebuildMap(){
-  Object.keys(evtMap).forEach(k=>delete evtMap[k]);
-  ALL_EVENTS.forEach(e=>{if(!evtMap[e.date])evtMap[e.date]=[];evtMap[e.date].push(e);});
-}
+function saveEvts(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(ALL_EVENTS));}catch(e){}}
+function rebuildMap(){Object.keys(evtMap).forEach(k=>delete evtMap[k]);ALL_EVENTS.forEach(e=>{if(!evtMap[e.date])evtMap[e.date]=[];evtMap[e.date].push(e);});}
 
-/* ── EXPORT: download events as JSON file ── */
 function exportData(){
-  const payload={
-    exported:new Date().toISOString(),
-    version:3,
-    events:ALL_EVENTS
-  };
-  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download='events-backup.json';
-  a.click();
-  URL.revokeObjectURL(url);
+  const blob=new Blob([JSON.stringify({exported:new Date().toISOString(),version:4,events:ALL_EVENTS},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='events-backup.json';a.click();
   showToast('Backup downloaded ✓');
 }
-
-/* ── IMPORT: restore events from JSON file ── */
-function importData(event){
-  const file=event.target.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=function(e){
+function importData(ev){
+  const file=ev.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{
     try{
       const raw=JSON.parse(e.target.result);
-      let evts=[];
-      if(Array.isArray(raw)) evts=raw;
-      else if(raw.events&&Array.isArray(raw.events)) evts=raw.events;
-      else{showToast('Invalid file format');return;}
-      if(evts.length===0){showToast('No events found in file');return;}
-      if(!confirm(`Import ${evts.length} events? This will replace your current events.`))return;
-      ALL_EVENTS=evts.filter(e=>e.type!=='pi');
-      ALL_EVENTS.sort((a,b)=>a.date.localeCompare(b.date));
+      let evts=Array.isArray(raw)?raw:raw.events;
+      if(!evts||!evts.length){showToast('No events found');return;}
+      if(!confirm(`Import ${evts.length} events? Replaces current events.`))return;
+      const maint=evts.filter(e=>!PH_TYPES.includes(e.type)&&e.type!=='pi');
+      const holidays=SEED.filter(e=>PH_TYPES.includes(e.type));
+      ALL_EVENTS=[...maint,...holidays].sort((a,b)=>a.date.localeCompare(b.date));
       nextId=Math.max(0,...ALL_EVENTS.map(e=>e.id))+1;
-      saveEvts();rebuildMap();render();
-      closeDataModal();
-      showToast(`${ALL_EVENTS.length} events imported ✓`);
-    }catch(err){showToast('Could not read file — check it is a valid backup');}
+      saveEvts();rebuildMap();closeDataModal();render();showToast(`${maint.length} events imported ✓`);
+    }catch(err){showToast('Could not read file');}
   };
-  reader.readAsText(file);
-  event.target.value='';
+  r.readAsText(file);ev.target.value='';
 }
 
 let ALL_EVENTS=loadEvts();
@@ -598,11 +609,11 @@ let manualTheme=null,drawerEvtId=null,tbcVal=false,modalEditId=null;
 
 /* ── THEME ── */
 function shouldBeDark(){if(manualTheme!==null)return manualTheme;const h=new Date().getHours();return h<7||h>=19;}
-function applyTheme(){const d=shouldBeDark();document.getElementById('shell').classList.toggle('dark-mode',d);document.body.classList.toggle('dark-mode',d);document.getElementById('theme-btn').textContent=d?'🌙 Dark':'☀ Light';}
+function applyTheme(){const d=shouldBeDark();document.getElementById('shell').classList.toggle('dark',d);document.body.classList.toggle('dark',d);document.getElementById('theme-btn').textContent=d?'🌙 Dark':'☀ Light';}
 function toggleTheme(){manualTheme=!shouldBeDark();applyTheme();}
 setInterval(()=>{if(manualTheme===null)applyTheme();},60000);
 
-function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':t==='ph'?'var(--ph)':t==='wa'?'var(--wa)':t==='qld'?'var(--qld)':'var(--tbc)';}
+function typeColor(t){return t==='chev'?'var(--chev)':t==='orig'?'var(--orig)':t==='ph'?'var(--ph)':t==='wa'?'var(--wa)':t==='qld'?'var(--qld)':t==='pto'?'var(--pto)':'var(--tbc)';}
 function fmtDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});}
 function shortDate(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function isUpcoming(s){return new Date(s+'T23:59:00')>=today;}
@@ -618,6 +629,7 @@ function updateStats(){
   document.getElementById('cnt-all').textContent=ALL_EVENTS.length;
   document.getElementById('cnt-chev').textContent=ALL_EVENTS.filter(e=>e.type==='chev').length;
   document.getElementById('cnt-orig').textContent=ALL_EVENTS.filter(e=>e.type==='orig').length;
+  document.getElementById('cnt-pto').textContent=ALL_EVENTS.filter(e=>e.type==='pto').length;
   document.getElementById('cnt-ph').textContent=ALL_EVENTS.filter(e=>e.type==='ph').length;
   document.getElementById('cnt-wa').textContent=ALL_EVENTS.filter(e=>e.type==='wa').length;
   document.getElementById('cnt-qld').textContent=ALL_EVENTS.filter(e=>e.type==='qld').length;
@@ -625,29 +637,24 @@ function updateStats(){
 
 function renderUpcoming(){
   const ul=document.getElementById('upcoming-list');
-  const up=filtered(ALL_EVENTS).filter(e=>isUpcoming(e.date)).slice(0,6);
-  if(!up.length){ul.innerHTML='<div style="font-size:11px;color:var(--text3);padding:4px">No upcoming events.</div>';return;}
+  const up=filtered(ALL_EVENTS).filter(e=>isUpcoming(e.date)&&e.type!=='ph'&&e.type!=='wa'&&e.type!=='qld').slice(0,8);
+  if(!up.length){ul.innerHTML='<div style="font-size:11px;color:var(--text4);padding:4px 4px">No upcoming events.</div>';return;}
   const now=new Date();
   ul.innerHTML=up.map(e=>{
-    const evtDate=new Date(e.date+'T12:00:00');
-    const daysUntil=Math.ceil((evtDate-now)/(1000*60*60*24));
-    const isHoliday=['ph','wa','qld'].includes(e.type);
-    /* Colour coding: red = within 7 days, amber = within 30 days, normal = beyond */
-    let urgencyClass='';
-    let dateColor='var(--text3)';
-    let urgencyLabel='';
-    if(!isHoliday){
-      if(daysUntil<=7){urgencyClass='urgent';dateColor='var(--reminder)';urgencyLabel=daysUntil===0?'Today':daysUntil===1?'Tomorrow':`${daysUntil}d away`;}
-      else if(daysUntil<=30){urgencyClass='soon';dateColor='var(--pi)';urgencyLabel=`${daysUntil}d away`;}
+    const daysUntil=Math.ceil((new Date(e.date+'T12:00:00')-now)/(864e5));
+    const isPTO=e.type==='pto';
+    let urgCls='',barColor=typeColor(e.type),titleColor='var(--text2)',dateColor='var(--text4)',lbl='';
+    if(!isPTO){
+      if(daysUntil<=7){urgCls='urgent';barColor='var(--reminder)';titleColor='var(--reminder)';dateColor='var(--reminder)';lbl=daysUntil===0?'Today':daysUntil===1?'Tomorrow':`${daysUntil}d`;}
+      else if(daysUntil<=30){urgCls='soon';barColor='var(--pto)';titleColor='var(--pto)';dateColor='var(--pto)';lbl=`${daysUntil}d`;}
     }
-    const barColor=isHoliday?typeColor(e.type):(daysUntil<=7?'var(--reminder)':daysUntil<=30?'var(--pi)':typeColor(e.type));
-    return `<div class="up-item${urgencyClass?' '+urgencyClass:''}">
+    return `<div class="up-item${urgCls?' '+urgCls:''}">
       <div class="up-bar" style="background:${barColor}"></div>
       <div style="flex:1;min-width:0" onclick="openDrawer(${e.id})">
-        <div class="up-date" style="color:${dateColor};font-weight:${urgencyClass?'700':'500'}">${shortDate(e.date)}${e.tbc?' · TBC':''}${urgencyLabel?' · <span style="font-weight:700">'+urgencyLabel+'</span>':''}</div>
-        <div class="up-title" style="color:${urgencyClass==='urgent'?'var(--reminder)':urgencyClass==='soon'?'var(--pi)':'var(--text2)'}">${e.title}</div>
+        <div class="up-date" style="color:${dateColor}">${shortDate(e.date)}${e.tbc?' · TBC':''}${lbl?' · '+lbl:''}</div>
+        <div class="up-title" style="color:${titleColor}">${e.title}</div>
       </div>
-      <button class="up-edit" onclick="openModal(${e.id},null);event.stopPropagation()" title="Edit">&#9998;</button>
+      <button class="up-edit" onclick="openModal(${e.id},null);event.stopPropagation()">✏</button>
     </div>`;
   }).join('');
 }
@@ -660,8 +667,10 @@ function renderMini(){
   for(let d=1;d<=daysIn;d++){
     const ds=`${curYear}-${String(curMonth).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
     const isT=today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===d;
-    const hasR=evtMap[ds]&&filtered(evtMap[ds]).some(e=>e.tbc);
-    h+=`<div class="mc${isT?' today':''}${hasR?' has-reminder':''}" onclick="jumpToDate('${ds}')">${d}</div>`;
+    const evts=evtMap[ds]?filtered(evtMap[ds]):[];
+    const hasR=evts.some(e=>e.tbc);
+    const hasPTO=evts.some(e=>e.type==='pto');
+    h+=`<div class="mc${isT?' today':''}${hasR?' has-reminder':hasPTO?' has-pto':''}" onclick="jumpToDate('${ds}')">${d}</div>`;
   }
   const rem=42-(first+daysIn);
   for(let i=1;i<=rem;i++)h+=`<div class="mc other">${i}</div>`;
@@ -678,31 +687,30 @@ function renderMonth(){
   for(let d=1;d<=daysIn;d++)cells.push({d,cur:true,y:curYear,m:curMonth});
   const rem=42-cells.length;
   for(let i=1;i<=rem;i++)cells.push({d:i,cur:false,y:curMonth===12?curYear+1:curYear,m:curMonth===12?1:curMonth+1});
-  let h=`<div class="wh">${SDAYS.map(d=>`<div>${d}</div>`).join('')}</div><div class="mgd">`;
+  let h=`<div class="wh">${SDAYS.map(s=>`<div>${s}</div>`).join('')}</div><div class="mgd">`;
   cells.forEach(c=>{
     const ds=`${c.y}-${String(c.m).padStart(2,'0')}-${String(c.d).padStart(2,'0')}`;
     const isT=c.cur&&today.getFullYear()===curYear&&today.getMonth()===curMonth-1&&today.getDate()===c.d;
+    const isWE=c.cur&&(new Date(ds+'T12:00:00').getDay()===0||new Date(ds+'T12:00:00').getDay()===6);
     const evts=evtMap[ds]?filtered(evtMap[ds]):[];
-    const phTypes=['ph','wa','qld'];
-    const flagMap={ph:'🇲🇾',wa:'🇦🇺',qld:'🇦🇺'};
-    const hasR=evts.some(e=>e.tbc),hasE=evts.length>0;
-    const allHoliday=hasE&&evts.every(e=>phTypes.includes(e.type));
-    const hasMaint=evts.some(e=>!phTypes.includes(e.type));
+    const hasR=evts.some(e=>e.tbc);
+    const hasPTO=evts.some(e=>e.type==='pto');
     let cls='cday';
-    if(!c.cur)cls+=' other';
-    else if(isT)cls+=' today';
-    else if(hasR)cls+=' day-reminder';
-    else if(hasMaint)cls+=' day-event';
-    else if(allHoliday)cls+=' day-holiday';
-    else cls+=' day-empty';
-    const dot=hasR?`<div class="day-indicator" style="background:var(--reminder)"></div>`:hasMaint?`<div class="day-indicator" style="background:var(--accent);opacity:.5"></div>`:`<div style="width:6px"></div>`;
-    const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()" title="Add event">+</button>`:'';
-    h+=`<div class="${cls}"><div class="dn-wrap"><div class="dn">${c.d}</div>${c.cur?`<div style="display:flex;align-items:center;gap:2px">${dot}${addBtn}</div>`:''}</div>${evts.map(e=>{
-      const isPH=phTypes.includes(e.type);
-      const label=isPH?`${flagMap[e.type]} ${e.title}`:e.title;
-      const assigneeLine=(!isPH&&e.assignee)?`<div class="cel-assignee">👤 ${e.assignee}</div>`:'';
-      return `<button class="cel ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}${e.assignee?' — '+e.assignee:''}" style="height:auto;white-space:normal;line-height:1.3;">${label}${assigneeLine}</button>`;
-    }).join('')}</div>`;
+    if(!c.cur)cls+=' other-month';
+    else if(isT)cls+=' is-today';
+    else if(hasR)cls+=' has-reminder';
+    else if(hasPTO)cls+=' has-pto';
+    else if(evts.length>0)cls+=' has-event';
+    else if(isWE)cls+=' is-weekend';
+    const addBtn=c.cur?`<button class="day-add" onclick="openModal(null,'${ds}');event.stopPropagation()">+</button>`:'';
+    h+=`<div class="${cls}"><div class="dn-row"><div class="dn">${c.d}</div>${c.cur?addBtn:''}</div>`;
+    evts.forEach(e=>{
+      const isPH=PH_TYPES.includes(e.type);
+      const label=isPH?`${FLAG[e.type]} ${e.title}`:e.type==='pto'?`🏖 ${e.title}`:e.title;
+      h+=`<div class="evt ${e.tbc?'tbc-evt':e.type}" onclick="openDrawer(${e.id})" title="${e.title}"><span class="evt-label">${label}</span></div>`;
+      if(!isPH&&e.type!=='pto'&&e.assignee)h+=`<div class="evt-assignee">👤 ${e.assignee}</div>`;
+    });
+    h+=`</div>`;
   });
   h+='</div>';
   body.innerHTML=h;
@@ -715,54 +723,50 @@ function renderList(){
   vis.forEach(e=>{const d=new Date(e.date+'T12:00:00');const k=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;if(!groups[k])groups[k]={label:MONTHS[d.getMonth()]+' '+d.getFullYear(),events:[]};groups[k].events.push(e);});
   let h='<div class="lv">';
   Object.keys(groups).sort().forEach(k=>{
-    const g=groups[k];
-    h+=`<div class="lmg"><div class="lml">${g.label}</div>`;
+    const g=groups[k];h+=`<div class="lmg"><div class="lml">${g.label}</div>`;
     g.events.forEach(e=>{
       const d=new Date(e.date+'T12:00:00');
-      const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`));
-      const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
-      const assigneeHtml=e.assignee?`<span class="assignee-chip"><span class="assignee-avatar">${e.assignee.charAt(0).toUpperCase()}</span>${e.assignee}</span>`:'';
-      h+=`<div class="le${e.tbc?' tbc-row':''}" onclick="openDrawer(${e.id})">
-        <div class="ldc"><div class="ldn">${String(d.getDate()).padStart(2,'0')}</div><div class="ldname">${DAYS[d.getDay()].slice(0,3)}</div></div>
-        <div class="ldiv"></div>
-        <div class="lcon">
-          <div class="ltitle">${e.title} ${eb}</div>
-          <div class="lmeta">${ab}<span style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text3)">${e.time}</span><span style="font-size:11px;color:var(--text3)">${e.duration}</span>${assigneeHtml}</div>
-          <div class="lnotes">${e.notes.length>120?e.notes.slice(0,120)+'…':e.notes}</div>
+      const isPH=PH_TYPES.includes(e.type),isPTO=e.type==='pto';
+      const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:isPH?`<span class="badge ${e.type}-b">Public Holiday</span>`:isPTO?`<span class="badge pto-b">PTO</span>`:(e.env==='Prod'?`<span class="badge prod">Prod</span>`:`<span class="badge nonprod">Non-prod</span>`);
+      const ab=`<span class="badge ${e.type==='orig'?'orig-b':e.type==='ph'?'ph-b':e.type==='wa'?'wa-b':e.type==='qld'?'qld-b':e.type==='pto'?'pto-b':'chev-b'}">${e.asset}</span>`;
+      const assigneeHtml=e.assignee&&!isPH&&!isPTO?`<span class="assignee-chip"><span class="av">${e.assignee[0].toUpperCase()}</span>${e.assignee}</span>`:'';
+      h+=`<div class="le" onclick="openDrawer(${e.id})">
+        <div class="le-accent" style="background:${typeColor(e.type)}"></div>
+        <div class="le-body">
+          <div class="le-date"><div class="le-day">${String(d.getDate()).padStart(2,'0')}</div><div class="le-dow">${DAYS[d.getDay()].slice(0,3)}</div></div>
+          <div class="le-divider"></div>
+          <div class="le-content">
+            <div class="le-title">${isPTO?'🏖 ':isPH?FLAG[e.type]+' ':''}${e.title} ${eb}</div>
+            <div class="le-meta">${ab}<span style="font-family:'JetBrains Mono',monospace;font-size:11px">${e.time}</span><span style="font-size:11px">${e.duration}</span>${assigneeHtml}</div>
+            <div class="le-notes">${e.notes.length>120?e.notes.slice(0,120)+'…':e.notes}</div>
+          </div>
         </div>
         <div class="le-actions" onclick="event.stopPropagation()">
-          <button class="le-btn" onclick="openModal(${e.id},null)">&#9998; Edit</button>
-          <button class="le-btn del" onclick="deleteEvt(${e.id})">&#128465;</button>
+          <button class="la-btn" onclick="openModal(${e.id},null)">✏ Edit</button>
+          <button class="la-btn del" onclick="deleteEvt(${e.id})">🗑</button>
         </div>
       </div>`;
     });
     h+='</div>';
   });
-  if(!vis.length)h+='<div style="color:var(--text3);font-size:13px;padding:40px;text-align:center;">No events match the current filter.</div>';
-  h+='</div>';
-  body.innerHTML=h;
+  if(!vis.length)h+='<div style="color:var(--text4);font-size:13px;padding:40px;text-align:center;">No events match the current filter.</div>';
+  h+='</div>';body.innerHTML=h;
 }
 
+/* ── DRAWER ── */
 function openDrawer(id){
   const e=ALL_EVENTS.find(x=>x.id===id);if(!e)return;
   drawerEvtId=id;
-  document.getElementById('d-bar').style.background=e.tbc?'var(--reminder)':typeColor(e.type);
+  document.getElementById('d-accent').style.background=e.tbc?'var(--reminder)':typeColor(e.type);
   document.getElementById('d-title').textContent=e.title;
   document.getElementById('d-date').textContent=fmtDate(e.date);
-  const eb=e.tbc?`<span class="badge tbc-b">TBC — confirmation needed</span>`:(e.type==='ph'||e.type==='wa'||e.type==='qld'?`<span class="badge ${e.type}-b">Public Holiday</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`));
-  const ab=e.type==='orig'?`<span class="badge orig-b">${e.asset}</span>`:e.type==='ph'?`<span class="badge ph-b">${e.asset}</span>`:e.type==='wa'?`<span class="badge wa-b">${e.asset}</span>`:e.type==='qld'?`<span class="badge qld-b">${e.asset}</span>`:`<span class="badge chev-b">${e.asset}</span>`;
+  const isPH=PH_TYPES.includes(e.type),isPTO=e.type==='pto';
+  const eb=e.tbc?`<span class="badge tbc-b">TBC</span>`:isPH?`<span class="badge ${e.type}-b">Public Holiday</span>`:isPTO?`<span class="badge pto-b">PTO</span>`:(e.env==='Prod'?`<span class="badge prod">Production</span>`:`<span class="badge nonprod">Non-production</span>`);
+  const ab=`<span class="badge ${e.type==='orig'?'orig-b':e.type==='ph'?'ph-b':e.type==='wa'?'wa-b':e.type==='qld'?'qld-b':e.type==='pto'?'pto-b':'chev-b'}">${e.asset}</span>`;
   document.getElementById('d-badges').innerHTML=ab+eb;
-  const flagMap={ph:'🇲🇾 KL Malaysia',wa:'🇦🇺 Perth, WA',qld:'🇦🇺 Brisbane, QLD'};
-  const isHoliday=['ph','wa','qld'].includes(e.type);
-  const assigneeRow=e.assignee?`<div class="d-fl"><div class="d-fl-label">Assignee</div><div class="d-fl-val"><span class="assignee-chip"><span class="assignee-avatar">${e.assignee.charAt(0).toUpperCase()}</span>${e.assignee}</span></div></div>`:'';
-  const countryRow=isHoliday?`<div class="d-fl"><div class="d-fl-label">Country / Region</div><div class="d-fl-val">${flagMap[e.type]}</div></div>`:'';
-  document.getElementById('d-fields').innerHTML=`
-    ${countryRow}
-    <div class="d-fl"><div class="d-fl-label">Time window</div><div class="d-fl-val">${e.time}</div></div>
-    <div class="d-fl"><div class="d-fl-label">Duration</div><div class="d-fl-val">${e.duration}</div></div>
-    ${assigneeRow}
-    <hr class="d-div">
-    <div class="d-fl"><div class="d-fl-label">Notes</div><div class="d-fl-val">${e.notes}</div></div>`;
+  const countryRow=isPH?`<div class="d-field"><div class="d-label">Region</div><div class="d-val">${FLAG[e.type]} ${e.type==='ph'?'KL, Malaysia':e.type==='wa'?'Perth, WA':'Brisbane, QLD'}</div></div>`:'';
+  const assigneeRow=e.assignee?`<div class="d-field"><div class="d-label">Assignee</div><div class="d-val"><span class="assignee-chip"><span class="av">${e.assignee[0].toUpperCase()}</span>${e.assignee}</span></div></div>`:'';
+  document.getElementById('d-body').innerHTML=`${countryRow}<div class="d-field"><div class="d-label">Time window</div><div class="d-val">${e.time}</div></div><div class="d-field"><div class="d-label">Duration</div><div class="d-val">${e.duration}</div></div>${assigneeRow}<hr class="d-sep"><div class="d-field"><div class="d-label">Notes</div><div class="d-val">${e.notes||'—'}</div></div>`;
   document.getElementById('overlay').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }
@@ -770,26 +774,35 @@ function closeDrawer(){document.getElementById('overlay').classList.remove('open
 function editFromDrawer(){if(drawerEvtId!==null){const id=drawerEvtId;closeDrawer();openModal(id,null);}}
 function deleteFromDrawer(){if(drawerEvtId!==null){const id=drawerEvtId;closeDrawer();deleteEvt(id);}}
 
+/* ── MODAL ── */
+function updateModalFields(){
+  const t=document.getElementById('f-type').value;
+  const isMaint=t==='chev'||t==='orig';
+  document.getElementById('maint-fields').style.display=isMaint?'grid':'none';
+  document.getElementById('time-field').style.display=(isMaint)?'block':'none';
+  document.getElementById('assignee-field').style.display=isMaint?'block':'none';
+}
 function openModal(editId,prefillDate){
   modalEditId=editId;
   const e=editId!==null?ALL_EVENTS.find(x=>x.id===editId):null;
-  document.getElementById('modal-title').textContent=e?'Edit event':'Add event';
-  document.getElementById('btn-delete').style.display=e?'inline-block':'none';
+  document.getElementById('modal-ttl').textContent=e?'Edit event':'Add event';
+  document.getElementById('btn-del-modal').style.display=e?'inline-block':'none';
   document.getElementById('f-title').value=e?e.title:'';
   document.getElementById('f-date').value=e?e.date:(prefillDate||new Date().toISOString().slice(0,10));
   document.getElementById('f-type').value=e?e.type:'chev';
   document.getElementById('f-env').value=e?e.env:'Prod';
-  document.getElementById('f-duration').value=e?(e.tbc?'':e.duration):'';
-  document.getElementById('f-time').value=e?(e.tbc?'':e.time):'';
+  document.getElementById('f-duration').value=e&&!e.tbc?e.duration:'';
+  document.getElementById('f-time').value=e&&!e.tbc?e.time:'';
   document.getElementById('f-notes').value=e?e.notes:'';
   document.getElementById('f-assignee').value=e?(e.assignee||''):'';
   tbcVal=e?e.tbc:false;
   document.getElementById('tbc-track').classList.toggle('on',tbcVal);
-  document.getElementById('modal-ov').classList.add('open');
+  updateModalFields();
+  document.getElementById('modal-bg').classList.add('open');
   setTimeout(()=>document.getElementById('f-title').focus(),80);
 }
-function closeModal(){document.getElementById('modal-ov').classList.remove('open');modalEditId=null;}
-function handleOvClick(e){if(e.target===document.getElementById('modal-ov'))closeModal();}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');modalEditId=null;}
+function handleModalBg(e){if(e.target===document.getElementById('modal-bg'))closeModal();}
 function toggleTbc(){tbcVal=!tbcVal;document.getElementById('tbc-track').classList.toggle('on',tbcVal);}
 
 function saveEvent(){
@@ -799,8 +812,8 @@ function saveEvent(){
   if(!date){document.getElementById('f-date').focus();return;}
   const type=document.getElementById('f-type').value;
   const env=document.getElementById('f-env').value;
-  const duration=document.getElementById('f-duration').value.trim()||'TBC';
-  const time=tbcVal?'TBC':(document.getElementById('f-time').value.trim()||'TBC');
+  const duration=document.getElementById('f-duration').value.trim()||'All day';
+  const time=tbcVal?'TBC':(document.getElementById('f-time').value.trim()||'All day');
   const notes=document.getElementById('f-notes').value.trim();
   const assignee=document.getElementById('f-assignee').value.trim();
   if(modalEditId!==null){
@@ -813,30 +826,28 @@ function saveEvent(){
   }
   saveEvts();rebuildMap();closeModal();render();
 }
-
 function deleteEvt(id){
-  if(!confirm('Delete this event? This cannot be undone.'))return;
+  if(!confirm('Delete this event?'))return;
   const idx=ALL_EVENTS.findIndex(x=>x.id===id);
-  if(idx>-1){ALL_EVENTS.splice(idx,1);saveEvts();rebuildMap();showToast('Event deleted');render();}
+  if(idx>-1){ALL_EVENTS.splice(idx,1);saveEvts();rebuildMap();showToast('Deleted');render();}
 }
 function deleteFromModal(){
-  if(modalEditId!==null&&confirm('Delete this event? This cannot be undone.')){
+  if(modalEditId!==null&&confirm('Delete this event?')){
     const idx=ALL_EVENTS.findIndex(x=>x.id===modalEditId);
-    if(idx>-1){ALL_EVENTS.splice(idx,1);saveEvts();rebuildMap();showToast('Event deleted');closeModal();render();}
+    if(idx>-1){ALL_EVENTS.splice(idx,1);saveEvts();rebuildMap();closeModal();showToast('Deleted');render();}
   }
 }
-
-function openDataModal(){document.getElementById('data-modal-ov').classList.add('open');}
-function closeDataModal(){document.getElementById('data-modal-ov').classList.remove('open');}
-function handleDataOvClick(e){if(e.target===document.getElementById('data-modal-ov'))closeDataModal();}
-
-function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function openDataModal(){document.getElementById('data-bg').classList.add('open');}
+function closeDataModal(){document.getElementById('data-bg').classList.remove('open');}
+function handleDataBg(e){if(e.target===document.getElementById('data-bg'))closeDataModal();}
+function setFilter(f,btn){activeFilter=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
 function setView(v){curView=v;document.getElementById('btn-month').classList.toggle('active',v==='month');document.getElementById('btn-list').classList.toggle('active',v==='list');render();}
 function prevMonth(){curMonth===1?(curMonth=12,curYear--):curMonth--;render();}
 function nextMonth(){curMonth===12?(curMonth=1,curYear++):curMonth++;render();}
 function goToday(){curYear=today.getFullYear();curMonth=today.getMonth()+1;render();}
 function jumpToDate(s){const d=new Date(s+'T12:00:00');curYear=d.getFullYear();curMonth=d.getMonth()+1;setView('month');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeDrawer();closeDataModal();}});
+document.getElementById('f-type').addEventListener('change',updateModalFields);
 
 function render(){
   const cnt=filtered(ALL_EVENTS).filter(e=>{const d=new Date(e.date+'T12:00:00');return d.getFullYear()===curYear&&d.getMonth()===curMonth-1;}).length;
@@ -846,9 +857,9 @@ function render(){
   renderMini();renderUpcoming();updateStats();
 }
 
-document.getElementById('today-display').textContent=today.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
-applyTheme();
-render();
+const now=new Date();
+document.getElementById('today-display').textContent=now.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+applyTheme();render();
 </script>
 </body>
 </html>
