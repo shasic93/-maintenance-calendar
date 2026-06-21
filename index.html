@@ -758,8 +758,8 @@ let ALL_EVENTS=loadEvts();
 const evtMap={};
 rebuildMap();
 let nextId=Math.max(0,...ALL_EVENTS.map(e=>e.id))+1;
-let curYear=today.getFullYear(),curMonth=today.getMonth()+1,activeFilter='all',curView='month';
 const today=new Date();
+let curYear=today.getFullYear(),curMonth=today.getMonth()+1,activeFilter='all',curView='month';
 let manualTheme=null,drawerEvtId=null,tbcVal=false,modalEditId=null;
 
 /* ── THEME ── */
