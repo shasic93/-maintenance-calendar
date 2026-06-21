@@ -89,12 +89,16 @@ body{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;-webkit-font-
 .sr-meta{font-size:10px;color:var(--c-text3);font-family:'JetBrains Mono',monospace}
 
 /* health */
-.health{display:flex;align-items:center;gap:6px;background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:20px;padding:4px 11px;cursor:pointer;transition:all .15s}
-.health:hover{border-color:var(--c-accent)}
-.health-lbl{font-size:10px;color:var(--c-text3);font-weight:500}
-.health-val{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace}
-.health-track{width:32px;height:3px;background:var(--c-border2);border-radius:2px;overflow:hidden}
-.health-fill{height:100%;border-radius:2px;transition:width .4s}
+.health{display:flex;align-items:center;gap:7px;background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:20px;padding:5px 12px;cursor:pointer;transition:all .15s;position:relative}
+.health:hover{border-color:var(--c-accent);background:var(--c-surface3)}
+.health-icon{font-size:13px;flex-shrink:0}
+.health-inner{display:flex;flex-direction:column;gap:2px}
+.health-lbl{font-size:9px;color:var(--c-text4);font-weight:600;letter-spacing:.06em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;line-height:1}
+.health-row{display:flex;align-items:center;gap:6px}
+.health-val{font-size:12px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1}
+.health-grade{font-size:10px;font-weight:600;color:var(--c-text3);line-height:1}
+.health-track{width:44px;height:4px;background:var(--c-border2);border-radius:2px;overflow:hidden}
+.health-fill{height:100%;border-radius:2px;transition:width .5s ease}
 
 .tb-r{margin-left:auto;display:flex;align-items:center;gap:6px}
 .tb-pill{font-size:10px;padding:3px 9px;border-radius:20px;border:1px solid var(--c-border2);color:var(--c-text3);font-family:'JetBrains Mono',monospace;background:var(--c-surface2)}
@@ -452,10 +456,16 @@ textarea.fin{resize:vertical;min-height:65px}
     <input class="srch-inp" id="srch-inp" type="text" placeholder="Search events… /" autocomplete="off" oninput="doSearch(this.value)" onfocus="showDrop()" onblur="setTimeout(hideDrop,200)">
     <div class="srch-drop" id="srch-drop"></div>
   </div>
-  <div class="health" onclick="openHM()" title="Maintenance health score">
-    <span class="health-lbl">Health</span>
-    <span class="health-val" id="hp-val">—</span>
-    <div class="health-track"><div class="health-fill" id="hp-fill"></div></div>
+  <div class="health" onclick="openHM()" title="Click to see your schedule health breakdown">
+    <span class="health-icon" id="hp-icon">📊</span>
+    <div class="health-inner">
+      <span class="health-lbl">Health · <span id="hp-label-month">—</span></span>
+      <div class="health-row">
+        <span class="health-val" id="hp-val">—</span>
+        <span class="health-grade" id="hp-grade">/100</span>
+        <div class="health-track"><div class="health-fill" id="hp-fill"></div></div>
+      </div>
+    </div>
   </div>
   <div class="tb-r">
     <div class="tb-pill live"><div class="ldot"></div>Live</div>
@@ -589,6 +599,23 @@ textarea.fin{resize:vertical;min-height:65px}
         <option value="qld">Brisbane (QLD) Public Holiday</option>
       </select>
     </div>
+    <div class="fr" id="mf-activity"><label class="flbl">Activity type</label>
+      <select class="fin" id="f-activity">
+        <option value="">— Select activity type —</option>
+        <option value="OS Patching">OS Patching</option>
+        <option value="DNS Firewall">DNS Firewall Rollout</option>
+        <option value="DB Maintenance">DB Maintenance / Engine Update</option>
+        <option value="EG Upgrade">EG Upgrade</option>
+        <option value="EC Password Refresh">EC Password Refresh</option>
+        <option value="Infrastructure">Infrastructure Change</option>
+        <option value="Release">Software Release / Deployment</option>
+        <option value="Incident">Incident Response</option>
+        <option value="UAT">UAT / Testing</option>
+        <option value="Meeting">Meeting / Review</option>
+        <option value="Audit">Audit / Compliance</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
     <div class="fr two" id="mf-maint">
       <div><label class="flbl">Environment</label><select class="fin" id="f-env"><option value="Prod">Production</option><option value="Non-prod">Non-production</option></select></div>
       <div><label class="flbl">Duration (hours)</label><div class="dur-wrap"><input class="fin" id="f-dur" type="number" min="0.5" step="0.5" placeholder="e.g. 3"><span class="dur-sfx">hrs</span></div></div>
@@ -636,13 +663,89 @@ textarea.fin{resize:vertical;min-height:65px}
 
 <!-- HEALTH MODAL -->
 <div class="mbg" id="hm-bg" onclick="handleHMBG(event)">
-  <div class="hm">
-    <div class="mhdr"><div class="mttl">📊 Maintenance health</div><button class="mx" onclick="closeHM()">✕</button></div>
-    <div class="hm-score-row">
-      <div><div style="font-size:10px;color:var(--c-text3);margin-bottom:3px">Score</div><div class="hm-big" id="hm-big">—</div><div style="font-size:10px;color:var(--c-text3);margin-top:2px" id="hm-grade">—</div></div>
-      <div class="hm-track"><div class="hm-fill" id="hm-fill"></div></div>
+  <div class="hm" style="width:600px;max-width:96vw">
+    <div class="mhdr">
+      <div class="mttl">📊 Schedule health</div>
+      <button class="mx" onclick="closeHM()">✕</button>
     </div>
-    <div id="hm-items"></div>
+
+    <!-- Explanation banner -->
+    <div style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-sm);padding:9px 12px;margin-bottom:14px;font-size:12px;color:var(--c-text2);line-height:1.6">
+      <strong style="color:var(--c-accent2)">What is this?</strong> Your schedule health score (0–100) measures how well-planned your maintenance is for a given period. In operations, each month is independent — a volatile month doesn't carry into the next. The topbar always shows <strong>the currently viewed month</strong>.
+    </div>
+
+    <!-- Month + Year scores side by side -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+
+      <!-- This month -->
+      <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r);padding:14px">
+        <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:8px" id="hm-month-name">This month</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div>
+            <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1" id="hm-month-score">—</div>
+            <div style="font-size:11px;font-weight:600;margin-top:3px" id="hm-month-grade">—</div>
+          </div>
+          <div style="flex:1">
+            <div class="hm-track"><div class="hm-fill" id="hm-month-fill"></div></div>
+            <div style="font-size:9px;color:var(--c-text4);margin-top:4px;font-family:'JetBrains Mono',monospace">out of 100</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Full year -->
+      <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r);padding:14px">
+        <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:8px">Full year average</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div>
+            <div style="font-size:36px;font-weight:700;font-family:'JetBrains Mono',monospace;line-height:1" id="hm-year-score">—</div>
+            <div style="font-size:11px;font-weight:600;margin-top:3px" id="hm-year-grade">—</div>
+          </div>
+          <div style="flex:1">
+            <div class="hm-track"><div class="hm-fill" id="hm-year-fill"></div></div>
+            <div style="font-size:9px;color:var(--c-text4);margin-top:4px;font-family:'JetBrains Mono',monospace">all of this year</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Monthly trend bars for the year -->
+    <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r);padding:12px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:10px">Monthly health trend — all 12 months</div>
+      <div style="display:flex;gap:4px;align-items:flex-end" id="hm-trend"></div>
+    </div>
+
+    <!-- Two column: breakdown + planning tips -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:7px">This month breakdown</div>
+        <div id="hm-items"></div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:7px">Planning tips</div>
+        <div id="hm-tips"></div>
+      </div>
+    </div>
+
+    <!-- Grade scale -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:12px">
+      <div style="background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);border-radius:var(--r-xs);padding:6px 8px;text-align:center"><div style="font-size:14px">🔴</div><div style="font-size:10px;font-weight:700;color:#f87171">0–59</div><div style="font-size:9px;color:var(--c-text4)">Needs attention</div></div>
+      <div style="background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.15);border-radius:var(--r-xs);padding:6px 8px;text-align:center"><div style="font-size:14px">🟡</div><div style="font-size:10px;font-weight:700;color:#fbbf24">60–74</div><div style="font-size:9px;color:var(--c-text4)">Fair</div></div>
+      <div style="background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.15);border-radius:var(--r-xs);padding:6px 8px;text-align:center"><div style="font-size:14px">🟢</div><div style="font-size:10px;font-weight:700;color:#34d399">75–89</div><div style="font-size:9px;color:var(--c-text4)">Good</div></div>
+      <div style="background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);border-radius:var(--r-xs);padding:6px 8px;text-align:center"><div style="font-size:14px">✅</div><div style="font-size:10px;font-weight:700;color:#34d399">90–100</div><div style="font-size:9px;color:var(--c-text4)">Excellent</div></div>
+    </div>
+
+    <!-- Deduction rules -->
+    <div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:10px 12px;margin-bottom:12px">
+      <div style="font-size:10px;font-weight:600;color:var(--c-text4);text-transform:uppercase;letter-spacing:.07em;font-family:'JetBrains Mono',monospace;margin-bottom:7px">How score is calculated</div>
+      <div style="font-size:11px;color:var(--c-text3);margin-bottom:5px">Starts at <strong style="color:var(--c-orig)">100</strong> — deductions applied per month:</div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--c-border)"><span style="color:var(--c-text2)">% of events marked TBC (unconfirmed)</span><span style="color:#f87171;font-weight:700;font-family:'JetBrains Mono',monospace">up to −50</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0;border-bottom:1px solid var(--c-border)"><span style="color:var(--c-text2)">Each scheduling conflict (same-day events)</span><span style="color:#f87171;font-weight:700;font-family:'JetBrains Mono',monospace">−15 each</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;padding:3px 0"><span style="color:var(--c-text2)">Each maintenance event on your PTO day</span><span style="color:#fb923c;font-weight:700;font-family:'JetBrains Mono',monospace">−10 each</span></div>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:flex-end"><button class="btn-cancel" onclick="closeHM()">Close</button></div>
   </div>
 </div>
 
@@ -853,39 +956,123 @@ function renderConflicts(){
 }
 
 /* HEALTH */
-function calcHealth(){
-  const mn=AE.filter(e=>isMn(e));
-  if(!mn.length)return{score:100,grade:'N/A',color:'var(--c-orig)',items:[]};
-  const tbc=mn.filter(e=>e.tbc).length;
-  const cx=getConflicts().filter(c=>!c.isPTO).length;
-  const ptocx=getConflicts().filter(c=>c.isPTO).length;
-  let s=100-tbc/mn.length*50-cx*15-ptocx*10;
+/* ── SMART HEALTH SCORING ── */
+function eventsInMonth(y,m){
+  const prefix=y+'-'+String(m).padStart(2,'0');
+  return AE.filter(e=>e.date.startsWith(prefix)&&isMn(e));
+}
+function eventsInYear(y){
+  return AE.filter(e=>e.date.startsWith(String(y))&&isMn(e));
+}
+function conflictsInSet(evts){
+  const cx=[];
+  for(let i=0;i<evts.length;i++)for(let j=i+1;j<evts.length;j++)if(evts[i].date===evts[j].date)cx.push({a:evts[i],b:evts[j],date:evts[i].date});
+  const ptoDates=new Set(AE.filter(e=>e.type==='pto').map(e=>e.date));
+  evts.forEach(e=>{if(ptoDates.has(e.date))cx.push({a:e,b:{title:'Your PTO'},date:e.date,isPTO:true});});
+  return cx;
+}
+function scoreSet(evts){
+  if(!evts.length)return{score:null,grade:'No events',color:'var(--c-text4)',tbc:0,cx:0,ptocx:0,prod:0,total:0};
+  const tbc=evts.filter(e=>e.tbc).length;
+  const allCx=conflictsInSet(evts);
+  const cx=allCx.filter(c=>!c.isPTO).length;
+  const ptocx=allCx.filter(c=>c.isPTO).length;
+  const prod=evts.filter(e=>e.env==='Prod').length;
+  let s=100;
+  s-=Math.round(tbc/evts.length*50); // up to -50 for TBC rate
+  s-=cx*15;                           // -15 per conflict
+  s-=ptocx*10;                        // -10 per PTO clash
   s=Math.max(0,Math.min(100,Math.round(s)));
   const grade=s>=90?'Excellent':s>=75?'Good':s>=60?'Fair':'Needs attention';
   const color=s>=90?'var(--c-orig)':s>=75?'var(--c-chev)':s>=60?'var(--c-pto)':'var(--c-tbc)';
-  return{score:s,grade,color,items:[
-    {l:'Total maintenance',v:mn.length,c:''},
-    {l:'TBC / unconfirmed',v:tbc+' ('+Math.round(tbc/mn.length*100)+'%)',c:tbc/mn.length>0.3?'b':tbc>0?'w':'g'},
-    {l:'Scheduling conflicts',v:cx,c:cx>0?'b':'g'},
-    {l:'Maintenance on PTO',v:ptocx,c:ptocx>0?'w':'g'},
-    {l:'Upcoming',v:mn.filter(e=>isUp(e.date)).length,c:''},
-  ]};
+  return{score:s,grade,color,tbc,cx,ptocx,prod,total:evts.length};
+}
+function calcHealth(){
+  // Month score = currently viewed month
+  const mEvts=eventsInMonth(CY,CM);
+  const ms=scoreSet(mEvts);
+  // Year score = current calendar year
+  const yEvts=eventsInYear(CY);
+  const ys=scoreSet(yEvts);
+  // Topbar shows month score (more relevant for ops)
+  const display=ms.score!==null?ms:ys;
+  return{month:ms,year:ys,display,
+    // legacy items for health modal
+    items:[
+      {l:'Events this month',v:ms.total,c:''},
+      {l:'TBC this month',v:ms.tbc+(ms.total?` (${Math.round(ms.tbc/ms.total*100)}%)`:' (0%)'),c:ms.tbc/Math.max(ms.total,1)>0.3?'b':ms.tbc>0?'w':'g'},
+      {l:'Conflicts this month',v:ms.cx,c:ms.cx>0?'b':'g'},
+      {l:'Maintenance on PTO',v:ms.ptocx,c:ms.ptocx>0?'w':'g'},
+      {l:'Production events',v:ms.prod,c:''},
+    ]
+  };
 }
 function updateHealth(){
   const h=calcHealth();
-  document.getElementById('hp-val').textContent=h.score;
-  document.getElementById('hp-val').style.color=h.color;
-  document.getElementById('hp-fill').style.width=h.score+'%';
-  document.getElementById('hp-fill').style.background=h.color;
+  const s=h.display.score;
+  const color=h.display.color;
+  const grade=h.display.grade;
+  document.getElementById('hp-val').textContent=s!==null?s:'—';
+  document.getElementById('hp-val').style.color=color;
+  document.getElementById('hp-grade').textContent=s!==null?'· '+grade:'';
+  document.getElementById('hp-grade').style.color=color;
+  document.getElementById('hp-icon').textContent=s===null?'📊':s>=90?'✅':s>=75?'🟢':s>=60?'🟡':'🔴';
+  document.getElementById('hp-fill').style.width=(s||0)+'%';
+  document.getElementById('hp-fill').style.background=color;
+  // update label to show which month
+  document.getElementById('hp-label-month').textContent=MONTHS[CM-1].slice(0,3);
 }
 function openHM(){
   const h=calcHealth();
-  document.getElementById('hm-big').textContent=h.score;
-  document.getElementById('hm-big').style.color=h.color;
-  document.getElementById('hm-grade').textContent=h.grade;
-  document.getElementById('hm-fill').style.width=h.score+'%';
-  document.getElementById('hm-fill').style.background=h.color;
-  document.getElementById('hm-items').innerHTML=h.items.map(i=>'<div class="hm-row"><span class="hm-lbl">'+i.l+'</span><span class="hm-val '+i.c+'">'+i.v+'</span></div>').join('');
+  const ms=h.month,ys=h.year;
+
+  // Month section
+  const mScore=ms.score!==null?ms.score:'—';
+  document.getElementById('hm-month-score').textContent=mScore;
+  document.getElementById('hm-month-score').style.color=ms.color;
+  document.getElementById('hm-month-grade').textContent=ms.score!==null?(ms.score>=90?'✅ Excellent':ms.score>=75?'🟢 Good':ms.score>=60?'🟡 Fair':'🔴 Needs attention'):'No maintenance this month';
+  document.getElementById('hm-month-grade').style.color=ms.color;
+  document.getElementById('hm-month-fill').style.width=(ms.score||0)+'%';
+  document.getElementById('hm-month-fill').style.background=ms.color;
+  document.getElementById('hm-month-name').textContent=MONTHS[CM-1]+' '+CY;
+
+  // Year section
+  const yScore=ys.score!==null?ys.score:'—';
+  document.getElementById('hm-year-score').textContent=yScore;
+  document.getElementById('hm-year-score').style.color=ys.color;
+  document.getElementById('hm-year-grade').textContent=ys.score!==null?(ys.score>=90?'✅ Excellent':ys.score>=75?'🟢 Good':ys.score>=60?'🟡 Fair':'🔴 Needs attention'):'No events';
+  document.getElementById('hm-year-grade').style.color=ys.color;
+  document.getElementById('hm-year-fill').style.width=(ys.score||0)+'%';
+  document.getElementById('hm-year-fill').style.background=ys.color;
+
+  // Month breakdown
+  const statusIcon={g:'✅',w:'⚠️',b:'🔴','':''};
+  document.getElementById('hm-items').innerHTML=h.items.map(i=>`<div class="hm-row"><span class="hm-lbl">${i.l}</span><div style="display:flex;align-items:center;gap:6px"><span>${statusIcon[i.c]||''}</span><span class="hm-val ${i.c}">${i.v}</span></div></div>`).join('');
+
+  // Monthly trend for year (spark bars)
+  const months=Array.from({length:12},(_,i)=>{
+    const evts=eventsInMonth(CY,i+1);
+    const sc=scoreSet(evts);
+    return{m:MONTHS[i].slice(0,3),score:sc.score,color:sc.color,total:sc.total};
+  });
+  document.getElementById('hm-trend').innerHTML=months.map(m=>`
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0">
+      <div style="width:100%;background:var(--c-surface3);border-radius:3px;height:40px;position:relative;overflow:hidden">
+        <div style="position:absolute;bottom:0;width:100%;height:${m.score!==null?Math.round(m.score*0.4):0}px;background:${m.score!==null?m.color:'transparent'};border-radius:2px;transition:height .4s"></div>
+      </div>
+      <div style="font-size:9px;color:${m.m===MONTHS[CM-1].slice(0,3)?'var(--c-accent2)':'var(--c-text4)'};font-family:'JetBrains Mono',monospace;font-weight:${m.m===MONTHS[CM-1].slice(0,3)?'700':'400'}">${m.m}</div>
+      <div style="font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace;color:${m.score!==null?m.color:'var(--c-text4)'}">${m.score!==null?m.score:'—'}</div>
+    </div>`).join('');
+
+  // Planning tips
+  const tips=[];
+  if(ms.tbc>0)tips.push(`⚠ <strong>${ms.tbc} TBC event${ms.tbc>1?'s':''}</strong> this month — confirm dates with stakeholders to improve your score`);
+  if(ms.cx>0)tips.push(`🔴 <strong>${ms.cx} scheduling conflict${ms.cx>1?'s':''}</strong> — two maintenance events on the same day. Consider spreading them out`);
+  if(ms.ptocx>0)tips.push(`🏖 <strong>${ms.ptocx} maintenance event${ms.ptocx>1?'s':''}</strong> fall on your PTO — consider rescheduling`);
+  if(ms.score!==null&&ms.score>=90)tips.push('✅ This month looks well-planned — all events confirmed and no conflicts');
+  if(!ms.total)tips.push('📅 No maintenance scheduled this month');
+  document.getElementById('hm-tips').innerHTML=tips.map(t=>`<div style="font-size:11px;color:var(--c-text2);padding:5px 0;border-bottom:1px solid var(--c-border);line-height:1.5">${t}</div>`).join('')||'<div style="font-size:11px;color:var(--c-text4)">Nothing to flag.</div>';
+
   document.getElementById('hm-bg').classList.add('open');
 }
 function closeHM(){document.getElementById('hm-bg').classList.remove('open');}
@@ -1002,9 +1189,10 @@ function renderMonth(){
       h+='<div class="ec '+(e.tbc?'tbc-e':e.type)+'" onclick="openDrawer('+e.id+')" title="'+e.title+'">'+lbl+'</div>';
       if(isMn(e)){
         const env=e.env==='Prod'?'<span style="color:var(--c-orig)">●</span> Prod':'<span style="color:var(--c-wa)">●</span> Non-prod';
+        const act=e.activity?'<span style="color:var(--c-accent2);font-weight:700">'+e.activity+'</span>':'';
         const dur=e.tbc?'⏱ TBC':(e.duration&&e.duration!=='All day'?'⏱ '+e.duration:'');
         const asgn=e.assignee?'👤 '+e.assignee:'';
-        const meta=[env,dur,asgn].filter(Boolean).join(' · ');
+        const meta=[act,env,dur,asgn].filter(Boolean).join(' · ');
         h+='<div class="ec-meta">'+meta+'</div>';
       }
     });
@@ -1052,7 +1240,8 @@ function openDrawer(id){
   const asgn=e.assignee?'<div class="dr-field"><div class="dr-lbl">Assignee</div><div class="dr-val"><span class="av-chip"><span class="av">'+e.assignee[0].toUpperCase()+'</span>'+e.assignee+'</span></div></div>':'';
   const sd2=AE.filter(x=>x.date===e.date&&x.id!==e.id&&PHT.includes(x.type));
   const hol=sd2.length&&!isPH?'<div class="dr-hol"><div class="dr-hol-t">&#9888; Holidays on this day</div>'+sd2.map(h=>'<div class="dr-hol-i">'+h.title+' ('+h.asset+')</div>').join('')+'</div>':'';
-  document.getElementById('dr-body').innerHTML=reg+'<div class="dr-field"><div class="dr-lbl">Time window</div><div class="dr-val">'+e.time+'</div></div><div class="dr-field"><div class="dr-lbl">Duration</div><div class="dr-val">'+e.duration+'</div></div>'+asgn+'<hr class="dr-sep"><div class="dr-field"><div class="dr-lbl">Notes</div><div class="dr-val">'+(e.notes||'—')+'</div></div>'+hol;
+  const actRow=e.activity?'<div class="dr-field"><div class="dr-lbl">Activity type</div><div class="dr-val"><span style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.25);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600;color:var(--c-accent2)">'+e.activity+'</span></div></div>':'';
+  document.getElementById('dr-body').innerHTML=reg+actRow+'<div class="dr-field"><div class="dr-lbl">Time window</div><div class="dr-val">'+e.time+'</div></div><div class="dr-field"><div class="dr-lbl">Duration</div><div class="dr-val">'+e.duration+'</div></div>'+asgn+'<hr class="dr-sep"><div class="dr-field"><div class="dr-lbl">Notes</div><div class="dr-val">'+(e.notes||'—')+'</div></div>'+hol;
   document.getElementById('ov').classList.add('open');
   document.getElementById('drawer').classList.add('open');
 }
@@ -1066,6 +1255,7 @@ function updateMF(){
   document.getElementById('mf-maint').style.display=m?'grid':'none';
   document.getElementById('mf-time').style.display=m?'block':'none';
   document.getElementById('mf-assignee').style.display=m?'block':'none';
+  document.getElementById('mf-activity').style.display=m?'block':'none';
 }
 function checkConf(){
   const date=document.getElementById('f-date').value,w=document.getElementById('conf-warn');
@@ -1090,6 +1280,7 @@ function openModal(eid,pd){
   document.getElementById('f-time').value=e&&!e.tbc?e.time:'';
   document.getElementById('f-notes').value=e?e.notes:'';
   document.getElementById('f-assignee').value=e?(e.assignee||''):'';
+  document.getElementById('f-activity').value=e?(e.activity||''):'';
   TBV=e?e.tbc:false;
   document.getElementById('tbc-tog').classList.toggle('on',TBV);
   document.getElementById('conf-warn').classList.remove('show');
@@ -1115,6 +1306,7 @@ function saveEvt(){
   const time=TBV?'TBC':(document.getElementById('f-time').value.trim()||'All day');
   const notes=document.getElementById('f-notes').value.trim();
   const asgn=document.getElementById('f-assignee').value.trim();
+  const activity=document.getElementById('f-activity').value;
   const dates=[];
   if(de&&de>ds){
     let cur=new Date(ds+'T12:00:00');const end=new Date(de+'T12:00:00');
@@ -1123,9 +1315,9 @@ function saveEvt(){
   const tdays=dates.length,durLbl=tdays>1?tdays+' days':dur;
   if(MID!==null){
     const idx=AE.findIndex(x=>x.id===MID);
-    if(idx>-1){AE[idx]={...AE[idx],title,date:ds,dateEnd:de||null,type,asset:AN[type],env,duration:durLbl,time,tbc:TBV,notes,assignee:asgn};toast('Updated ✓');}
+    if(idx>-1){AE[idx]={...AE[idx],title,date:ds,dateEnd:de||null,type,asset:AN[type],env,duration:durLbl,time,tbc:TBV,notes,assignee:asgn,activity};toast('Updated ✓');}
   }else{
-    dates.forEach(d=>{AE.push({id:NI++,title,date:d,dateEnd:tdays>1?de:null,type,asset:AN[type],env,duration:durLbl,time,tbc:TBV,notes,assignee:asgn});});
+    dates.forEach(d=>{AE.push({id:NI++,title,date:d,dateEnd:tdays>1?de:null,type,asset:AN[type],env,duration:durLbl,time,tbc:TBV,notes,assignee:asgn,activity});});
     AE.sort((a,b)=>a.date.localeCompare(b.date));
     toast(tdays>1?tdays+' events added ✓':'Event added ✓');
   }
@@ -1168,7 +1360,7 @@ let aiHistory=[];
 
 function buildContext(){
   const mn=AE.filter(e=>isMn(e)||e.type==='pto');
-  const sum=mn.map(e=>`- ${e.date} | ${e.type==='pto'?'PTO':e.asset} | ${e.title} | ${e.env} | ${e.tbc?'TBC':e.time} | ${e.duration}${e.assignee?' | '+e.assignee:''}`).join('\n');
+  const sum=mn.map(e=>`- ${e.date} | ${e.type==='pto'?'PTO':e.asset} | ${e.activity||'General'} | ${e.title} | ${e.env} | ${e.tbc?'TBC':e.time} | ${e.duration}${e.assignee?' | '+e.assignee:''}`).join('\n');
   const hols=AE.filter(e=>PHT.includes(e.type)).map(e=>`- ${e.date} | ${e.asset} | ${e.title}`).join('\n');
   return `You are an intelligent maintenance calendar assistant for Shafiq Zuraidin at Quorum Software. Today is ${T.toDateString()}.
 
@@ -1386,7 +1578,15 @@ function renderAnalytics(){
       })()}
     </div>
     <div class="an-card">
-      <div class="an-title">TBC events needing confirmation</div>
+      <div class="an-title">Activity type breakdown</div>
+      ${(()=>{
+        const acts={};
+        mn.forEach(e=>{const a=e.activity||'Untagged';acts[a]=(acts[a]||0)+1;});
+        const sorted=Object.entries(acts).sort((a,b)=>b[1]-a[1]);
+        const mx=sorted[0]?sorted[0][1]:1;
+        return sorted.map(([a,n])=>`<div class="bar-row"><div class="bar-label" style="width:80px;font-size:10px;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${a}">${a}</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(n/mx*100)}%;background:var(--c-accent)"><span>${n}</span></div></div></div>`).join('')||'<div style="color:var(--c-text4);font-size:12px">No tagged activities yet.<br>Add Activity type when creating events.</div>';
+      })()}
+    </div>
       ${mn.filter(e=>e.tbc).slice(0,6).map(e=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--c-border);font-size:11px"><span style="color:var(--c-text);font-weight:600">${e.title}</span><span style="color:var(--c-text3);font-family:'JetBrains Mono',monospace">${sd(e.date)}</span></div>`).join('')||'<div style="color:var(--c-text4);font-size:12px;padding:8px 0">No TBC events — all confirmed!</div>'}
     </div>
   </div></div>`;
