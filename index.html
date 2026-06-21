@@ -943,7 +943,16 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 /* CONFLICTS */
 function getConflicts(){
   const mn=AE.filter(e=>isMn(e)),cx=[];
-  for(let i=0;i<mn.length;i++)for(let j=i+1;j<mn.length;j++)if(mn[i].date===mn[j].date)cx.push({date:mn[i].date,a:mn[i],b:mn[j]});
+  /* Only flag when SAME asset (chev vs chev, or orig vs orig) has two events same day.
+     Chevron + Origin on same day is fine — they are separate systems/teams. */
+  for(let i=0;i<mn.length;i++){
+    for(let j=i+1;j<mn.length;j++){
+      if(mn[i].date===mn[j].date&&mn[i].type===mn[j].type){
+        cx.push({date:mn[i].date,a:mn[i],b:mn[j]});
+      }
+    }
+  }
+  /* Flag maintenance landing on your PTO days */
   const pd=new Set(AE.filter(e=>e.type==='pto').map(e=>e.date));
   mn.forEach(e=>{if(pd.has(e.date))cx.push({date:e.date,a:e,b:{title:'Your PTO',type:'pto'},isPTO:true});});
   return cx;
