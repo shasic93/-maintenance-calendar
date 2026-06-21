@@ -1144,7 +1144,7 @@ function renderMini(){
     const ds=CY+'-'+String(CM).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const isT=T.getFullYear()===CY&&T.getMonth()===CM-1&&T.getDate()===d;
     const ev=EM[ds]?fil(EM[ds]):[];
-    const ht=ev.some(e=>e.tbc),hm=ev.some(e=>isMn(e)&&!e.tbc),hp=ev.some(e=>e.type==='pto');
+    const ht=ev.some(e=>e.tbc&&isMn(e)),hm=ev.some(e=>isMn(e)&&!e.tbc),hp=ev.some(e=>e.type==='pto')&&!ev.some(e=>isMn(e));
     const cls=isT?'tod':ht?'ht':hm?'hm':hp?'hp':'';
     h+=`<div class="mc${cls?' '+cls:''}" onclick="jumpToDate('${ds}')">${d}</div>`;
   }
@@ -1172,14 +1172,17 @@ function renderMonth(){
     const isT=c.cur&&T.getFullYear()===CY&&T.getMonth()===CM-1&&T.getDate()===c.d;
     const isWE=new Date(ds+'T12:00:00').getDay()===0||new Date(ds+'T12:00:00').getDay()===6;
     const ev=EM[ds]?fil(EM[ds]):[];
-    const hasTBC=ev.some(e=>e.tbc),hasPTO=ev.some(e=>e.type==='pto'),isCfl=cxDates.has(ds)&&c.cur;
+    const hasTBC=ev.some(e=>e.tbc&&isMn(e));
+    const isPTODay=ev.some(e=>e.type==='pto');
+    const hasMaintOnPTO=isPTODay&&ev.some(e=>isMn(e));
+    const isCfl=cxDates.has(ds)&&c.cur;
     let cls='cday';
     if(!c.cur)cls+=' om';
     else if(isT)cls+=' tod';
+    else if(isCfl)cls+=' cfl';
     else if(hasTBC)cls+=' htbc';
-    else if(hasPTO)cls+=' hpto';
+    else if(isPTODay&&!hasMaintOnPTO)cls+=' hpto';
     else if(isWE)cls+=' we';
-    if(isCfl)cls+=' cfl';
     const plus=c.cur?`<button class="day-plus" onclick="openModal(null,'${ds}');event.stopPropagation()">+</button>`:'';
     h+='<div class="'+cls+'"><div class="dn-row"><div class="dn">'+c.d+'</div>'+plus+'</div><div class="evts">';
     const MAX=3;
