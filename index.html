@@ -939,8 +939,9 @@ function renderMini(){
     const cls=isT?'today':hasTBC?'has-tbc':hasMaintEvt?'has-maint':hasPTO?'has-pto':'';
     h+=`<div class="mc${cls?' '+cls:''}" onclick="jumpToDate('${ds}')">${d}</div>`;
   }
-  const rem=42-(first+daysIn);
-  for(let i=1;i<=rem;i++)h+=`<div class="mc other">${i}</div>`;
+  const totalSoFarM=first+daysIn;
+  const remM=totalSoFarM%7===0?0:7-(totalSoFarM%7);
+  for(let i=1;i<=remM;i++)h+=`<div class="mc other">${i}</div>`;
   document.getElementById('mini-cells').innerHTML=h;
 }
 function miniPrev(){curMonth===1?(curMonth=12,curYear--):curMonth--;render();}
@@ -953,7 +954,9 @@ function renderMonth(){
   let cells=[];
   for(let i=0;i<first;i++)cells.push({d:prev-first+1+i,cur:false,y:curMonth===1?curYear-1:curYear,m:curMonth===1?12:curMonth-1});
   for(let d=1;d<=daysIn;d++)cells.push({d,cur:true,y:curYear,m:curMonth});
-  const rem=42-cells.length;
+  /* Only pad to next complete week — don't always force 6 rows */
+  const totalSoFar=first+daysIn;
+  const rem=totalSoFar%7===0?0:7-(totalSoFar%7);
   for(let i=1;i<=rem;i++)cells.push({d:i,cur:false,y:curMonth===12?curYear+1:curYear,m:curMonth===12?1:curMonth+1});
   const conflictDates=new Set(detectConflicts().map(c=>c.date));
   let h=`<div style="display:flex;flex-direction:column;height:100%;"><div class="wh">${SDAYS.map((s,i)=>`<div class="${i===0||i===6?'weekend-hd':''}">${s}</div>`).join('')}</div><div class="mgd">`;
