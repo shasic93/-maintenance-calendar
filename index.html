@@ -115,20 +115,23 @@ body{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;-webkit-font-
 .sb-hd{font-size:9px;font-weight:600;letter-spacing:.1em;color:var(--c-text4);text-transform:uppercase;margin-bottom:7px;padding:0 3px;font-family:'JetBrains Mono',monospace}
 
 /* mini cal */
-.mini{background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r);padding:10px}
-.mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
-.mini-nav-lbl{font-size:11px;font-weight:600;color:var(--c-text)}
-.mnb{background:none;border:none;color:var(--c-text3);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:4px;line-height:1}
+.mini{background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r);padding:12px}
+.mini-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.mini-nav-lbl{font-size:12px;font-weight:700;color:var(--c-text);letter-spacing:-.01em}
+.mnb{background:none;border:none;color:var(--c-text3);cursor:pointer;font-size:14px;padding:3px 6px;border-radius:4px;line-height:1;transition:all .1s}
 .mnb:hover{color:var(--c-text);background:var(--c-surface3)}
-.mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;text-align:center}
-.mini-dh{font-size:9px;color:var(--c-text4);padding:2px 0;font-family:'JetBrains Mono',monospace;font-weight:500}
-.mc{font-size:11px;color:var(--c-text3);padding:3px 1px;border-radius:4px;cursor:pointer;position:relative;transition:all .1s;line-height:1.4}
+.mini-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.mini-dh{font-size:9px;color:var(--c-text4);padding:3px 0 4px;font-family:'JetBrains Mono',monospace;font-weight:600;letter-spacing:.02em}
+.mc{font-size:11px;color:var(--c-text3);padding:4px 2px;border-radius:5px;cursor:pointer;position:relative;transition:all .1s;line-height:1.2;text-align:center;min-width:0}
 .mc:hover{background:var(--c-surface3);color:var(--c-text)}
-.mc.om{color:var(--c-text4)}
-.mc.tod{background:var(--c-accent);color:#fff;font-weight:700}
-.mc.hm{background:var(--c-chev-bg);color:var(--c-chev);font-weight:600;border:1px solid var(--c-chev-bd)}
-.mc.ht{background:var(--c-tbc-bg);color:var(--c-tbc);font-weight:700;border:1px solid var(--c-tbc-bd)}
-.mc.hp{background:var(--c-pto-bg);color:var(--c-pto);font-weight:600;border:1px solid var(--c-pto-bd)}
+.mc.om{color:var(--c-text4);opacity:.4}
+.mc.tod{background:var(--c-accent);color:#fff;font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:0 auto;padding:0}
+.mc.hm{background:var(--c-chev-bg);color:var(--c-chev);font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:0 auto;padding:0;box-shadow:0 0 0 1px var(--c-chev-bd)}
+.mc.ht{background:var(--c-tbc-bg);color:var(--c-tbc);font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:0 auto;padding:0;box-shadow:0 0 0 1px var(--c-tbc-bd)}
+.mc.hp{background:var(--c-pto-bg);color:var(--c-pto);font-weight:700;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;margin:0 auto;padding:0;box-shadow:0 0 0 1px var(--c-pto-bd)}
+.mini-legend{display:flex;gap:8px;margin-top:9px;padding-top:8px;border-top:1px solid var(--c-border);flex-wrap:wrap}
+.ml-i{display:flex;align-items:center;gap:3px;font-size:9px;color:var(--c-text4)}
+.ml-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 
 /* filter */
 .fb{display:flex;align-items:center;gap:6px;width:100%;padding:6px 8px;border-radius:var(--r-xs);border:none;background:transparent;cursor:pointer;font-size:11px;font-weight:500;color:var(--c-text3);margin-bottom:1px;transition:all .1s;font-family:'Inter',sans-serif;text-align:left}
@@ -427,10 +430,12 @@ textarea.fin{resize:vertical;min-height:65px}
           <span class="mini-nav-lbl" id="mini-lbl"></span>
           <button class="mnb" onclick="miniNext()">›</button>
         </div>
-        <div class="mini-grid">
-          <div class="mini-dh">Su</div><div class="mini-dh">Mo</div><div class="mini-dh">Tu</div>
-          <div class="mini-dh">We</div><div class="mini-dh">Th</div><div class="mini-dh">Fr</div><div class="mini-dh">Sa</div>
-          <div id="mini-cells" style="display:contents"></div>
+        <div class="mini-grid" id="mini-grid"></div>
+        <div class="mini-legend">
+          <div class="ml-i"><div class="ml-dot" style="background:var(--c-accent)"></div>Today</div>
+          <div class="ml-i"><div class="ml-dot" style="background:var(--c-chev)"></div>Maint.</div>
+          <div class="ml-i"><div class="ml-dot" style="background:var(--c-tbc)"></div>TBC</div>
+          <div class="ml-i"><div class="ml-dot" style="background:var(--c-pto)"></div>PTO</div>
         </div>
       </div>
     </div>
@@ -843,20 +848,25 @@ function renderUpcoming(){
 
 /* MINI CAL */
 function renderMini(){
-  document.getElementById('mini-lbl').textContent=MONTHS[CM-1].slice(0,3)+' '+CY;
+  document.getElementById('mini-lbl').textContent=MONTHS[CM-1]+' '+CY;
   const fi=new Date(CY,CM-1,1).getDay(),di=new Date(CY,CM,0).getDate(),pv=new Date(CY,CM-1,0).getDate();
-  let h='';
+  /* Day headers */
+  let h=['Su','Mo','Tu','We','Th','Fr','Sa'].map(d=>'<div class="mini-dh">'+d+'</div>').join('');
+  /* Leading empty days */
   for(let i=0;i<fi;i++)h+='<div class="mc om">'+(pv-fi+1+i)+'</div>';
+  /* Days of month */
   for(let d=1;d<=di;d++){
     const ds=CY+'-'+String(CM).padStart(2,'0')+'-'+String(d).padStart(2,'0');
     const isT=T.getFullYear()===CY&&T.getMonth()===CM-1&&T.getDate()===d;
     const ev=EM[ds]?fil(EM[ds]):[];
     const ht=ev.some(e=>e.tbc),hm=ev.some(e=>isMn(e)&&!e.tbc),hp=ev.some(e=>e.type==='pto');
-    h+='<div class="mc'+(isT?' tod':ht?' ht':hm?' hm':hp?' hp':'')+`" onclick="jumpToDate('${ds}')">` +d+'</div>';
+    const cls=isT?'tod':ht?'ht':hm?'hm':hp?'hp':'';
+    h+=`<div class="mc${cls?' '+cls:''}" onclick="jumpToDate('${ds}')">${d}</div>`;
   }
+  /* Trailing days */
   const tot=fi+di,rem=tot%7===0?0:7-tot%7;
   for(let i=1;i<=rem;i++)h+='<div class="mc om">'+i+'</div>';
-  document.getElementById('mini-cells').innerHTML=h;
+  document.getElementById('mini-grid').innerHTML=h;
 }
 function miniPrev(){CM===1?(CM=12,CY--):CM--;render();}
 function miniNext(){CM===12?(CM=1,CY++):CM++;render();}
