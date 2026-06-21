@@ -377,7 +377,54 @@ textarea.fin{resize:vertical;min-height:65px}
 /* footer */
 .footer{grid-column:1/-1;background:var(--c-surface);border-top:1px solid var(--c-border);display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:9px;color:var(--c-text4);font-family:'JetBrains Mono',monospace}
 
-/* toast */
+/* ── AI FEATURES ── */
+.ai-btn{background:linear-gradient(135deg,rgba(139,92,246,.15),rgba(59,130,246,.15));border-color:rgba(139,92,246,.4)!important;color:#a78bfa!important}
+.ai-btn:hover{background:linear-gradient(135deg,rgba(139,92,246,.25),rgba(59,130,246,.25))!important;border-color:rgba(139,92,246,.6)!important}
+.ai-msg{display:flex;gap:10px;align-items:flex-start}
+.ai-msg.user{flex-direction:row-reverse}
+.ai-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:2px}
+.ai-avatar.ai{background:linear-gradient(135deg,#7c3aed,#3b82f6)}
+.ai-avatar.user{background:var(--c-accent);color:#fff;font-size:11px;font-weight:700}
+.ai-bubble{max-width:82%;padding:10px 13px;border-radius:12px;font-size:13px;line-height:1.6;color:var(--c-text)}
+.ai-bubble.ai{background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:4px 12px 12px 12px}
+.ai-bubble.user{background:var(--c-accent);color:#fff;border-radius:12px 4px 12px 12px}
+.ai-bubble.thinking{color:var(--c-text3);font-style:italic}
+.ai-bubble.thinking::after{content:'...';animation:dots 1.2s infinite}
+@keyframes dots{0%,100%{content:'...'}33%{content:'.'}66%{content:'...'}}
+.ai-suggestion{background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:20px;padding:4px 10px;font-size:11px;color:var(--c-text3);cursor:pointer;transition:all .1s;white-space:nowrap}
+.ai-suggestion:hover{border-color:rgba(139,92,246,.4);color:#a78bfa;background:rgba(139,92,246,.08)}
+.risk-item{padding:10px 12px;border-radius:var(--r-sm);margin-bottom:8px;border-left:3px solid transparent}
+.risk-item.high{background:rgba(248,113,113,.08);border-color:#f87171}
+.risk-item.med{background:rgba(251,146,60,.08);border-color:#fb923c}
+.risk-item.low{background:rgba(251,191,36,.06);border-color:#fbbf24}
+.risk-item.ok{background:rgba(52,211,153,.06);border-color:#34d399}
+.risk-title{font-size:12px;font-weight:700;color:var(--c-text);margin-bottom:3px}
+.risk-desc{font-size:11px;color:var(--c-text3);line-height:1.5}
+.report-section{margin-bottom:14px}
+.report-section h3{font-size:12px;font-weight:700;color:var(--c-text);margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--c-border)}
+.report-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--c-border);font-size:12px}
+.report-row:last-child{border-bottom:none}
+.report-val{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--c-text)}
+
+/* analytics */
+.analytics-wrap{flex:1;overflow-y:auto;padding:16px}
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:900px}
+.an-card{background:var(--c-surface);border:1px solid var(--c-border);border-radius:var(--r);padding:16px}
+.an-card.full{grid-column:1/-1}
+.an-title{font-size:11px;font-weight:600;color:var(--c-text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;font-family:'JetBrains Mono',monospace}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{font-size:11px;color:var(--c-text3);width:36px;text-align:right;flex-shrink:0;font-family:'JetBrains Mono',monospace}
+.bar-track{flex:1;height:20px;background:var(--c-surface2);border-radius:3px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:3px;transition:width .4s ease;display:flex;align-items:center;padding-left:6px}
+.bar-fill span{font-size:10px;font-weight:600;color:#fff;font-family:'JetBrains Mono',monospace}
+.donut-wrap{display:flex;align-items:center;gap:16px}
+.donut-legend{display:flex;flex-direction:column;gap:6px}
+.donut-leg-item{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--c-text3)}
+.donut-leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.kpi{background:var(--c-surface2);border-radius:var(--r-sm);padding:10px 12px}
+.kpi-n{font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--c-text);line-height:1}
+.kpi-l{font-size:10px;color:var(--c-text4);margin-top:3px;font-weight:500}
 .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(40px);background:var(--c-text);color:var(--c-bg);padding:8px 18px;border-radius:20px;font-size:12px;font-weight:600;opacity:0;transition:all .25s;z-index:400;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
@@ -415,6 +462,7 @@ textarea.fin{resize:vertical;min-height:65px}
     <button class="tb-btn" id="theme-btn" onclick="toggleTheme()">☀ Light</button>
     <button class="tb-btn" onclick="openSM()" title="Keyboard shortcuts">⌨</button>
     <button class="tb-btn" onclick="openDM()">💾 Data</button>
+    <button class="tb-btn ai-btn" onclick="openAI()">✨ Ask AI</button>
     <button class="tb-btn add" onclick="openModal(null,null)">+ Add</button>
   </div>
 </header>
@@ -474,6 +522,7 @@ textarea.fin{resize:vertical;min-height:65px}
     <div class="view-tog">
       <button class="vb active" id="btn-month" onclick="setView('month')">Month</button>
       <button class="vb" id="btn-list" onclick="setView('list')">List</button>
+      <button class="vb" id="btn-analytics" onclick="setView('analytics')">📊</button>
     </div>
   </div>
   <div class="leg-bar">
@@ -545,7 +594,7 @@ textarea.fin{resize:vertical;min-height:65px}
       <div><label class="flbl">Duration (hours)</label><div class="dur-wrap"><input class="fin" id="f-dur" type="number" min="0.5" step="0.5" placeholder="e.g. 3"><span class="dur-sfx">hrs</span></div></div>
     </div>
     <div class="fr" id="mf-time"><label class="flbl">Time window</label><input class="fin" id="f-time" placeholder="e.g. 19:30 – 22:30 AWST"></div>
-    <div class="fr"><label class="flbl">Notes</label><textarea class="fin" id="f-notes" placeholder="Case numbers, contacts, scope…"></textarea></div>
+    <div class="fr"><label class="flbl">Notes <button onclick="aiGenNotes()" id="ai-gen-btn" style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.3);border-radius:4px;color:var(--c-accent2);cursor:pointer;padding:1px 7px;font-size:10px;font-weight:600;font-family:Inter,sans-serif;margin-left:6px;transition:all .15s" title="AI generate notes">✨ Generate</button></label><textarea class="fin" id="f-notes" placeholder="Case numbers, contacts, scope…"></textarea></div>
     <div class="fr" id="mf-assignee"><label class="flbl">Assignee</label><input class="fin" id="f-assignee" placeholder="e.g. Shafiq, John"></div>
     <div class="fr"><div class="ftog" onclick="toggleTbc()"><div class="tog" id="tbc-tog"><div class="tog-th"></div></div><span class="tog-lbl">Mark as TBC — not yet confirmed</span></div></div>
     <div class="mft">
@@ -578,6 +627,7 @@ textarea.fin{resize:vertical;min-height:65px}
     <div class="sk-row"><span class="sk-lbl">Go to today</span><span class="sk-k">T</span></div>
     <div class="sk-row"><span class="sk-lbl">Month view</span><span class="sk-k">M</span></div>
     <div class="sk-row"><span class="sk-lbl">List view</span><span class="sk-k">L</span></div>
+    <div class="sk-row"><span class="sk-lbl">Open AI Assistant</span><span class="sk-k">A</span></div>
     <div class="sk-row"><span class="sk-lbl">Toggle dark / light</span><span class="sk-k">D</span></div>
     <div class="sk-row"><span class="sk-lbl">Close modal / drawer</span><span class="sk-k">Esc</span></div>
     <div class="sk-row"><span class="sk-lbl">This panel</span><span class="sk-k">?</span></div>
@@ -593,6 +643,54 @@ textarea.fin{resize:vertical;min-height:65px}
       <div class="hm-track"><div class="hm-fill" id="hm-fill"></div></div>
     </div>
     <div id="hm-items"></div>
+  </div>
+</div>
+
+<!-- AI ASSISTANT MODAL -->
+<div class="mbg" id="ai-bg" onclick="handleAIBG(event)">
+  <div class="modal" style="width:580px;max-width:96vw">
+    <div class="mhdr">
+      <div class="mttl">✨ AI Assistant <span style="font-size:10px;color:var(--c-text3);font-weight:400;margin-left:6px">Powered by Claude</span></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button onclick="openRiskAlert()" style="background:var(--c-tbc-bg);border:1px solid var(--c-tbc-bd);border-radius:4px;color:var(--c-tbc);cursor:pointer;padding:3px 9px;font-size:11px;font-weight:600;font-family:Inter,sans-serif">🧠 Risk scan</button>
+        <button onclick="openReport()" style="background:var(--c-orig-bg);border:1px solid var(--c-orig-bd);border-radius:4px;color:var(--c-orig);cursor:pointer;padding:3px 9px;font-size:11px;font-weight:600;font-family:Inter,sans-serif">📋 Report</button>
+        <button class="mx" onclick="closeAI()">✕</button>
+      </div>
+    </div>
+    <!-- Chat messages -->
+    <div id="ai-msgs" style="min-height:200px;max-height:360px;overflow-y:auto;padding:4px 0;display:flex;flex-direction:column;gap:10px;margin-bottom:12px"></div>
+    <!-- Suggested questions -->
+    <div id="ai-suggestions" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+      <div style="font-size:10px;color:var(--c-text4);width:100%;margin-bottom:2px;font-family:'JetBrains Mono',monospace">Try asking:</div>
+    </div>
+    <!-- Input -->
+    <div style="display:flex;gap:8px;align-items:flex-end">
+      <textarea id="ai-input" placeholder="Ask anything about your maintenance calendar…" style="flex:1;background:var(--c-surface2);border:1.5px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text);font-family:Inter,sans-serif;font-size:13px;padding:8px 10px;outline:none;resize:none;min-height:44px;max-height:120px;transition:border-color .15s" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendAI()}" oninput="this.style.height='44px';this.style.height=Math.min(this.scrollHeight,120)+'px'"></textarea>
+      <button onclick="sendAI()" id="ai-send" style="background:var(--c-accent);border:none;border-radius:var(--r-xs);color:#fff;cursor:pointer;padding:10px 16px;font-size:13px;font-weight:700;font-family:Inter,sans-serif;flex-shrink:0;transition:opacity .15s;height:44px">Send</button>
+    </div>
+    <div style="font-size:10px;color:var(--c-text4);margin-top:6px;font-family:'JetBrains Mono',monospace">Enter to send · Shift+Enter for new line · Your event data is sent to Claude API</div>
+  </div>
+</div>
+
+<!-- RISK ALERT MODAL -->
+<div class="mbg" id="risk-bg" onclick="handleRiskBG(event)">
+  <div class="modal" style="width:560px;max-width:96vw">
+    <div class="mhdr"><div class="mttl">🧠 Smart risk scan</div><button class="mx" onclick="closeRisk()">✕</button></div>
+    <div id="risk-body" style="min-height:120px"></div>
+  </div>
+</div>
+
+<!-- MANAGER REPORT MODAL -->
+<div class="mbg" id="report-bg" onclick="handleReportBG(event)">
+  <div class="modal" style="width:620px;max-width:96vw">
+    <div class="mhdr">
+      <div class="mttl">📋 Manager report</div>
+      <div style="display:flex;gap:6px">
+        <button onclick="copyReport()" style="background:var(--c-orig-bg);border:1px solid var(--c-orig-bd);border-radius:4px;color:var(--c-orig);cursor:pointer;padding:3px 9px;font-size:11px;font-weight:600;font-family:Inter,sans-serif">📋 Copy</button>
+        <button class="mx" onclick="closeReport()">✕</button>
+      </div>
+    </div>
+    <div id="report-body" style="min-height:120px"></div>
   </div>
 </div>
 
@@ -1057,10 +1155,261 @@ function nextMonth(){CM===12?(CM=1,CY++):CM++;render();}
 function goToday(){CY=T.getFullYear();CM=T.getMonth()+1;render();}
 function jumpToDate(s){const d=new Date(s+'T12:00:00');CY=d.getFullYear();CM=d.getMonth()+1;setView('month');}
 
+/* ── AI FEATURES ── */
+const AI_SUGGESTIONS=[
+  'Do I have any maintenance overlapping public holidays?',
+  'What\'s my busiest month this year?',
+  'Summarise all TBC events',
+  'Are there any back-to-back maintenance windows?',
+  'Which asset has the most upcoming work?',
+  'What production events are coming up this month?'
+];
+let aiHistory=[];
+
+function buildContext(){
+  const mn=AE.filter(e=>isMn(e)||e.type==='pto');
+  const sum=mn.map(e=>`- ${e.date} | ${e.type==='pto'?'PTO':e.asset} | ${e.title} | ${e.env} | ${e.tbc?'TBC':e.time} | ${e.duration}${e.assignee?' | '+e.assignee:''}`).join('\n');
+  const hols=AE.filter(e=>PHT.includes(e.type)).map(e=>`- ${e.date} | ${e.asset} | ${e.title}`).join('\n');
+  return `You are an intelligent maintenance calendar assistant for Shafiq Zuraidin at Quorum Software. Today is ${T.toDateString()}.
+
+MAINTENANCE & PTO EVENTS:
+${sum||'None'}
+
+PUBLIC HOLIDAYS (KL Malaysia, Perth WA, Brisbane QLD):
+${hols||'None'}
+
+Answer concisely and helpfully. Use bullet points where appropriate. Flag any risks or issues you notice.`;
+}
+
+function openAI(){
+  const sb=document.getElementById('ai-suggestions');
+  sb.innerHTML='<div style="font-size:10px;color:var(--c-text4);width:100%;margin-bottom:4px;font-family:\'JetBrains Mono\',monospace">Try asking:</div>'+
+    AI_SUGGESTIONS.map(s=>`<div class="ai-suggestion" onclick="document.getElementById('ai-input').value='${s}';sendAI()">${s}</div>`).join('');
+  if(!aiHistory.length){
+    document.getElementById('ai-msgs').innerHTML='<div style="text-align:center;padding:24px 0;color:var(--c-text4);font-size:12px">👋 Hi Shafiq! Ask me anything about your maintenance calendar.</div>';
+  }
+  document.getElementById('ai-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('ai-input').focus(),100);
+}
+function closeAI(){document.getElementById('ai-bg').classList.remove('open');}
+function handleAIBG(e){if(e.target===document.getElementById('ai-bg'))closeAI();}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-input');
+  const q=inp.value.trim();if(!q)return;
+  inp.value='';inp.style.height='44px';
+  document.getElementById('ai-suggestions').style.display='none';
+  const msgs=document.getElementById('ai-msgs');
+  msgs.innerHTML+='<div class="ai-msg user"><div class="ai-avatar user">S</div><div class="ai-bubble user">'+q+'</div></div>';
+  msgs.innerHTML+='<div class="ai-msg" id="ai-thinking"><div class="ai-avatar ai">✨</div><div class="ai-bubble thinking">Thinking</div></div>';
+  msgs.scrollTop=msgs.scrollHeight;
+  document.getElementById('ai-send').disabled=true;
+  aiHistory.push({role:'user',content:q});
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system:buildContext(),
+        messages:aiHistory
+      })
+    });
+    const data=await res.json();
+    const reply=data.content&&data.content[0]?data.content[0].text:'Sorry, I could not get a response. Please try again.';
+    aiHistory.push({role:'assistant',content:reply});
+    const thinking=document.getElementById('ai-thinking');
+    if(thinking)thinking.remove();
+    msgs.innerHTML+='<div class="ai-msg"><div class="ai-avatar ai">✨</div><div class="ai-bubble ai">'+reply.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/^- /gm,'• ')+'</div></div>';
+    msgs.scrollTop=msgs.scrollHeight;
+  }catch(err){
+    const thinking=document.getElementById('ai-thinking');
+    if(thinking)thinking.remove();
+    msgs.innerHTML+='<div class="ai-msg"><div class="ai-avatar ai">✨</div><div class="ai-bubble ai" style="color:var(--c-tbc)">⚠ Could not connect to AI. Check your internet connection.</div></div>';
+  }
+  document.getElementById('ai-send').disabled=false;
+}
+
+/* RISK SCAN */
+async function openRiskAlert(){
+  closeAI();
+  document.getElementById('risk-bg').classList.add('open');
+  document.getElementById('risk-body').innerHTML='<div style="text-align:center;padding:24px;color:var(--c-text3);font-size:13px">🧠 Scanning your maintenance schedule for risks…</div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        system:buildContext(),
+        messages:[{role:'user',content:'Perform a thorough risk analysis of my maintenance schedule. Look for: overlapping windows, back-to-back events, maintenance during public holidays, maintenance during PTO, TBC events that need confirmation, any other scheduling risks. For each risk rate it HIGH/MEDIUM/LOW and explain briefly. End with an overall summary. Format as JSON array: [{level:"high"|"medium"|"low"|"ok", title:"...", description:"..."}]'}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content&&data.content[0]?data.content[0].text:'';
+    let risks=[];
+    try{
+      const match=text.match(/\[[\s\S]*\]/);
+      if(match)risks=JSON.parse(match[0]);
+    }catch(e){risks=[{level:'ok',title:'Analysis complete',description:text}];}
+    const lvlMap={high:'high',medium:'med',low:'low',ok:'ok'};
+    const icons={high:'🔴',medium:'🟡',low:'🟢',ok:'✅'};
+    document.getElementById('risk-body').innerHTML=risks.length?
+      risks.map(r=>`<div class="risk-item ${lvlMap[r.level]||'low'}"><div class="risk-title">${icons[r.level]||'•'} ${r.title}</div><div class="risk-desc">${r.description}</div></div>`).join(''):
+      '<div style="color:var(--c-text3);font-size:13px;padding:16px">No risks detected — your schedule looks clean!</div>';
+  }catch(err){
+    document.getElementById('risk-body').innerHTML='<div style="color:var(--c-tbc);font-size:13px;padding:16px">⚠ Could not connect to AI. Check your internet connection.</div>';
+  }
+}
+function closeRisk(){document.getElementById('risk-bg').classList.remove('open');}
+function handleRiskBG(e){if(e.target===document.getElementById('risk-bg'))closeRisk();}
+
+/* MANAGER REPORT */
+async function openReport(){
+  closeAI();
+  document.getElementById('report-bg').classList.add('open');
+  document.getElementById('report-body').innerHTML='<div style="text-align:center;padding:24px;color:var(--c-text3);font-size:13px">📋 Generating your manager report…</div>';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1200,
+        system:buildContext(),
+        messages:[{role:'user',content:`Generate a concise, professional maintenance status report suitable for a manager. Include: 1) Executive summary (2-3 sentences), 2) Upcoming maintenance windows this month and next, 3) Events needing confirmation (TBC), 4) Any risks or concerns, 5) Overall schedule health. Keep it professional and brief. Plain text, no markdown headers, use clear sections.`}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content&&data.content[0]?data.content[0].text:'Could not generate report.';
+    window._reportText=text;
+    document.getElementById('report-body').innerHTML=`<div style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:14px;font-size:12px;line-height:1.8;color:var(--c-text2);white-space:pre-wrap;font-family:Inter,sans-serif;max-height:400px;overflow-y:auto">${text}</div>`;
+  }catch(err){
+    document.getElementById('report-body').innerHTML='<div style="color:var(--c-tbc);font-size:13px;padding:16px">⚠ Could not connect to AI. Check your internet connection.</div>';
+  }
+}
+function closeReport(){document.getElementById('report-bg').classList.remove('open');}
+function handleReportBG(e){if(e.target===document.getElementById('report-bg'))closeReport();}
+function copyReport(){if(window._reportText){navigator.clipboard.writeText(window._reportText).then(()=>toast('Report copied to clipboard ✓'));}}
+
+/* AI NOTES GENERATOR */
+async function aiGenNotes(){
+  const title=document.getElementById('f-title').value.trim();
+  const type=document.getElementById('f-type').value;
+  const env=document.getElementById('f-env').value;
+  if(!title){toast('Enter a title first');return;}
+  const btn=document.getElementById('ai-gen-btn');
+  btn.textContent='⏳';btn.disabled=true;
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:300,
+        messages:[{role:'user',content:`Write a concise professional maintenance note for: "${title}". Asset: ${AN[type]||type}. Environment: ${env}. Include typical scope items for this type of maintenance (OS patching, DB updates, EC password refresh etc if applicable). Keep it to 2-3 sentences. Just the note text, no preamble.`}]
+      })
+    });
+    const data=await res.json();
+    const note=data.content&&data.content[0]?data.content[0].text:'';
+    if(note)document.getElementById('f-notes').value=note;
+    toast('Notes generated ✓');
+  }catch(e){toast('Could not connect to AI');}
+  btn.textContent='✨ Generate';btn.disabled=false;
+}
+
+/* ANALYTICS VIEW */
+function renderAnalytics(){
+  const body=document.getElementById('cal-body');
+  const mn=AE.filter(e=>isMn(e));
+  const byMonth={};
+  mn.forEach(e=>{const m=e.date.slice(0,7);byMonth[m]=(byMonth[m]||0)+1;});
+  const months=Object.keys(byMonth).sort().slice(-6);
+  const maxM=Math.max(...months.map(m=>byMonth[m]),1);
+  const chevCnt=AE.filter(e=>e.type==='chev').length;
+  const origCnt=AE.filter(e=>e.type==='orig').length;
+  const total=chevCnt+origCnt||1;
+  const tbcCnt=mn.filter(e=>e.tbc).length;
+  const prodCnt=mn.filter(e=>e.env==='Prod').length;
+  const upCnt=mn.filter(e=>isUp(e.date)).length;
+  const avgLead=mn.filter(e=>isUp(e.date)&&!e.tbc).reduce((a,e)=>{return a+Math.ceil((new Date(e.date+'T12:00:00')-T)/864e5);},0)/Math.max(mn.filter(e=>isUp(e.date)&&!e.tbc).length,1);
+
+  body.innerHTML=`<div class="analytics-wrap"><div class="analytics-grid">
+    <div class="an-card full">
+      <div class="an-title">KPI Overview</div>
+      <div class="kpi-grid">
+        <div class="kpi"><div class="kpi-n">${mn.length}</div><div class="kpi-l">Total maintenance</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--c-tbc)">${tbcCnt}</div><div class="kpi-l">TBC events</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--c-orig)">${prodCnt}</div><div class="kpi-l">Production</div></div>
+        <div class="kpi"><div class="kpi-n" style="color:var(--c-accent2)">${Math.round(avgLead)}d</div><div class="kpi-l">Avg. lead time</div></div>
+      </div>
+    </div>
+    <div class="an-card">
+      <div class="an-title">Events by month (last 6)</div>
+      ${months.map(m=>{
+        const w=Math.round((byMonth[m]/maxM)*100);
+        const label=MONTHS[parseInt(m.split('-')[1])-1].slice(0,3);
+        return `<div class="bar-row"><div class="bar-label">${label}</div><div class="bar-track"><div class="bar-fill" style="width:${w}%;background:var(--c-accent)"><span>${byMonth[m]}</span></div></div></div>`;
+      }).join('')}
+    </div>
+    <div class="an-card">
+      <div class="an-title">Asset split</div>
+      <div class="donut-wrap">
+        <svg width="90" height="90" viewBox="0 0 90 90">
+          ${(()=>{
+            const c=Math.PI*2*30;
+            const cp=chevCnt/total*c;
+            const op=origCnt/total*c;
+            return `<circle cx="45" cy="45" r="30" fill="none" stroke="var(--c-chev-bg)" stroke-width="18"/>
+            <circle cx="45" cy="45" r="30" fill="none" stroke="var(--c-chev)" stroke-width="18" stroke-dasharray="${cp} ${c-cp}" stroke-dashoffset="${c/4}" transform="rotate(-90 45 45)"/>
+            <circle cx="45" cy="45" r="30" fill="none" stroke="var(--c-orig)" stroke-width="18" stroke-dasharray="${op} ${c-op}" stroke-dashoffset="${c/4-cp}" transform="rotate(-90 45 45)"/>
+            <text x="45" y="49" text-anchor="middle" fill="var(--c-text)" font-size="13" font-weight="700" font-family="JetBrains Mono,monospace">${mn.length}</text>`;
+          })()}
+        </svg>
+        <div class="donut-legend">
+          <div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--c-chev)"></div>Chevron: ${chevCnt}</div>
+          <div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--c-orig)"></div>Origin: ${origCnt}</div>
+          <div class="donut-leg-item"><div class="donut-leg-dot" style="background:var(--c-accent-glow);box-shadow:0 0 0 1px var(--c-accent)"></div>Upcoming: ${upCnt}</div>
+        </div>
+      </div>
+    </div>
+    <div class="an-card">
+      <div class="an-title">Prod vs Non-prod</div>
+      ${(()=>{
+        const np=mn.filter(e=>e.env==='Non-prod').length;
+        const tot2=prodCnt+np||1;
+        return `<div class="bar-row"><div class="bar-label" style="width:60px;font-size:10px">Prod</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(prodCnt/tot2*100)}%;background:var(--c-orig)"><span>${prodCnt}</span></div></div></div>
+        <div class="bar-row"><div class="bar-label" style="width:60px;font-size:10px">Non-prod</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(np/tot2*100)}%;background:var(--c-wa)"><span>${np}</span></div></div></div>
+        <div class="bar-row"><div class="bar-label" style="width:60px;font-size:10px">TBC</div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(tbcCnt/tot2*100)}%;background:var(--c-tbc)"><span>${tbcCnt}</span></div></div></div>`;
+      })()}
+    </div>
+    <div class="an-card">
+      <div class="an-title">TBC events needing confirmation</div>
+      ${mn.filter(e=>e.tbc).slice(0,6).map(e=>`<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--c-border);font-size:11px"><span style="color:var(--c-text);font-weight:600">${e.title}</span><span style="color:var(--c-text3);font-family:'JetBrains Mono',monospace">${sd(e.date)}</span></div>`).join('')||'<div style="color:var(--c-text4);font-size:12px;padding:8px 0">No TBC events — all confirmed!</div>'}
+    </div>
+  </div></div>`;
+}
+
+/* extend setView for analytics */
+const _origSetView=setView;
+// Override setView to support analytics
+function setView(v){
+  CV=v;
+  document.getElementById('btn-month').classList.toggle('active',v==='month');
+  document.getElementById('btn-list').classList.toggle('active',v==='list');
+  document.getElementById('btn-analytics').classList.toggle('active',v==='analytics');
+  if(v==='analytics')renderAnalytics();
+  else if(v==='month')renderMonth();
+  else renderList();
+}
+
+/* keyboard shortcut for AI */
 document.addEventListener('keydown',ev=>{
   const tag=document.activeElement.tagName;
   const typing=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
-  if(ev.key==='Escape'){closeModal();closeDrawer();closeDM();closeSM();closeHM();return;}
+  if(ev.key==='Escape'){closeModal();closeDrawer();closeDM();closeSM();closeHM();closeAI();closeRisk();closeReport();return;}
   if(typing)return;
   if(ev.key==='n'||ev.key==='N')openModal(null,null);
   else if(ev.key==='/')document.getElementById('srch-inp').focus();
@@ -1069,6 +1418,7 @@ document.addEventListener('keydown',ev=>{
   else if(ev.key==='t'||ev.key==='T')goToday();
   else if(ev.key==='m'||ev.key==='M')setView('month');
   else if(ev.key==='l'||ev.key==='L')setView('list');
+  else if(ev.key==='a'||ev.key==='A')openAI();
   else if(ev.key==='d'||ev.key==='D')toggleTheme();
   else if(ev.key==='?')openSM();
 });
