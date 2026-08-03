@@ -215,7 +215,13 @@ body{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;-webkit-font-
 .day-plus{background:none;border:none;color:var(--c-text4);cursor:pointer;font-size:13px;line-height:1;padding:1px 2px;opacity:0;transition:all .1s;border-radius:3px}
 .cday:hover .day-plus{opacity:1}
 .day-plus:hover{color:var(--c-accent2);background:var(--c-accent-glow)}
-.evts{flex:1;overflow:hidden;display:flex;flex-direction:column;gap:1px;min-height:0}
+.evts{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px;min-height:0;scrollbar-width:thin;scrollbar-color:var(--c-border2) transparent}
+.evts::-webkit-scrollbar{width:3px}
+.evts::-webkit-scrollbar-thumb{background:var(--c-border2);border-radius:2px}
+.evts::-webkit-scrollbar-track{background:transparent}
+/* show scrollbar only on hover */
+.cday:not(:hover) .evts{overflow-y:hidden}
+.cday:hover .evts{overflow-y:auto}
 
 /* event chips */
 .ec{padding:2px 5px;border-radius:3px;font-size:10px;font-weight:600;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;transition:opacity .1s;border-left:2px solid transparent;flex-shrink:0}
@@ -233,8 +239,25 @@ body{font-family:'Inter',sans-serif;font-size:13px;line-height:1.5;-webkit-font-
 .ec.pto{background:var(--c-pto-bg);color:var(--c-pto);border-color:var(--c-pto)}
 .ec.tbc-e{background:var(--c-tbc-bg);color:var(--c-tbc);border-color:var(--c-tbc);border-style:dashed}
 .ec-meta{font-size:9px;color:var(--c-text3);padding:0 6px 1px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex-shrink:0;opacity:.8}
-.ec-more{font-size:9px;color:var(--c-text4);padding:0 5px;cursor:pointer;flex-shrink:0}
-.ec-more:hover{color:var(--c-accent2)}
+.ec-more{font-size:9px;color:var(--c-accent2);padding:2px 5px;cursor:pointer;flex-shrink:0;background:var(--c-accent-glow);border-radius:3px;border:1px solid rgba(59,130,246,.2);text-align:center;font-weight:600;margin-top:1px}
+.ec-more:hover{background:var(--c-accent);color:#fff}
+
+/* day popup */
+.day-popup{position:fixed;background:var(--c-surface);border:1px solid var(--c-border2);border-radius:var(--r);box-shadow:0 8px 32px rgba(0,0,0,.4);z-index:300;width:260px;max-height:360px;display:flex;flex-direction:column;overflow:hidden}
+.dp-hdr{display:flex;align-items:center;justify-content:space-between;padding:9px 12px 7px;border-bottom:1px solid var(--c-border);flex-shrink:0}
+.dp-date{font-size:12px;font-weight:700;color:var(--c-text)}
+.dp-close{background:none;border:none;color:var(--c-text3);cursor:pointer;font-size:14px;padding:1px 4px;border-radius:3px;line-height:1}
+.dp-close:hover{color:var(--c-text);background:var(--c-surface2)}
+.dp-list{overflow-y:auto;padding:6px 8px;flex:1}
+.dp-list::-webkit-scrollbar{width:3px}
+.dp-list::-webkit-scrollbar-thumb{background:var(--c-border2);border-radius:2px}
+.dp-item{display:flex;gap:7px;padding:5px 4px;border-radius:var(--r-xs);cursor:pointer;align-items:flex-start;border-bottom:1px solid var(--c-border);transition:background .1s}
+.dp-item:last-child{border-bottom:none}
+.dp-item:hover{background:var(--c-surface2)}
+.dp-stripe{width:3px;border-radius:2px;align-self:stretch;flex-shrink:0;min-height:14px}
+.dp-info{flex:1;min-width:0}
+.dp-title{font-size:11px;font-weight:600;color:var(--c-text);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp-meta{font-size:9px;color:var(--c-text3);margin-top:1px;font-family:'JetBrains Mono',monospace}
 
 /* ── LIST VIEW ── */
 .list-wrap{flex:1;overflow-y:auto;padding:14px 16px}
@@ -856,6 +879,15 @@ textarea.fin{resize:vertical;min-height:65px}
   </div>
 </div>
 
+<!-- DAY POPUP -->
+<div id="day-popup" class="day-popup" style="display:none">
+  <div class="dp-hdr">
+    <span class="dp-date" id="dp-date"></span>
+    <button class="dp-close" onclick="closeDayPopup()">✕</button>
+  </div>
+  <div class="dp-list" id="dp-list"></div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1252,9 +1284,10 @@ function renderMonth(){
     else if(isPTODay&&!hasMaintOnPTO)cls+=' hpto';
     else if(isWE)cls+=' we';
     const plus=c.cur?`<button class="day-plus" onclick="openModal(null,'${ds}');event.stopPropagation()">+</button>`:'';
+    /* Show first 3 chips in cell, rest accessible via scroll or popup */
+    const SHOW=3;
     h+='<div class="'+cls+'"><div class="dn-row"><div class="dn">'+c.d+'</div>'+plus+'</div><div class="evts">';
-    const MAX=3;
-    ev.slice(0,MAX).forEach(e=>{
+    ev.forEach((e,ei)=>{
       const isPH=PHT.includes(e.type);
       const lbl=isPH?FLAG[e.type]+' '+e.title:e.type==='pto'?'🏖 '+e.title:e.title;
       h+='<div class="ec '+(e.tbc?'tbc-e':e.type)+'" onclick="openDrawer('+e.id+')" title="'+e.title+'">'+lbl+'</div>';
@@ -1267,7 +1300,7 @@ function renderMonth(){
         h+='<div class="ec-meta">'+meta+'</div>';
       }
     });
-    if(ev.length>MAX)h+='<div class="ec-more">+' +(ev.length-MAX)+' more</div>';
+    if(ev.length>SHOW)h+='<div class="ec-more" onclick="openDayPopup(event,\''+ds+'\')">👁 See all '+ev.length+' events</div>';
     h+='</div></div>';
   });
   h+='</div></div>';
@@ -1417,6 +1450,38 @@ function prevMonth(){CM===1?(CM=12,CY--):CM--;render();}
 function nextMonth(){CM===12?(CM=1,CY++):CM++;render();}
 function goToday(){CY=T.getFullYear();CM=T.getMonth()+1;render();}
 function jumpToDate(s){const d=new Date(s+'T12:00:00');CY=d.getFullYear();CM=d.getMonth()+1;setView('month');}
+
+/* ── DAY POPUP ── */
+function openDayPopup(event,ds){
+  event.stopPropagation();
+  const ev=EM[ds]?fil(EM[ds]):[];
+  if(!ev.length)return;
+  const popup=document.getElementById('day-popup');
+  const d=new Date(ds+'T12:00:00');
+  document.getElementById('dp-date').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  document.getElementById('dp-list').innerHTML=ev.map(function(e){
+    const isPH=PHT.includes(e.type);
+    const lbl=isPH?e.title:e.type==='pto'?'🏖 '+e.title:e.title;
+    const meta=[e.activity||'',e.env,e.duration].filter(function(x){return x&&x!=='All day'&&x!=='TBC'&&x!=='PTO'&&x!=='Holiday';}).join(' · ');
+    return '<div class="dp-item" onclick="closeDayPopup();openDrawer('+e.id+')">'+
+      '<div class="dp-stripe" style="background:'+(e.tbc?'var(--c-tbc)':tc(e.type))+'"></div>'+
+      '<div class="dp-info"><div class="dp-title">'+lbl+'</div>'+
+      (meta?'<div class="dp-meta">'+meta+'</div>':'')+
+      '</div></div>';
+  }).join('');
+  popup.style.display='flex';
+  const rect=event.currentTarget.getBoundingClientRect();
+  const pw=260,ph=Math.min(ev.length*56+48,360);
+  let left=rect.left+rect.width/2-pw/2;
+  let top=rect.bottom+6;
+  if(left+pw>window.innerWidth-10)left=window.innerWidth-pw-10;
+  if(left<10)left=10;
+  if(top+ph>window.innerHeight-10)top=rect.top-ph-6;
+  popup.style.left=left+'px';
+  popup.style.top=top+'px';
+  setTimeout(function(){document.addEventListener('click',closeDayPopup,{once:true});},10);
+}
+function closeDayPopup(){document.getElementById('day-popup').style.display='none';}
 
 /* ── AI FEATURES ── */
 const AI_SUGGESTIONS=[
@@ -1680,7 +1745,7 @@ function setView(v){
 document.addEventListener('keydown',ev=>{
   const tag=document.activeElement.tagName;
   const typing=tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT';
-  if(ev.key==='Escape'){closeModal();closeDrawer();closeDM();closeSM();closeHM();closeAI();closeRisk();closeReport();return;}
+  if(ev.key==='Escape'){closeModal();closeDrawer();closeDM();closeSM();closeHM();closeAI();closeRisk();closeReport();closeDayPopup();return;}
   if(typing)return;
   if(ev.key==='n'||ev.key==='N')openModal(null,null);
   else if(ev.key==='/')document.getElementById('srch-inp').focus();
