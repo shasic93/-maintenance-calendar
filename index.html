@@ -675,17 +675,24 @@ textarea.fin{resize:vertical;min-height:65px}
     <div class="dm-sec"><div class="dm-t">⬆ Import events</div><div class="dm-s">Restore from backup. Replaces current maintenance events.</div><input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)"><button class="dm-btn dm-blue" onclick="document.getElementById('imp-file').click()">⬆ Choose events-backup.json</button></div>
     <div class="dm-sec">
       <div class="dm-t">📊 Import from Schedule 2026.xlsx</div>
-      <div class="dm-s">Download the quarterly schedule from SharePoint, drop it here. Auto-reads DR dates &amp; OS patching for Chevron ABU and Origin/APLNG.</div>
-      <div style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-xs);padding:7px 10px;font-size:11px;color:var(--c-accent2);line-height:1.6;margin-bottom:8px"><strong>How:</strong> Download → Drop below → Preview → Import</div>
-      <div id="xl-drop" style="border:2px dashed var(--c-border2);border-radius:var(--r);padding:16px;text-align:center;cursor:pointer;transition:all .15s;margin-bottom:6px" onclick="document.getElementById('xl-file').click()" ondragover="xlDragOver(event)" ondragleave="xlDragLeave(event)" ondrop="xlDrop(event)">
-        <div style="font-size:22px;margin-bottom:4px">📂</div>
-        <div style="font-size:12px;font-weight:600;color:var(--c-text);margin-bottom:2px">Drop Schedule 2026.xlsx here</div>
-        <div style="font-size:11px;color:var(--c-text3)">or click to browse · .xlsx / .csv / .txt</div>
+      <div class="dm-s">Copy directly from Excel and paste below — no saving as CSV needed.</div>
+      <div style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-xs);padding:8px 10px;font-size:11px;color:var(--c-accent2);line-height:1.7;margin-bottom:8px">
+        <strong>How to import:</strong><br>
+        1. Open <strong>Schedule 2026.xlsx</strong> in Excel<br>
+        2. Press <strong>Ctrl+A</strong> to select all → <strong>Ctrl+C</strong> to copy<br>
+        3. Click the box below → <strong>Ctrl+V</strong> to paste<br>
+        4. Click <strong>🔍 Find my assets</strong>
       </div>
-      <input type="file" id="xl-file" accept=".xlsx,.xls,.csv,.txt" style="display:none" onchange="xlFileSelect(event)">
-      <div id="xl-preview" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-xs);padding:8px;max-height:160px;overflow-y:auto;display:none;margin-bottom:6px"></div>
-      <div id="xl-import-row" style="display:none">
-        <button onclick="xlImport()" style="background:var(--c-pto-bg);border:1px solid var(--c-pto-bd);border-radius:var(--r-xs);color:var(--c-pto);cursor:pointer;padding:6px 12px;font-size:11px;font-weight:600;font-family:Inter,sans-serif">⬇ Import selected</button>
+      <textarea id="xl-paste" placeholder="Paste your Excel data here (Ctrl+V)..." style="width:100%;height:110px;background:var(--c-surface2);border:1.5px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:8px;outline:none;resize:vertical;line-height:1.4" onfocus="this.style.borderColor='var(--c-accent)'" onblur="this.style.borderColor=''"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap">
+        <button onclick="xlFromPaste()" style="background:var(--c-accent);border:none;border-radius:var(--r-xs);color:#fff;cursor:pointer;padding:7px 14px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">🔍 Find my assets</button>
+        <span style="font-size:11px;color:var(--c-text4)">or upload a .csv / .txt file:</span>
+        <button onclick="document.getElementById('xl-file').click()" style="background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text3);cursor:pointer;padding:6px 10px;font-size:11px;font-weight:500;font-family:Inter,sans-serif">📂 Browse file</button>
+        <input type="file" id="xl-file" accept=".csv,.txt,.tsv" style="display:none" onchange="xlFileSelect(event)">
+      </div>
+      <div id="xl-preview" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-xs);padding:8px;max-height:180px;overflow-y:auto;display:none;margin-top:8px"></div>
+      <div id="xl-import-row" style="display:none;margin-top:6px">
+        <button onclick="xlImport()" style="background:var(--c-pto-bg);border:1px solid var(--c-pto-bd);border-radius:var(--r-xs);color:var(--c-pto);cursor:pointer;padding:7px 14px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">⬇ Import selected events</button>
         <span id="xl-count" style="font-size:11px;color:var(--c-text3);margin-left:8px"></span>
       </div>
     </div>
@@ -1712,13 +1719,18 @@ function xlDragOver(e){e.preventDefault();document.getElementById('xl-drop').sty
 function xlDragLeave(){document.getElementById('xl-drop').style.borderColor='';document.getElementById('xl-drop').style.background='';}
 function xlDrop(e){e.preventDefault();xlDragLeave();const f=e.dataTransfer.files[0];if(f)xlProcess(f);}
 function xlFileSelect(e){const f=e.target.files[0];if(f)xlProcess(f);e.target.value='';}
+function xlFromPaste(){
+  const text=document.getElementById('xl-paste').value.trim();
+  if(!text){toast('Paste your Excel data first (Ctrl+V in the box)');return;}
+  xlParsed=xlParseSchedule(text,'pasted data');
+  xlShowPreview();
+}
 function xlProcess(file){
   const reader=new FileReader();
   reader.onload=function(e){
     xlParsed=xlParseSchedule(e.target.result,file.name);
     xlShowPreview();
   };
-  /* Always read as text — works for CSV and TSV (tab-separated) exports */
   reader.readAsText(file);
 }
 
@@ -1890,6 +1902,7 @@ function xlImport(){
   saveEvts();rebuildMap();
   document.getElementById('xl-preview').style.display='none';
   document.getElementById('xl-import-row').style.display='none';
+  const pa=document.getElementById('xl-paste');if(pa)pa.value='';
   xlParsed=[];
   render();toast(added+' events imported from schedule ✓');
 }('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
