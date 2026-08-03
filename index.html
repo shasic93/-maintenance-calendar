@@ -868,20 +868,11 @@ const PHT=['ph','wa','qld'];
 const FLAG={ph:'<span class="country-badge my-badge">MY</span>',wa:'<span class="country-badge au-badge">AU</span>',qld:'<span class="country-badge au-badge">AU</span>'};
 
 const SEED=[
-  {id:1,date:'2026-04-22',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30-22:30 AWST',duration:'3 hrs',tbc:false,notes:'All non-prod environments (DEV/TEST/UAT). OS patching, DNS Firewall, DB engine update, EC password refresh.'},
-  {id:2,date:'2026-04-28',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30-22:30 AWST',duration:'3 hrs',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh. Project Wildcat environment.'},
-  {id:3,date:'2026-04-29',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Non-prod',time:'19:30-22:30 AWST',duration:'3 hrs',tbc:false,notes:'OS Patching, DNS Firewall, DB engine update, EC password refresh.'},
-  {id:4,date:'2026-05-18',title:'APLNG Q2 prod maintenance',asset:'Origin / APLNG',type:'orig',env:'Prod',time:'TBC',duration:'TBC',tbc:true,notes:'Case 26-01101247. Exact date TBC. Contact Quorum EC Midstream team.'},
-  {id:7,date:'2026-06-10',title:'Wheatstone Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00-23:00 AWST',duration:'3 hrs',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh. DNS Firewall deferred to mid-July.'},
-  {id:8,date:'2026-06-11',title:'Gorgon Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00-23:00 AWST',duration:'3 hrs',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
-  {id:9,date:'2026-06-24',title:'WAOIL Q2 OS patching',asset:'Chevron ABU',type:'chev',env:'Prod',time:'20:00-23:00 AWST',duration:'3 hrs',tbc:false,notes:'PRODUCTION. OS Patching, DB engine update, EC password refresh.'},
-  {id:10,date:'2026-07-15',title:'Wheatstone DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00-20:00 AWST',duration:'2 hrs',tbc:true,notes:'Deferred from Q2. RTO: 15-30 min. ABU to review near date to avoid cargo conflicts.'},
-  {id:11,date:'2026-07-16',title:'Gorgon DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00-20:00 AWST',duration:'2 hrs',tbc:true,notes:'Deferred from Q2. Azure Fileshare: //ecfsauegorp214.file.core.windows.net/gorgon-prod'},
-  {id:12,date:'2026-07-16',title:'WAOIL DNS firewall rollout',asset:'Chevron ABU',type:'chev',env:'Prod',time:'18:00-20:00 AWST',duration:'2 hrs',tbc:true,notes:'Deferred from Q2. WAOIL Azure FS: https://ecfsauewaop214.file.core.windows.net/waoil-prod'},
-  {id:50,date:'2026-05-20',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',tbc:false,notes:'PTO 20-25 May (weekdays only).'},
-  {id:51,date:'2026-05-21',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',tbc:false,notes:'PTO 20-25 May (weekdays only).'},
-  {id:52,date:'2026-05-22',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',tbc:false,notes:'PTO 20-25 May (weekdays only).'},
-  {id:55,date:'2026-05-25',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',tbc:false,notes:'PTO 20-25 May (weekdays only).'},
+  /* PTO */
+  {id:50,date:'2026-05-20',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',activity:'',tbc:false,notes:'PTO 20-25 May (weekdays only).',assignee:''},
+  {id:51,date:'2026-05-21',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',activity:'',tbc:false,notes:'PTO 20-25 May (weekdays only).',assignee:''},
+  {id:52,date:'2026-05-22',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',activity:'',tbc:false,notes:'PTO 20-25 May (weekdays only).',assignee:''},
+  {id:55,date:'2026-05-25',title:'Shafiq PTO',asset:'PTO',type:'pto',env:'PTO',time:'All day',duration:'4 days',activity:'',tbc:false,notes:'PTO 20-25 May (weekdays only).',assignee:''},
   {id:101,date:'2026-01-01',title:"New Year's Day",asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday.'},
   {id:102,date:'2026-02-01',title:'Thaipusam',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'Federal public holiday.'},
   {id:103,date:'2026-02-01',title:'Federal Territory Day',asset:'KL Public Holiday',type:'ph',env:'Holiday',time:'All day',duration:'1 day',tbc:false,notes:'KL Federal Territory Day.'},
@@ -941,9 +932,18 @@ function loadEvts(){
   try{
     const s=localStorage.getItem(SK);
     if(s){const p=JSON.parse(s);if(Array.isArray(p)&&p.length>0){
-      const m=p.filter(e=>!PHT.includes(e.type)&&e.type!=='pi');
-      const h=SEED.filter(e=>PHT.includes(e.type));
-      return [...m,...h].sort((a,b)=>a.date.localeCompare(b.date));
+      let m=p.filter(function(e){return !PHT.includes(e.type)&&e.type!=='pi';});
+      /* Migration: remove old placeholder seed events (id 1–12) */
+      m=m.filter(function(e){return !(e.id>=1&&e.id<=12);});
+      /* Migration: deduplicate — remove exact title+date duplicates, keep last */
+      const seen={};const deduped=[];
+      m.slice().reverse().forEach(function(e){const k=e.date+'|'+e.title;if(!seen[k]){seen[k]=true;deduped.push(e);}});
+      m=deduped.reverse();
+      const h=SEED.filter(function(e){return PHT.includes(e.type);});
+      const merged=[...m,...h].sort(function(a,b){return a.date.localeCompare(b.date);});
+      /* Save cleaned data back */
+      try{localStorage.setItem(SK,JSON.stringify(merged));}catch(e){}
+      return merged;
     }}
   }catch(e){}
   const i=JSON.parse(JSON.stringify(SEED));
@@ -1974,12 +1974,31 @@ function xlShowPreview(){
 function xlImport(){
   const selected=xlParsed.filter(function(_,i){const c=document.getElementById('xlc'+i);return c&&c.checked;});
   if(!selected.length){toast('No events selected');return;}
-  let added=0,skipped=0;
+
+  /* Determine which activity type we're replacing */
+  const importActivity=selected[0]?selected[0].activity:'EG Upgrade';
+
+  /* Remove ALL previously imported events of this activity type for the same assets
+     This ensures re-import of a new quarterly schedule replaces the old one cleanly.
+     Only removes events that came from imports (EG Upgrade or DR Schedule activity).
+     Manual events (OS Patching, DNS Firewall, Incident etc) are never touched. */
+  const IMPORT_ACTIVITIES=['EG Upgrade','DR Schedule'];
+  if(IMPORT_ACTIVITIES.includes(importActivity)){
+    AE=AE.filter(function(e){
+      /* Keep: holidays, PTO, manual events (non-import activities) */
+      if(PHT.includes(e.type)||e.type==='pto')return true;
+      /* Keep: events with different activity type */
+      if(e.activity!==importActivity)return true;
+      /* Remove: same activity type — will be replaced by new import */
+      return false;
+    });
+  }
+
+  /* Add all selected events */
   selected.forEach(function(e){
-    if(!AE.some(function(x){return x.date===e.date&&x.title===e.title;})){
-      AE.push(Object.assign({},e,{id:NI++}));added++;
-    } else { skipped++; }
+    AE.push(Object.assign({},e,{id:NI++}));
   });
+
   AE.sort(function(a,b){return a.date.localeCompare(b.date);});
   saveEvts();rebuildMap();
   document.getElementById('xl-preview').style.display='none';
@@ -1987,7 +2006,7 @@ function xlImport(){
   const pa=document.getElementById('xl-paste');if(pa)pa.value='';
   xlParsed=[];
   render();
-  toast(added+' event'+(added!==1?'s':'')+' added'+(skipped?' ('+skipped+' already existed)':'')+' ✓');
+  toast(selected.length+' events imported — old '+importActivity+' schedule replaced ✓');
 }
 applyTheme();render();
 </script>
