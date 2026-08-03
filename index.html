@@ -1978,25 +1978,19 @@ function xlImport(){
   /* Determine which activity type we're replacing */
   const importActivity=selected[0]?selected[0].activity:'OS Patching';
 
-  /* Remove ALL previously imported events of this activity type for the same assets
-     This ensures re-import of a new quarterly schedule replaces the old one cleanly.
-     Only removes events that came from imports (EG Upgrade or DR Schedule activity).
-     Manual events (DNS Firewall, Incident, Meeting etc) are never touched. */
-  const IMPORT_ACTIVITIES=['OS Patching','DR Schedule'];
-  if(IMPORT_ACTIVITIES.includes(importActivity)){
-    AE=AE.filter(function(e){
-      /* Keep: holidays, PTO, manual events (non-import activities) */
-      if(PHT.includes(e.type)||e.type==='pto')return true;
-      /* Keep: events with different activity type */
-      if(e.activity!==importActivity)return true;
-      /* Remove: same activity type — will be replaced by new import */
-      return false;
-    });
-  }
+  /* Only remove events that were previously imported from Excel (flagged fromXL:true).
+     Manual events — even if they have the same activity type like "OS Patching" or
+     "DR Schedule" — are NEVER removed because they won't have fromXL:true. */
+  AE=AE.filter(function(e){
+    if(PHT.includes(e.type)||e.type==='pto')return true; /* always keep holidays + PTO */
+    if(!e.fromXL)return true;                            /* keep all manually added events */
+    if(e.activity!==importActivity)return true;          /* keep imports of different type */
+    return false;                                        /* remove: same type XL import → replace */
+  });
 
-  /* Add all selected events */
+  /* Add all selected events — tagged as fromXL so future imports can replace them */
   selected.forEach(function(e){
-    AE.push(Object.assign({},e,{id:NI++}));
+    AE.push(Object.assign({},e,{id:NI++,fromXL:true}));
   });
 
   AE.sort(function(a,b){return a.date.localeCompare(b.date);});
