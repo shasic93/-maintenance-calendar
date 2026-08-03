@@ -1757,52 +1757,35 @@ function xlProcess(file){
   reader.readAsText(file);
 }
 
-function xlParseCSVLine(line){
-  /* If line has tabs, split on tabs only (TSV/Excel direct copy) */
-  if(line.includes('\t')){
-    return line.split('\t').map(function(c){return c.replace(/^"|"$/g,'').trim();});
-  }
-  /* Otherwise proper CSV parser handling quoted fields with commas inside */
-  const result=[];
-  let cur='',inQ=false;
-  for(let i=0;i<line.length;i++){
-    const c=line[i];
-    if(c==='"'){inQ=!inQ;}
-    else if(c===','&&!inQ){result.push(cur.trim());cur='';}
-    else cur+=c;
-  }
-  result.push(cur.trim());
-  return result;
-}
-
-function xlParseSchedule(text,filename){
+function xlParseSchedule(text,tabName){
   /*
-    Column layout (0-indexed):
-    0: Shift Time  1: EC Version  2: Asset Name  3: Env Name
-    4: Ticket      5: Date in IST  6: Start IST   7: End IST
-    ...            13: Customer TZ  14: Region     20: Assignee
+    AUTO-DETECTS which tab format:
 
-    Your assets:
-      Gorgon  → Chevron ABU
-      WST     → Chevron ABU (Wheatstone)
-      WA OIL  → Chevron ABU (WAOIL)
-      Origin  → Origin / APLNG
+    OS PATCHING tab columns (0-indexed):
+      0:Shift  1:EC Version  2:Asset Name  3:Env  4:Ticket
+      5:Date IST  6:Start  7:End  ...  20:SDM
+
+    DR SCHEDULE tab columns (0-indexed):
+      0:EC Version  1:Asset Name  2:Ticket
+      3:Date IST  4:Time  5:Date CustTZ  6:Time CustTZ
+      7:empty  8:Assignee  ...  11:Region
+
+    Detection: DR tab has "EC1x" in col 0, OS tab has "First/Second/Night/General Shift" in col 0
   */
   const ASSET_MAP={
-    'gorgon':  {type:'chev',label:'Gorgon'},
-    'wst':     {type:'chev',label:'Wheatstone (WST)'},
-    'wheatstone':{type:'chev',label:'Wheatstone'},
-    'wa oil':  {type:'chev',label:'WA OIL'},
-    'waoil':   {type:'chev',label:'WAOIL'},
-    'origin':  {type:'orig',label:'Origin / APLNG'},
-    'aplng':   {type:'orig',label:'APLNG'},
+    'gorgon':     {type:'chev',name:'Gorgon'},
+    'wst':        {type:'chev',name:'Wheatstone (WST)'},
+    'wheatstone': {type:'chev',name:'Wheatstone'},
+    'wa oil':     {type:'chev',name:'WA OIL'},
+    'waoil':      {type:'chev',name:'WAOIL'},
+    'origin':     {type:'orig',name:'Origin / APLNG'},
+    'aplng':      {type:'orig',name:'APLNG'},
   };
   const MON={january:1,february:2,march:3,april:4,may:5,june:6,
              july:7,august:8,september:9,october:10,november:11,december:12};
 
   function parseWordDate(str){
-    /* Handles: "Wednesday, July 15, 2026" or "July 15, 2026" */
-    if(!str||str==='NA'||str.trim()==='')return null;
+    if(!str||str.trim()===''||str==='NA')return null;
     const m=str.match(/(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
     if(!m)return null;
     const mo=MON[m[1].toLowerCase()];
@@ -1810,90 +1793,162 @@ function xlParseSchedule(text,filename){
     return m[3]+'-'+String(mo).padStart(2,'0')+'-'+String(m[2]).padStart(2,'0');
   }
 
-  const results=[];
-  const seenKeys=new Set(); /* deduplicate */
-  const lines=text.split(/\r?\n/);
-
-  lines.forEach(function(line){
-    if(!line.trim())return;
-    const cols=xlParseCSVLine(line);
-    if(cols.length<6)return;
-
-    const assetRaw=(cols[2]||'').trim();
-    const assetLow=assetRaw.toLowerCase();
-    const envRaw=(cols[3]||'').trim();
-    const dateRaw=(cols[5]||'').trim();
-
-    /* Match asset */
-    let assetInfo=null;
+  function matchAsset(raw){
+    const low=(raw||'').toLowerCase().trim();
     for(const k in ASSET_MAP){
-      if(assetLow===k||assetLow.startsWith(k)||assetLow.replace(/\s/g,'')===k.replace(/\s/g,'')){
-        assetInfo=ASSET_MAP[k];break;
+      if(low===k||low.startsWith(k)||low.replace(/\s/g,'')===k.replace(/\s/g,'')){
+        return ASSET_MAP[k];
       }
     }
-    if(!assetInfo)return;
+    return null;
+  }
 
-    /* Parse date */
-    const dateStr=parseWordDate(dateRaw);
-    if(!dateStr)return;
+  function parseLine(cols, isDR){
+    if(isDR){
+      /* DR tab: col0=EC, col1=Asset, col2=Ticket, col3=Date, col4=StartTime, col8=Assignee */
+      if(cols.length<4)return null;
+      const assetInfo=matchAsset(cols[1]);
+      if(!assetInfo)return null;
+      const dateStr=parseWordDate(cols[3]);
+      if(!dateStr)return null;
+      const ecVer=(cols[0]||'').trim();
+      const ticket=(cols[2]||'').trim();
+      const startT=(cols[4]||'').trim();
+      const assignee=(cols[8]||cols[10]||'').trim();
+      return{
+        assetInfo,dateStr,ecVer,ticket,
+        startT,endT:'',assignee,
+        envRaw:'Prod',env:'Prod',
+        assetRaw:(cols[1]||'').trim()
+      };
+    } else {
+      /* OS Patching tab: col0=Shift, col1=EC, col2=Asset, col3=Env, col4=Ticket, col5=Date, col6=Start, col7=End, col20=SDM */
+      if(cols.length<6)return null;
+      const assetInfo=matchAsset(cols[2]);
+      if(!assetInfo)return null;
+      const dateStr=parseWordDate(cols[5]);
+      if(!dateStr)return null;
+      const ecVer=(cols[1]||'').trim();
+      const ticket=(cols[4]||'').trim();
+      const envRaw=(cols[3]||'').trim();
+      const envLow=envRaw.toLowerCase();
+      const env=envLow==='prod'||envLow.startsWith('prod')?'Prod':'Non-prod';
+      const startT=(cols[6]||'').trim();
+      const endT=(cols[7]||'').trim();
+      const assignee=(cols[20]||'').trim();
+      return{
+        assetInfo,dateStr,ecVer,ticket,
+        startT,endT,assignee,
+        envRaw,env,
+        assetRaw:(cols[2]||'').trim()
+      };
+    }
+  }
 
-    /* Time window */
-    const startT=(cols[6]||'').trim();
-    const endT=(cols[7]||'').trim();
-    const timeIST=startT&&endT&&startT!=='NA'?startT+' – '+endT+' IST':'TBC';
+  /* Auto-detect format from first data row */
+  const lines=text.split(/\r?\n/);
+  let isDR=null;
+  for(const line of lines){
+    if(!line.trim())continue;
+    const c0=(line.split('\t')[0]||'').trim().toLowerCase();
+    if(c0.startsWith('ec1')||c0.startsWith('ec2')){isDR=true;break;}
+    if(c0.includes('shift')||c0==='shift time'){isDR=false;break;}
+  }
+  /* Also allow manual override from tabName */
+  if(tabName==='DR Schedule')isDR=true;
+  if(tabName==='OS Patching')isDR=false;
+  if(isDR===null)isDR=false; /* default to OS Patching */
 
-    /* Env */
+  const activity=isDR?'DR Schedule':'EG Upgrade';
+
+  /* First pass — collect all rows grouped by asset+date */
+  const groups={};
+  lines.forEach(function(line){
+    if(!line.trim())return;
+    const cols=line.split('\t').map(function(c){return c.replace(/^"|"$/g,'').trim();});
+    const parsed=parseLine(cols,isDR);
+    if(!parsed)return;
+    const{assetInfo,dateStr,ecVer,ticket,startT,endT,assignee,envRaw,env,assetRaw}=parsed;
+    /* Group key: asset + date + ec version */
+    const gKey=assetRaw+'|'+dateStr+'|'+ecVer;
+    if(!groups[gKey]){
+      groups[gKey]={assetInfo,dateStr,ecVer,assetRaw,assignee,startT,endT,ticket,
+        envs:[],isProd:false};
+    }
+    const g=groups[gKey];
+    /* Categorise env */
     const envLow=envRaw.toLowerCase();
-    const isProd=envLow==='prod'||envLow.startsWith('prod');
-    const env=isProd?'Prod':'Non-prod';
-
-    /* EC version & activity */
-    const ecVer=(cols[1]||'').trim();
-    const ticketNum=(cols[4]||'').trim();
-    const assignee=(cols[20]||'').replace(/['"]/g,'').trim();
-    const region=(cols[14]||'').trim();
-    const tz=(cols[13]||'').trim();
-
-    /* Activity type based on which Excel tab is being imported */
-    const isDR=filename==='DR Schedule';
-    const activity=isDR?'DR Schedule':'EG Upgrade';
-
-    /* Title */
-    const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' ('+envRaw+')';
-
-    /* Deduplicate same asset+date+env */
-    const key=assetRaw+'|'+dateStr+'|'+envRaw;
-    if(seenKeys.has(key))return;
-    seenKeys.add(key);
-
-    /* Notes */
-    const noteLines=[
-      'EC Version: '+ecVer,
-      'Environment: '+envRaw,
-      'Time (IST): '+timeIST,
-      ticketNum?'Ticket: '+ticketNum:'',
-      region?'Region: '+region:'',
-      tz?'Timezone: '+tz:'',
-      assignee?'Assignee: '+assignee:'',
-      'Source: '+filename+' (imported '+new Date().toLocaleDateString()+')',
-    ].filter(Boolean);
-
-    results.push({
-      date:    dateStr,
-      title:   title,
-      type:    assetInfo.type,
-      asset:   assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
-      activity:activity,
-      env:     env,
-      time:    timeIST,
-      duration:'3 hrs',
-      tbc:     false,
-      notes:   noteLines.join('\n'),
-      assignee:assignee,
-    });
+    if(envLow==='prod'||envLow.startsWith('prod')){
+      g.isProd=true;
+      g.prodEnv=envRaw;
+    } else {
+      /* Extract individual env names — handle "Non-Prod (Dev, Test, UAT)" style labels */
+      let envNames=[];
+      const inner=envRaw.match(/\(([^)]+)\)/);
+      if(inner){
+        envNames=inner[1].split(',').map(function(s){return s.trim();});
+      } else {
+        envNames=[envRaw];
+      }
+      envNames.forEach(function(n){if(n&&!g.envs.includes(n))g.envs.push(n);});
+    }
+    /* Keep the best ticket/time */
+    if(ticket&&!g.ticket)g.ticket=ticket;
+    if(startT&&!g.startT)g.startT=startT;
+    if(endT&&!g.endT)g.endT=endT;
   });
 
-  /* Sort by date */
+  /* Second pass — build results: one row for non-prod group, one for prod */
+  const results=[];
+  const seenKeys=new Set();
+
+  Object.values(groups).forEach(function(g){
+    const{assetInfo,dateStr,ecVer,assetRaw,assignee,ticket}=g;
+    const timeIST=g.startT&&g.endT?g.startT+' – '+g.endT+' IST':g.startT?g.startT+' IST':'TBC';
+
+    /* Non-prod group → one event */
+    if(g.envs.length>0){
+      const envLabel='Non-prod ('+g.envs.join(', ')+')';
+      const npKey=assetRaw+'|'+dateStr+'|nonprod';
+      if(!seenKeys.has(npKey)){
+        seenKeys.add(npKey);
+        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' — '+envLabel;
+        results.push({
+          date:dateStr,title:title,
+          type:assetInfo.type,
+          asset:assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
+          activity:activity,env:'Non-prod',time:timeIST,duration:'3 hrs',tbc:false,
+          assignee:assignee,
+          notes:['Activity: '+(isDR?'DR Schedule':'EG Upgrade'),
+            'EC Version: '+ecVer,'Environment: '+envLabel,'Time (IST): '+timeIST,
+            ticket?'Ticket: '+ticket:'',assignee?'Assignee: '+assignee:'',
+            'Source: '+tabName+' tab (imported '+new Date().toLocaleDateString()+')'].filter(Boolean).join('\n')
+        });
+      }
+    }
+
+    /* Prod → separate event */
+    if(g.isProd){
+      const prodKey=assetRaw+'|'+dateStr+'|prod';
+      if(!seenKeys.has(prodKey)){
+        seenKeys.add(prodKey);
+        const envLabel=g.prodEnv||'Prod';
+        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' — '+envLabel;
+        results.push({
+          date:dateStr,title:title,
+          type:assetInfo.type,
+          asset:assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
+          activity:activity,env:'Prod',time:timeIST,duration:'3 hrs',tbc:false,
+          assignee:assignee,
+          notes:['Activity: '+(isDR?'DR Schedule':'EG Upgrade'),
+            'EC Version: '+ecVer,'Environment: '+envLabel,'Time (IST): '+timeIST,
+            ticket?'Ticket: '+ticket:'',assignee?'Assignee: '+assignee:'',
+            'Source: '+tabName+' tab (imported '+new Date().toLocaleDateString()+')'].filter(Boolean).join('\n')
+        });
+      }
+    }
+  });
+
   results.sort(function(a,b){return a.date.localeCompare(b.date);});
   return results;
 }
