@@ -668,35 +668,37 @@ textarea.fin{resize:vertical;min-height:65px}
 
 <!-- DATA MODAL -->
 <div class="mbg" id="dm-bg" onclick="handleDMBG(event)">
-  <div class="dm">
-    <div class="mhdr"><div class="mttl">💾 Data manager</div><button class="mx" onclick="closeDM()">✕</button></div>
+  <div class="dm" style="max-height:90vh;overflow-y:auto;display:flex;flex-direction:column">
+    <div class="mhdr" style="flex-shrink:0"><div class="mttl">💾 Data manager</div><button class="mx" onclick="closeDM()">✕</button></div>
+    <div style="overflow-y:auto;flex:1;padding-bottom:8px">
     <div class="info-bn">Events auto-save in your browser. Export before every upgrade, import to restore instantly.</div>
-    <div class="dm-sec"><div class="dm-t">⬇ Export events</div><div class="dm-s">Downloads <strong>events-backup.json</strong> — do before uploading a new calendar version.</div><button class="dm-btn dm-green" onclick="exportData()">⬇ Download events-backup.json</button></div>
-    <div class="dm-sec"><div class="dm-t">⬆ Import events</div><div class="dm-s">Restore from backup. Replaces current maintenance events.</div><input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)"><button class="dm-btn dm-blue" onclick="document.getElementById('imp-file').click()">⬆ Choose events-backup.json</button></div>
+    <div class="dm-sec"><div class="dm-t">⬇ Export events</div><div class="dm-s">Downloads <strong>events-backup.json</strong> — do this before uploading a new calendar version.</div><button class="dm-btn dm-green" onclick="exportData()">⬇ Download events-backup.json</button></div>
+    <div class="dm-sec"><div class="dm-t">⬆ Import backup</div><div class="dm-s">Restore from a previous backup. Replaces current events.</div><input type="file" id="imp-file" accept=".json" style="display:none" onchange="importData(event)"><button class="dm-btn dm-blue" onclick="document.getElementById('imp-file').click()">⬆ Choose events-backup.json</button></div>
     <div class="dm-sec">
       <div class="dm-t">📊 Import from Schedule 2026.xlsx</div>
-      <div class="dm-s">Copy directly from Excel and paste below — no saving as CSV needed.</div>
-      <div style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-xs);padding:8px 10px;font-size:11px;color:var(--c-accent2);line-height:1.7;margin-bottom:8px">
-        <strong>How to import:</strong><br>
-        1. Open <strong>Schedule 2026.xlsx</strong> in Excel<br>
-        2. Press <strong>Ctrl+A</strong> to select all → <strong>Ctrl+C</strong> to copy<br>
-        3. Click the box below → <strong>Ctrl+V</strong> to paste<br>
-        4. Click <strong>🔍 Find my assets</strong>
+      <div class="dm-s" style="margin-bottom:8px">Your schedule has multiple tabs — <strong>OS Patching</strong> and <strong>DR Schedule</strong>. Paste each tab separately below. Events are <strong>added</strong> to your calendar, never overwritten.</div>
+      <div style="background:var(--c-accent-glow);border:1px solid rgba(59,130,246,.2);border-radius:var(--r-xs);padding:8px 11px;font-size:11px;color:var(--c-accent2);line-height:1.8;margin-bottom:10px">
+        <strong>For each tab in your Excel:</strong><br>
+        1. Click the tab (e.g. OS Patching) → <strong>Ctrl+A</strong> → <strong>Ctrl+C</strong><br>
+        2. Click in the box below → <strong>Ctrl+V</strong><br>
+        3. Click <strong>Find my assets</strong> → tick events → <strong>Import</strong><br>
+        4. Repeat for the DR Schedule tab
       </div>
-      <textarea id="xl-paste" placeholder="Paste your Excel data here (Ctrl+V)..." style="width:100%;height:110px;background:var(--c-surface2);border:1.5px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:8px;outline:none;resize:vertical;line-height:1.4" onfocus="this.style.borderColor='var(--c-accent)'" onblur="this.style.borderColor=''"></textarea>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap">
-        <button onclick="xlFromPaste()" style="background:var(--c-accent);border:none;border-radius:var(--r-xs);color:#fff;cursor:pointer;padding:7px 14px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">🔍 Find my assets</button>
-        <span style="font-size:11px;color:var(--c-text4)">or upload a .csv / .txt file:</span>
-        <button onclick="document.getElementById('xl-file').click()" style="background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text3);cursor:pointer;padding:6px 10px;font-size:11px;font-weight:500;font-family:Inter,sans-serif">📂 Browse file</button>
-        <input type="file" id="xl-file" accept=".csv,.txt,.tsv" style="display:none" onchange="xlFileSelect(event)">
+      <div style="display:flex;gap:6px;margin-bottom:6px">
+        <button onclick="xlSetTab('os')" id="xl-tab-os" style="flex:1;padding:7px;border-radius:var(--r-xs);font-size:11px;font-weight:700;font-family:Inter,sans-serif;cursor:pointer;border:2px solid var(--c-accent);background:var(--c-accent);color:#fff">💻 OS Patching tab</button>
+        <button onclick="xlSetTab('dr')" id="xl-tab-dr" style="flex:1;padding:7px;border-radius:var(--r-xs);font-size:11px;font-weight:700;font-family:Inter,sans-serif;cursor:pointer;border:2px solid var(--c-border2);background:var(--c-surface2);color:var(--c-text3)">🔄 DR Schedule tab</button>
       </div>
-      <div id="xl-preview" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-xs);padding:8px;max-height:180px;overflow-y:auto;display:none;margin-top:8px"></div>
-      <div id="xl-import-row" style="display:none;margin-top:6px">
-        <button onclick="xlImport()" style="background:var(--c-pto-bg);border:1px solid var(--c-pto-bd);border-radius:var(--r-xs);color:var(--c-pto);cursor:pointer;padding:7px 14px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">⬇ Import selected events</button>
-        <span id="xl-count" style="font-size:11px;color:var(--c-text3);margin-left:8px"></span>
+      <div id="xl-tab-hint" style="font-size:11px;color:var(--c-text3);margin-bottom:6px;font-family:'JetBrains Mono',monospace">Currently pasting: <strong style="color:var(--c-accent2)">OS Patching</strong> tab</div>
+      <textarea id="xl-paste" placeholder="Click here then press Ctrl+V to paste from Excel..." style="width:100%;height:90px;background:var(--c-surface2);border:1.5px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text);font-family:'JetBrains Mono',monospace;font-size:10px;padding:8px;outline:none;resize:none;line-height:1.4;display:block" onfocus="this.style.borderColor='var(--c-accent)'" onblur="this.style.borderColor=''"></textarea>
+      <button onclick="xlFromPaste()" style="margin-top:7px;width:100%;background:var(--c-accent);border:none;border-radius:var(--r-xs);color:#fff;cursor:pointer;padding:8px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">🔍 Find my assets from this tab</button>
+      <div id="xl-preview" style="background:var(--c-surface2);border:1px solid var(--c-border);border-radius:var(--r-xs);padding:8px;max-height:200px;overflow-y:auto;display:none;margin-top:8px"></div>
+      <div id="xl-import-row" style="display:none;margin-top:6px;display:none">
+        <button onclick="xlImport()" style="width:100%;background:var(--c-orig-bg);border:1px solid var(--c-orig-bd);border-radius:var(--r-xs);color:var(--c-orig);cursor:pointer;padding:8px;font-size:12px;font-weight:700;font-family:Inter,sans-serif">⬇ Import selected events into calendar</button>
+        <div id="xl-count" style="font-size:11px;color:var(--c-text3);margin-top:4px;text-align:center"></div>
       </div>
     </div>
-    <div style="display:flex;justify-content:flex-end;margin-top:4px"><button class="btn-cancel" onclick="closeDM()">Close</button></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;padding-top:8px;border-top:1px solid var(--c-border);flex-shrink:0"><button class="btn-cancel" onclick="closeDM()">Close</button></div>
   </div>
 </div>
 
@@ -1719,10 +1721,31 @@ function xlDragOver(e){e.preventDefault();document.getElementById('xl-drop').sty
 function xlDragLeave(){document.getElementById('xl-drop').style.borderColor='';document.getElementById('xl-drop').style.background='';}
 function xlDrop(e){e.preventDefault();xlDragLeave();const f=e.dataTransfer.files[0];if(f)xlProcess(f);}
 function xlFileSelect(e){const f=e.target.files[0];if(f)xlProcess(f);e.target.value='';}
+let xlCurrentTab='os'; /* 'os' or 'dr' */
+function xlSetTab(tab){
+  xlCurrentTab=tab;
+  const os=document.getElementById('xl-tab-os');
+  const dr=document.getElementById('xl-tab-dr');
+  const hint=document.getElementById('xl-tab-hint');
+  if(tab==='os'){
+    os.style.background='var(--c-accent)';os.style.color='#fff';os.style.borderColor='var(--c-accent)';
+    dr.style.background='var(--c-surface2)';dr.style.color='var(--c-text3)';dr.style.borderColor='var(--c-border2)';
+    hint.innerHTML='Currently pasting: <strong style="color:var(--c-accent2)">OS Patching</strong> tab';
+  } else {
+    dr.style.background='var(--c-accent)';dr.style.color='#fff';dr.style.borderColor='var(--c-accent)';
+    os.style.background='var(--c-surface2)';os.style.color='var(--c-text3)';os.style.borderColor='var(--c-border2)';
+    hint.innerHTML='Currently pasting: <strong style="color:var(--c-orig)">DR Schedule</strong> tab';
+  }
+  /* Clear paste box and results when switching tabs */
+  document.getElementById('xl-paste').value='';
+  document.getElementById('xl-preview').style.display='none';
+  document.getElementById('xl-import-row').style.display='none';
+  xlParsed=[];
+}
 function xlFromPaste(){
   const text=document.getElementById('xl-paste').value.trim();
-  if(!text){toast('Paste your Excel data first (Ctrl+V in the box)');return;}
-  xlParsed=xlParseSchedule(text,'pasted data');
+  if(!text){toast('Click the box above and press Ctrl+V to paste from Excel');return;}
+  xlParsed=xlParseSchedule(text, xlCurrentTab==='dr'?'DR Schedule':'OS Patching');
   xlShowPreview();
 }
 function xlProcess(file){
@@ -1831,8 +1854,12 @@ function xlParseSchedule(text,filename){
     const region=(cols[14]||'').trim();
     const tz=(cols[13]||'').trim();
 
-    /* Title: Asset + EC Version + env */
-    const title=assetRaw+' '+ecVer+' EG Upgrade ('+envRaw+')';
+    /* Activity type based on which Excel tab is being imported */
+    const isDR=filename==='DR Schedule';
+    const activity=isDR?'DR Schedule':'EG Upgrade';
+
+    /* Title */
+    const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' ('+envRaw+')';
 
     /* Deduplicate same asset+date+env */
     const key=assetRaw+'|'+dateStr+'|'+envRaw;
@@ -1856,7 +1883,7 @@ function xlParseSchedule(text,filename){
       title:   title,
       type:    assetInfo.type,
       asset:   assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
-      activity:'EG Upgrade',
+      activity:activity,
       env:     env,
       time:    timeIST,
       duration:'3 hrs',
@@ -1875,28 +1902,28 @@ function xlShowPreview(){
   const row=document.getElementById('xl-import-row');
   if(!xlParsed.length){
     prev.style.display='block';
-    prev.innerHTML='<div style="color:var(--c-text3);font-size:11px;padding:6px">No matching events found. Make sure the file contains dates and asset names (Gorgon, Wheatstone, WAOIL, APLNG, Origin, Chevron).<br><br><strong>Tip:</strong> If your file is .xlsx, first save it as CSV from Excel, then import the CSV here.</div>';
+    prev.innerHTML='<div style="color:var(--c-tbc);font-size:11px;padding:8px;line-height:1.7">⚠ No matching events found for your assets.<br><br><strong>Your assets:</strong> Gorgon, WST (Wheatstone), WA OIL, Origin<br><br>Make sure you selected the right tab in Excel and copied ALL rows (Ctrl+A then Ctrl+C).</div>';
     row.style.display='none';return;
   }
   prev.style.display='block';
-  prev.innerHTML='<div style="font-size:10px;color:var(--c-text4);margin-bottom:5px;font-family:\'JetBrains Mono\',monospace">'+xlParsed.length+' events found — tick to include:</div>'+
+  prev.innerHTML='<div style="font-size:10px;color:var(--c-text4);margin-bottom:5px;font-family:\'JetBrains Mono\',monospace">'+xlParsed.length+' events found for your assets — tick to include:</div>'+
     xlParsed.map(function(e,i){return '<div style="display:flex;align-items:center;gap:7px;padding:3px 0;border-bottom:1px solid var(--c-border);font-size:11px">'+
       '<input type="checkbox" id="xlc'+i+'" checked style="accent-color:var(--c-accent)">'+
       '<span style="background:'+(e.type==='chev'?'var(--c-chev-bg)':'var(--c-orig-bg)')+';color:'+(e.type==='chev'?'var(--c-chev)':'var(--c-orig)')+';padding:1px 5px;border-radius:3px;font-size:9px;font-weight:700">'+(e.type==='chev'?'CHEV':'ORIG')+'</span>'+
       '<span style="font-family:\'JetBrains Mono\',monospace;color:var(--c-text3);font-size:10px">'+e.date+'</span>'+
       '<span style="flex:1;color:var(--c-text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e.title+'</span>'+
       '<span style="color:var(--c-accent2);font-size:9px">'+e.activity+'</span></div>';}).join('');
-  document.getElementById('xl-count').textContent=xlParsed.length+' events ready';
+  document.getElementById('xl-count').textContent=xlParsed.length+' events ready to import';
   row.style.display='block';
 }
 function xlImport(){
   const selected=xlParsed.filter(function(_,i){const c=document.getElementById('xlc'+i);return c&&c.checked;});
   if(!selected.length){toast('No events selected');return;}
-  let added=0;
+  let added=0,skipped=0;
   selected.forEach(function(e){
     if(!AE.some(function(x){return x.date===e.date&&x.title===e.title;})){
       AE.push(Object.assign({},e,{id:NI++}));added++;
-    }
+    } else { skipped++; }
   });
   AE.sort(function(a,b){return a.date.localeCompare(b.date);});
   saveEvts();rebuildMap();
@@ -1904,8 +1931,9 @@ function xlImport(){
   document.getElementById('xl-import-row').style.display='none';
   const pa=document.getElementById('xl-paste');if(pa)pa.value='';
   xlParsed=[];
-  render();toast(added+' events imported from schedule ✓');
-}('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  render();
+  toast(added+' event'+(added!==1?'s':'')+' added'+(skipped?' ('+skipped+' already existed)':'')+' ✓');
+}
 applyTheme();render();
 </script>
 </body>
