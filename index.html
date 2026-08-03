@@ -1718,28 +1718,125 @@ function xlProcess(file){
   reader.readAsText(file);
 }
 function xlParseSchedule(text,filename){
-  const lines=text.split(/\r?\n/).filter(l=>l.trim());
+  /* ── Column layout (0-indexed, tab-separated):
+     0: Shift Time  1: EC Version  2: Asset Name  3: Env Name
+     4: Ticket      5: Date in IST  6: Start IST  7: End IST
+     8: empty  9: Date Customer TZ  10: Start CustTZ  11: End CustTZ
+     12: empty  13: Customer TZ  14: Region  ...  20: SDM (Assignee)
+  ── */
+
+  /* Your assets that belong to Chevron ABU or Origin/APLNG */
+  const ASSET_MAP={
+    'gorgon':'chev',
+    'wst':'chev',        /* Wheatstone */
+    'wheatstone':'chev',
+    'wa oil':'chev',     /* WAOIL */
+    'waoil':'chev',
+    'origin':'orig',
+    'aplng':'orig',
+  };
+
+  /* Month name → number */
+  const MON={january:1,february:2,march:3,april:4,may:5,june:6,july:7,august:8,september:9,october:10,november:11,december:12};
+
+  function parseWordDate(str){
+    /* "Wednesday, July 15, 2026" → "2026-07-15" */
+    if(!str)return null;
+    const m=str.match(/(\w+),?\s+(\w+)\s+(\d{1,2}),?\s+(\d{4})/);
+    if(!m)return null;
+    const mo=MON[m[2].toLowerCase()];
+    if(!mo)return null;
+    return m[4]+'-'+String(mo).padStart(2,'0')+'-'+String(m[3]).padStart(2,'0');
+  }
+
   const results=[];
-  const assetMap={'gorgon':'chev','wheatstone':'chev','waoil':'chev','chevron':'chev','abu':'chev','aplng':'orig','origin':'orig'};
-  const actMap={'dr schedule':'DR Schedule','disaster recovery':'DR Schedule','annual dr':'DR Schedule','os patch':'OS Patching','patching':'OS Patching','dns firewall':'DNS Firewall','firewall':'DNS Firewall','db maintenance':'DB Maintenance','engine update':'DB Maintenance','eg upgrade':'EG Upgrade','eg ':'EG Upgrade','ec password':'EC Password Refresh','password refresh':'EC Password Refresh','uat':'UAT','regression':'Regression Fix','release':'Release','incident':'Incident'};
-  const dateRe=/(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})|(\d{4})[\/\-\.](\d{1,2})[\/\-\.](\d{1,2})/;
+  const lines=text.split(/\r?\n/);
+
   lines.forEach(function(line){
-    const low=line.toLowerCase();
+    if(!line.trim())return;
+
+    /* Handle both tab-separated and comma-separated (CSV export) */
+    let cols;
+    if(line.includes('\t')){
+      cols=line.split('\t');
+    } else {
+      /* CSV — handle quoted fields */
+      cols=line.split(',');
+    }
+
+    /* Need at least 6 columns */
+    if(cols.length<6)return;
+
+    const assetRaw=(cols[2]||'').trim().toLowerCase();
+    const envRaw=(cols[3]||'').trim();
+    const dateRaw=(cols[5]||'').trim();
+
+    /* Check if this asset belongs to your accounts */
     let assetType='';
-    for(const k in assetMap){if(low.includes(k)){assetType=assetMap[k];break;}}
+    for(const k in ASSET_MAP){
+      if(assetRaw===k||assetRaw.includes(k)){
+        assetType=ASSET_MAP[k];
+        break;
+      }
+    }
     if(!assetType)return;
-    let activity='';
-    for(const k in actMap){if(low.includes(k)){activity=actMap[k];break;}}
-    const dm=line.match(dateRe);
-    if(!dm)return;
-    let y,mo,d;
-    if(dm[4]){y=dm[4];mo=dm[5];d=dm[6];}
-    else{d=dm[1];mo=dm[2];y=dm[3];if(y.length===2)y='20'+y;}
-    const dateStr=y.padStart(4,'0')+'-'+mo.padStart(2,'0')+'-'+d.padStart(2,'0');
-    if(isNaN(new Date(dateStr).getTime()))return;
-    const title=line.replace(dateRe,'').replace(/[,;]+/g,' ').replace(/\s+/g,' ').trim().slice(0,80)||activity||'Scheduled activity';
-    results.push({date:dateStr,title:title,type:assetType,asset:AN[assetType],activity:activity||'Other',env:'Prod',time:'TBC',duration:'TBC',tbc:true,notes:'Imported from '+filename+' on '+new Date().toLocaleDateString(),assignee:''});
+
+    /* Parse the date */
+    const dateStr=parseWordDate(dateRaw);
+    if(!dateStr)return;
+
+    /* Time window */
+    const startTime=(cols[6]||'').trim();
+    const endTime=(cols[7]||'').trim();
+    const timeWindow=startTime&&endTime?startTime+' – '+endTime+' IST':'TBC';
+
+    /* Environment */
+    const envLow=envRaw.toLowerCase();
+    const isProd=envLow==='prod'||envLow==='production';
+    const env=isProd?'Prod':'Non-prod';
+
+    /* Activity type from EC version + env */
+    const ecVer=(cols[1]||'').trim();
+    const activity='EG Upgrade'; /* This schedule is the EG upgrade schedule */
+
+    /* Assignee */
+    const assignee=(cols[20]||cols[cols.length-1]||'').trim();
+
+    /* Ticket number */
+    const ticket=(cols[4]||'').trim();
+
+    /* Asset display name */
+    const assetDisplay=(cols[2]||'').trim();
+    const assetName=assetType==='chev'?'Chevron ABU':'Origin / APLNG';
+
+    /* Title */
+    const title=assetDisplay+' '+ecVer+' EG Upgrade — '+envRaw;
+
+    /* Notes */
+    const notes=[
+      'EC Version: '+ecVer,
+      'Environment: '+envRaw,
+      'Time (IST): '+timeWindow,
+      ticket?'Ticket: '+ticket:'',
+      assignee?'Assignee: '+assignee:'',
+      'Imported from '+filename+' on '+new Date().toLocaleDateString()
+    ].filter(Boolean).join('\n');
+
+    results.push({
+      date:dateStr,
+      title:title,
+      type:assetType,
+      asset:assetName,
+      activity:activity,
+      env:env,
+      time:timeWindow,
+      duration:'3 hrs',
+      tbc:false,
+      notes:notes,
+      assignee:assignee
+    });
   });
+
   return results;
 }
 function xlShowPreview(){
