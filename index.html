@@ -1859,7 +1859,7 @@ function xlParseSchedule(text,tabName){
   if(tabName==='OS Patching')isDR=false;
   if(isDR===null)isDR=false; /* default to OS Patching */
 
-  const activity=isDR?'DR Schedule':'EG Upgrade';
+  const activity=isDR?'DR Schedule':'OS Patching';
 
   /* First pass — collect all rows grouped by asset+date */
   const groups={};
@@ -1912,14 +1912,14 @@ function xlParseSchedule(text,tabName){
       const npKey=assetRaw+'|'+dateStr+'|nonprod';
       if(!seenKeys.has(npKey)){
         seenKeys.add(npKey);
-        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' — '+envLabel;
+        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'OS Patching')+' — '+envLabel;
         results.push({
           date:dateStr,title:title,
           type:assetInfo.type,
           asset:assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
           activity:activity,env:'Non-prod',time:timeIST,duration:'3 hrs',tbc:false,
           assignee:assignee,
-          notes:['Activity: '+(isDR?'DR Schedule':'EG Upgrade'),
+          notes:['Activity: '+(isDR?'DR Schedule':'OS Patching'),
             'EC Version: '+ecVer,'Environment: '+envLabel,'Time (IST): '+timeIST,
             ticket?'Ticket: '+ticket:'',assignee?'Assignee: '+assignee:'',
             'Source: '+tabName+' tab (imported '+new Date().toLocaleDateString()+')'].filter(Boolean).join('\n')
@@ -1933,14 +1933,14 @@ function xlParseSchedule(text,tabName){
       if(!seenKeys.has(prodKey)){
         seenKeys.add(prodKey);
         const envLabel=g.prodEnv||'Prod';
-        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'EG Upgrade')+' — '+envLabel;
+        const title=assetRaw+' '+ecVer+' '+(isDR?'DR Schedule':'OS Patching')+' — '+envLabel;
         results.push({
           date:dateStr,title:title,
           type:assetInfo.type,
           asset:assetInfo.type==='chev'?'Chevron ABU':'Origin / APLNG',
           activity:activity,env:'Prod',time:timeIST,duration:'3 hrs',tbc:false,
           assignee:assignee,
-          notes:['Activity: '+(isDR?'DR Schedule':'EG Upgrade'),
+          notes:['Activity: '+(isDR?'DR Schedule':'OS Patching'),
             'EC Version: '+ecVer,'Environment: '+envLabel,'Time (IST): '+timeIST,
             ticket?'Ticket: '+ticket:'',assignee?'Assignee: '+assignee:'',
             'Source: '+tabName+' tab (imported '+new Date().toLocaleDateString()+')'].filter(Boolean).join('\n')
@@ -1976,13 +1976,13 @@ function xlImport(){
   if(!selected.length){toast('No events selected');return;}
 
   /* Determine which activity type we're replacing */
-  const importActivity=selected[0]?selected[0].activity:'EG Upgrade';
+  const importActivity=selected[0]?selected[0].activity:'OS Patching';
 
   /* Remove ALL previously imported events of this activity type for the same assets
      This ensures re-import of a new quarterly schedule replaces the old one cleanly.
      Only removes events that came from imports (EG Upgrade or DR Schedule activity).
-     Manual events (OS Patching, DNS Firewall, Incident etc) are never touched. */
-  const IMPORT_ACTIVITIES=['EG Upgrade','DR Schedule'];
+     Manual events (DNS Firewall, Incident, Meeting etc) are never touched. */
+  const IMPORT_ACTIVITIES=['OS Patching','DR Schedule'];
   if(IMPORT_ACTIVITIES.includes(importActivity)){
     AE=AE.filter(function(e){
       /* Keep: holidays, PTO, manual events (non-import activities) */
