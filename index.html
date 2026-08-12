@@ -621,13 +621,20 @@ textarea.fin{resize:vertical;min-height:65px}
     <!-- Filter panel -->
     <div id="panel-filter" class="panel-sec" style="display:none">
       <div class="panel-hd">Filter <button class="panel-close" onclick="closePanel()">✕</button></div>
-      <button class="fb active" onclick="setFilter('all',this)"><div class="fb-dot" style="background:var(--c-text3)"></div>All<span class="fb-cnt" id="cnt-all">0</span></button>
-      <button class="fb" onclick="setFilter('chev',this)"><div class="fb-dot" style="background:var(--c-chev)"></div>Chevron ABU<span class="fb-cnt" id="cnt-chev">0</span></button>
-      <button class="fb" onclick="setFilter('orig',this)"><div class="fb-dot" style="background:var(--c-orig)"></div>Origin / APLNG<span class="fb-cnt" id="cnt-orig">0</span></button>
-      <button class="fb" onclick="setFilter('pto',this)"><div class="fb-dot" style="background:var(--c-pto)"></div>My PTO<span class="fb-cnt" id="cnt-pto">0</span></button>
-      <button class="fb" onclick="setFilter('ph',this)"><div class="fb-dot" style="background:var(--c-ph)"></div><span class="cb-my">MY</span>KL<span class="fb-cnt" id="cnt-ph">0</span></button>
-      <button class="fb" onclick="setFilter('wa',this)"><div class="fb-dot" style="background:var(--c-wa)"></div><span class="cb-au">AU</span>Perth<span class="fb-cnt" id="cnt-wa">0</span></button>
-      <button class="fb" onclick="setFilter('qld',this)"><div class="fb-dot" style="background:var(--c-qld)"></div><span class="cb-au">AU</span>Brisbane<span class="fb-cnt" id="cnt-qld">0</span></button>
+      <div style="font-size:10px;color:var(--c-text4);margin-bottom:8px;line-height:1.5">Tap to toggle. Select multiple to combine views.</div>
+      <button class="fb active" data-filter="all" onclick="setFilter('all',this)"><div class="fb-dot" style="background:var(--c-text3)"></div>All<span class="fb-cnt" id="cnt-all">0</span></button>
+      <div style="height:1px;background:var(--c-border);margin:5px 0 5px"></div>
+      <button class="fb" data-filter="chev" onclick="setFilter('chev',this)"><div class="fb-dot" style="background:var(--c-chev)"></div>Chevron ABU<span class="fb-cnt" id="cnt-chev">0</span></button>
+      <button class="fb" data-filter="orig" onclick="setFilter('orig',this)"><div class="fb-dot" style="background:var(--c-orig)"></div>Origin / APLNG<span class="fb-cnt" id="cnt-orig">0</span></button>
+      <button class="fb" data-filter="pto" onclick="setFilter('pto',this)"><div class="fb-dot" style="background:var(--c-pto)"></div>My PTO<span class="fb-cnt" id="cnt-pto">0</span></button>
+      <div style="height:1px;background:var(--c-border);margin:5px 0 5px"></div>
+      <button class="fb" data-filter="ph" onclick="setFilter('ph',this)"><div class="fb-dot" style="background:var(--c-ph)"></div><span class="cb-my">MY</span>KL Holidays<span class="fb-cnt" id="cnt-ph">0</span></button>
+      <button class="fb" data-filter="wa" onclick="setFilter('wa',this)"><div class="fb-dot" style="background:var(--c-wa)"></div><span class="cb-au">AU</span>Perth Holidays<span class="fb-cnt" id="cnt-wa">0</span></button>
+      <button class="fb" data-filter="qld" onclick="setFilter('qld',this)"><div class="fb-dot" style="background:var(--c-qld)"></div><span class="cb-au">AU</span>Brisbane Holidays<span class="fb-cnt" id="cnt-qld">0</span></button>
+      <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--c-border)">
+        <div id="filter-summary" style="font-size:10px;color:var(--c-accent2);font-family:'JetBrains Mono',monospace;margin-bottom:6px">Showing all</div>
+        <button onclick="setFilter('all',document.querySelector('[data-filter=all]'))" style="width:100%;background:var(--c-surface2);border:1px solid var(--c-border2);border-radius:var(--r-xs);color:var(--c-text3);cursor:pointer;padding:5px;font-size:11px;font-weight:500;font-family:Inter,sans-serif;transition:all .1s">↺ Reset to All</button>
+      </div>
     </div>
     <!-- Radar panel -->
     <div id="panel-radar" class="panel-sec" style="display:none">
@@ -1080,7 +1087,7 @@ let AE=loadEvts(),EM={};
 rebuildMap();
 let NI=Math.max(0,...AE.map(e=>e.id))+1;
 const T=new Date();
-let CY=T.getFullYear(),CM=T.getMonth()+1,AF='all',CV='month';
+let CY=T.getFullYear(),CM=T.getMonth()+1,AF=new Set(['all']),CV='month';
 let MT=null,DID=null,TBV=false,MID=null;
 
 /* THEME */
@@ -1095,7 +1102,10 @@ function fd(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{weekda
 function sd(s){return new Date(s+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});}
 function isUp(s){return new Date(s+'T23:59:00')>=T;}
 function isMn(e){return e.type==='chev'||e.type==='orig';}
-function fil(evts){return AF==='all'?evts:evts.filter(e=>e.type===AF);}
+function fil(evts){
+  if(AF.has('all'))return evts;
+  return evts.filter(function(e){return AF.has(e.type);});
+}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2600);}
 
 /* CONFLICTS */
@@ -1284,6 +1294,19 @@ function updateStats(){
   document.getElementById('cnt-ph').textContent=AE.filter(e=>e.type==='ph').length;
   document.getElementById('cnt-wa').textContent=AE.filter(e=>e.type==='wa').length;
   document.getElementById('cnt-qld').textContent=AE.filter(e=>e.type==='qld').length;
+  /* Sync filter button active states */
+  document.querySelectorAll('.fb[data-filter]').forEach(function(b){
+    b.classList.toggle('active',AF.has(b.getAttribute('data-filter')));
+  });
+  /* Sync filter summary text */
+  const summary=document.getElementById('filter-summary');
+  if(summary){
+    if(AF.has('all')){summary.textContent='Showing all';}
+    else{
+      const LABELS={chev:'Chevron',orig:'Origin',pto:'PTO',ph:'KL',wa:'Perth',qld:'Brisbane'};
+      summary.textContent='Showing: '+Array.from(AF).map(function(x){return LABELS[x]||x;}).join(' + ');
+    }
+  }
   updateHealth();
 }
 
@@ -1516,7 +1539,39 @@ function handleDMBG(e){if(e.target===document.getElementById('dm-bg'))closeDM();
 function openSM(){document.getElementById('sm-bg').classList.add('open');}
 function closeSM(){document.getElementById('sm-bg').classList.remove('open');}
 function handleSMBG(e){if(e.target===document.getElementById('sm-bg'))closeSM();}
-function setFilter(f,btn){AF=f;document.querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render();}
+function setFilter(f,btn){
+  if(f==='all'){
+    /* All button: reset to show everything */
+    AF=new Set(['all']);
+  } else {
+    /* Remove 'all' from set when picking a specific filter */
+    AF.delete('all');
+    /* Toggle this filter */
+    if(AF.has(f)){
+      AF.delete(f);
+      /* If nothing selected, fall back to All */
+      if(AF.size===0)AF=new Set(['all']);
+    } else {
+      AF.add(f);
+    }
+  }
+  /* Update button active states */
+  document.querySelectorAll('.fb').forEach(function(b){
+    const ftype=b.getAttribute('data-filter');
+    if(ftype)b.classList.toggle('active',AF.has(ftype));
+  });
+  /* Show active filter summary */
+  const summary=document.getElementById('filter-summary');
+  if(summary){
+    if(AF.has('all')){
+      summary.textContent='Showing all';
+    } else {
+      const LABELS={chev:'Chevron',orig:'Origin',pto:'PTO',ph:'KL',wa:'Perth',qld:'Brisbane'};
+      summary.textContent='Showing: '+Array.from(AF).map(function(x){return LABELS[x]||x;}).join(' + ');
+    }
+  }
+  render();
+}
 function setView(v){CV=v;document.getElementById('btn-month').classList.toggle('active',v==='month');document.getElementById('btn-list').classList.toggle('active',v==='list');render();}
 function prevMonth(){CM===1?(CM=12,CY--):CM--;render();}
 function nextMonth(){CM===12?(CM=1,CY++):CM++;render();}
